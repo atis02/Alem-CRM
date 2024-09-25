@@ -12,6 +12,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import moment from "moment";
 import { Capitalize, user } from "../../../Components/utils";
 import CreateIcon from "@mui/icons-material/Create";
+import deleteIcon from "../../../public/images/Delete.png";
 
 const MyAccordion = ({ data }) => {
   // Filter out items with null notes and group by date
@@ -154,7 +155,7 @@ const MyAccordion = ({ data }) => {
                       <IconButton onClick={() => handleDeleteNote(dateKey.id)}>
                         <img
                           style={{ width: 24, height: 24 }}
-                          src="/images/Delete.png"
+                          src={deleteIcon}
                           alt=""
                         />
                       </IconButton>

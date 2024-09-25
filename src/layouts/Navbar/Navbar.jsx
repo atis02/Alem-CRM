@@ -51,7 +51,8 @@ import HomeIcon from "@mui/icons-material/Home";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import Diversity3Icon from "@mui/icons-material/Diversity3";
-
+import Alert from "./../../../public/images/Alert Badge.png";
+import search from "../../../public/images/Search (1).png";
 import axios from "axios";
 import menuItems from "./components/menuItems";
 
@@ -92,7 +93,7 @@ export default function Navbar() {
         InputProps={{
           startAdornment: (
             <img
-              src="/images/Search (1).png"
+              src={search}
               style={{ width: "24px", height: "24px", marginRight: 10 }}
               alt=""
             />
@@ -141,7 +142,7 @@ export default function Navbar() {
             }}
           >
             <img
-              src="/images/Alert Badge.png"
+              src={Alert}
               style={{
                 width: "30px",
                 height: "30px",
@@ -199,7 +200,7 @@ export default function Navbar() {
                   height: "100%",
                   borderRadius: "100px",
                 }}
-                src={`http://localhost:5022/images/${admin.img}`}
+                src={`http://192.168.1.46/images/${admin.img}`}
                 alt=""
               />
             )}

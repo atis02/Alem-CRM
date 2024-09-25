@@ -20,6 +20,8 @@ import {
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import { toast } from "react-toastify";
 import { NavLink } from "react-router-dom";
+import deleteIcon from "../../../public/images/Delete.png";
+
 export const user = JSON.parse(localStorage.getItem("CRM_USER"));
 
 const index = () => {
@@ -189,7 +191,7 @@ const index = () => {
                     <IconButton onClick={() => handleDeletePdf(elem.id)}>
                       <img
                         style={{ width: 24, height: 24 }}
-                        src="/images/Delete.png"
+                        src={deleteIcon}
                         alt=""
                       />
                     </IconButton>

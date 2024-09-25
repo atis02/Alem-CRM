@@ -22,8 +22,9 @@ import {
 import AxiosInstance from "../Components/db/Redux/api/AxiosHelper";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import Register from "./Register";
-
-// import { jwtDecode } from "jwt-decode";
+import logo from "../../public/images/Logo.png";
+import logo2 from "../../public/images/login (2).png";
+import logo3 from "../../public/images/login (1).png";
 
 const Login = () => {
   const [data, setData] = useState();
@@ -122,7 +123,7 @@ const Login = () => {
             alignItems="center"
           >
             <img
-              src="/images/Logo.png"
+              src={logo}
               style={{
                 width: "85px",
                 height: "95px",
@@ -141,7 +142,7 @@ const Login = () => {
             </Typography>
           </Stack>
           <img
-            src="/images/login (2).png"
+            src={logo2}
             style={{
               width: "100%",
               height: "49.4vh",
@@ -173,7 +174,7 @@ const Login = () => {
             CRM
           </Typography>
           <img
-            src="/images/login (1).png"
+            src={logo3}
             style={{
               width: "100%",
               height: "49.5vh",

@@ -23,6 +23,8 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { logout } from "../Components/db/Redux/reducers/AuthSlice";
+import signOut from "../../public/images/Sign Out.png";
+import logo from "../../public/images/Logo.png";
 
 export default function SidebarNav(data, sendingData) {
   const user = JSON.parse(localStorage.getItem("CRM_USER"));
@@ -81,7 +83,7 @@ export default function SidebarNav(data, sendingData) {
                 alignItems="center"
               >
                 <img
-                  src="/images/Logo.png"
+                  src={logo}
                   style={{
                     width: "55px",
                     height: "65px",
@@ -157,6 +159,11 @@ export default function SidebarNav(data, sendingData) {
                 title="Işgärler"
                 component={<NavLink className="sideNav" to="/employees" />}
                 icon={<Diversity3Icon />}
+                style={{
+                  ...(user.role === "USER"
+                    ? { display: "none" }
+                    : { display: "flex" }),
+                }}
               >
                 <Stack
                   sx={{
@@ -189,11 +196,7 @@ export default function SidebarNav(data, sendingData) {
         </Stack>
         <Stack direction="row" alignItems="center" p="0 0 50px 20px">
           {/* <PowerSettingsNewIcon sx={{ width: 30, height: 30 }} /> */}
-          <img
-            src="/images/Sign Out.png"
-            style={{ width: 30, height: 30 }}
-            alt="Sign Out"
-          />
+          <img src={signOut} style={{ width: 30, height: 30 }} alt="Sign Out" />
           <Button
             onClick={handleLogout}
             sx={{

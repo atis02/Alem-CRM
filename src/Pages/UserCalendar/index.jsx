@@ -34,6 +34,9 @@ import { useDispatch, useSelector } from "react-redux";
 import CreateIcon from "@mui/icons-material/Create";
 import moment from "moment";
 import "moment/locale/tk";
+import deleteIcon from "../../../public/images/Delete.png";
+import mark from "../../../public/images/mark.png";
+import checked from "../../../public/images/checked.png";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { toast } from "react-toastify";
@@ -334,7 +337,7 @@ const index = () => {
                           // mb="20px"
                         >
                           <Stack borderRadius="100%" width={26} height={26}>
-                            <img src="/images/mark.png" alt="" />
+                            <img src={mark} alt="" />
                           </Stack>
                           <Stack direction="column">
                             <Typography
@@ -379,7 +382,7 @@ const index = () => {
                       mb="20px"
                     >
                       <Stack borderRadius="100%" width={26} height={26}>
-                        <img src="/images/checked.png" alt="" />
+                        <img src={checked} alt="" />
                       </Stack>
                       <Stack direction="column">
                         <Typography
@@ -550,7 +553,7 @@ const index = () => {
                                   >
                                     <img
                                       style={{ width: 24, height: 24 }}
-                                      src="/images/Delete.png"
+                                      src={deleteIcon}
                                       alt=""
                                     />
                                   </IconButton>

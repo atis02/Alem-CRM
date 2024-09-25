@@ -101,6 +101,7 @@ const UpdateUserInfo = ({ img, setFile }) => {
           whereStudy: education,
           whereLive: live,
           languages: selectedValueLang,
+          positionId: selectedValue,
         }).then((res) => {
           res.data
             ? (localStorage.setItem("CRM_USER", JSON.stringify(res.data)),

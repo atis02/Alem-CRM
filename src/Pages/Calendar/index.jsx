@@ -67,6 +67,8 @@ import {
   TimePicker,
 } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
+import check from "../../../public/images/check.png";
+import deleteIcon from "../../../public/images/Delete.png";
 
 const index = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -116,6 +118,7 @@ const index = () => {
   console.log(filteredUsersData);
   console.log(defaultSelectedUsers);
   const [users, setUsers] = useState(filteredUsersData);
+  console.log(users);
 
   const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem("CRM_USER"));
@@ -431,11 +434,7 @@ const index = () => {
               }}
               onClick={() => setModalOpenNote(true)}
             >
-              <img
-                style={{ width: 20, height: 20 }}
-                src="/images/check.png"
-                alt="check"
-              />{" "}
+              <img style={{ width: 20, height: 20 }} src={check} alt="check" />{" "}
               Bellik goşmak
             </Button>
 
@@ -566,7 +565,7 @@ const index = () => {
                                     >
                                       <img
                                         style={{ width: 24, height: 24 }}
-                                        src="/images/Delete.png"
+                                        src={deleteIcon}
                                         alt=""
                                       />
                                     </IconButton>
@@ -691,7 +690,7 @@ const index = () => {
                               >
                                 <img
                                   style={{ width: 24, height: 24 }}
-                                  src="/images/Delete.png"
+                                  src={deleteIcon}
                                   alt=""
                                 />
                               </IconButton>
