@@ -43,6 +43,12 @@ export const RandomBgColor = () => {
 export const getRandomNumber = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
+export const projects = [
+  { name: "Arzan Al", id: 1 },
+  { name: "Alem CRM", id: 2 },
+  { name: "HMDU", id: 3 },
+  { name: "Rysgal Market", id: 4 },
+];
 export const style = {
   position: "absolute",
   top: "10%",
@@ -70,6 +76,10 @@ export const style3 = {
   borderRadius: "30px",
   p: "30px ",
   height: "575px",
+  overflow: "scroll",
+  "&::-webkit-scrollbar": {
+    display: "none",
+  },
 };
 export const style2 = {
   position: "absolute",

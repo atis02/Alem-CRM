@@ -151,11 +151,12 @@ export const adminNotesOfMonth = createAsyncThunk(
 export const postAdminNote = createAsyncThunk("postAdminNote", async (body) => {
   const data = {
     title: body.title,
-    date: `${body.date} ${body.dateHour}`,
+    date: new Date(`${body.date} ${body.dateHour}`).toJSON(),
     color: body.color,
 
     users: body.users,
   };
+
   if (data.title !== "" && data.date !== null && data.users.length !== 0) {
     const resp = await AxiosInstance.post(`/holidays/post`, data);
     resp.data == "OK" ? toast.success("Üstünlikli!") : toast.error("Şowsuz!");
@@ -300,7 +301,7 @@ export const updateAdminNotes = createAsyncThunk(
     const data = {
       holidayId: body.noteId,
       title: body.content,
-      date: `${body.date} ${body.dateHour}`,
+      date: new Date(`${body.date} ${body.dateHour}`).toJSON(),
       color: body.color,
       users: body.users,
     };

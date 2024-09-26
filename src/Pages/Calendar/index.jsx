@@ -23,6 +23,7 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import {
   Capitalize,
   getRandomNumber,
+  projects,
   RandomBgColor,
   style,
   style2,
@@ -70,6 +71,7 @@ import {
 import dayjs from "dayjs";
 import check from "../../../public/images/check.png";
 import deleteIcon from "../../../public/images/Delete.png";
+import { formToJSON } from "axios";
 
 const index = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -90,8 +92,9 @@ const index = () => {
   const [dateNote2, setDateNote2] = useState();
   const [dateHour, setDateHour] = useState();
   const [noteID, setNoteId] = useState();
-  const [projectId, setProjectId] = useState();
   const [noteAdmin, setNoteAdmin] = useState();
+
+  const [projectId, setProjectId] = useState();
 
   const adminNotes = useSelector((state) => state.getWorkDate.adminNotes);
   const adminNoteStatus = useSelector(
@@ -102,7 +105,8 @@ const index = () => {
   const UsersData = useSelector((state) => state.users.data);
   const defaultSelectedUsers =
     dateNote2 !== undefined
-      ? dateNote2.HolidayShares.map((share) => ({
+      ? dateNote2.HolidayShares &&
+        dateNote2.HolidayShares.map((share) => ({
           userId: share.userId,
           name: share.User.name,
           surname: share.User.surname,
@@ -113,13 +117,11 @@ const index = () => {
     statusUsers === "succeeded" &&
     UsersData.filter(
       (user) =>
+        defaultSelectedUsers &&
         !defaultSelectedUsers.some((selected) => selected.userId === user.id)
     );
   const [selectedUser, setSelectedUser] = useState(defaultSelectedUsers);
-  console.log(filteredUsersData);
-  console.log(defaultSelectedUsers);
   const [users, setUsers] = useState([]);
-  console.log(users);
 
   const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem("CRM_USER"));
@@ -129,15 +131,10 @@ const index = () => {
   const monthWorkData = useSelector(
     (state) => state.getWorkDate.employeerTime.employeerTime
   );
-  console.log(defaultSelectedUsers);
 
   const adminNotesForProject = useSelector(
     (state) => state.getWorkDate.adminNote
   );
-
-  console.log(adminNotes);
-
-  console.log(UsersData);
 
   moment.locale("tk");
 
@@ -170,9 +167,7 @@ const index = () => {
     adminNoteStatus === "succeeded"
       ? adminNotes.reduce((acc, item) => {
           if (item.note !== null) {
-            const date = moment(item.date, "DD/MM/YYYY HH:mm").format(
-              "YYYY-MM-DD"
-            );
+            const date = moment(item.date).format("YYYY-MM-DD");
             if (!acc[date]) {
               acc[date] = [];
             }
@@ -181,7 +176,6 @@ const index = () => {
           return acc;
         }, {})
       : "";
-  console.log(adminNotes);
 
   const handleColorClick = (color) => {
     setSelectedColor(color);
@@ -204,24 +198,26 @@ const index = () => {
     setSelectedDay(day);
     setModalOpen(true);
   };
-  const userIds = defaultSelectedUsers.map((user) => ({
-    id: user.userId,
-  }));
-  console.log(userIds);
+  const userIds =
+    defaultSelectedUsers &&
+    defaultSelectedUsers.map((user) => ({
+      id: user.userId,
+    }));
 
   const handleAddAdminNote = () => {
     const filteredUsers = users.map((item) => ({ id: item.id }));
-    console.log(users);
 
     const body = {
       title: notify,
       date: moment(dateNote).format("YYYY-MM-DD"),
+      // date: dateNote,
       dateHour: dateHour,
       color: selectedColor,
       startDate: startDate,
       endDate: endDate,
       users: users,
     };
+    console.log(body);
 
     if (notify !== "" && dateNote !== null && dateHour !== undefined) {
       dispatch(postAdminNote(body));
@@ -262,17 +258,14 @@ const index = () => {
     setEventText("");
   };
 
-  console.log(selectedUser);
   const handleChangeStep2 = (e, newValues) => {
     if (newValues) {
-      console.log(newValues);
       setSelectedUser(() => [
         ...newValues.map((user) => ({ id: user.id ? user.id : user.userId })),
       ]);
       setUsers(() => [
         ...newValues.map((user) => ({ id: user.id ? user.id : user.userId })),
       ]);
-      console.log(users);
 
       setUserId(newValues.id);
       setFilteredUsers((prevUsers) =>
@@ -282,14 +275,12 @@ const index = () => {
   };
   const handleChangeStep = (e, newValues) => {
     if (newValues) {
-      console.log(newValues);
       // setSelectedUser(() => [
       //   ...newValues.map((user) => ({ id: user.id ? user.id : user.userId })),
       // ]);
       setUsers(() => [
         ...newValues.map((user) => ({ id: user.id ? user.id : user.userId })),
       ]);
-      console.log(users);
 
       setUserId(newValues.id);
       // setFilteredUsers((prevUsers) =>
@@ -333,15 +324,16 @@ const index = () => {
       setAdminModalOpen(false);
     }
   };
+
   const handleUpdateAdminNotes = () => {
     const body = {
       noteId: noteID,
       content: notify,
-      date: moment(dateNote2).format("YYYY-MM-DD"),
-      dateHour:
-        dateHour == undefined
-          ? moment(date, "DD/MM/YYYY HH:mm").format("HH:mm")
-          : dateHour,
+      date: moment(dateNote2 && dateNote2.date).format("YYYY-MM-DD"),
+      // dateNote2 == undefined
+      //   ? moment(date).format("YYYY-MM-DD")
+      //   : moment(dateNote2).format("YYYY-MM-DD"),
+      dateHour: dateHour == undefined ? moment(date).format("HH:mm") : dateHour,
       startDate: startDate,
       endDate: endDate,
       authorId: user.id,
@@ -351,7 +343,8 @@ const index = () => {
 
     if (
       notify !== "" &&
-      (users.length !== 0 || defaultSelectedUsers.length !== 0)
+      (users.length !== 0 ||
+        (defaultSelectedUsers && defaultSelectedUsers.length !== 0))
     ) {
       dispatch(updateAdminNotes(body));
       handleClose();
@@ -360,14 +353,13 @@ const index = () => {
     }
   };
   const handleUpdateNote = (item) => {
-    console.log(item);
-
     setDateNote2(item);
     setAdminModalOpen(true);
     setDate(item.date);
     setNotify(item.title);
     setNoteId(item.id);
   };
+
   const adminProjectNoteUpdate = () => {
     const body = {
       authorId: user.id,
@@ -375,8 +367,15 @@ const index = () => {
       content: notify,
       projectId: projectId,
       userId: userId,
+      // == undefined
+      // ? UsersData.find(
+      //     (user) => user.id === (noteAdmin ? noteAdmin.userId : "")
+      //   ) || null
+      // : userId,
     };
-    if (notify !== "") {
+    console.log(body);
+
+    if (notify !== "" && projectId !== "") {
       dispatch(updateAdminNote(body));
       handleClose();
     } else {
@@ -389,12 +388,7 @@ const index = () => {
     setNoteId(item.id);
     setNotify(item.content);
   };
-  const projects = [
-    { name: "Arzan Al", id: 1 },
-    { name: "Alem CRM", id: 2 },
-    { name: "HMDU", id: 3 },
-    { name: "Rysgal Market", id: 4 },
-  ];
+
   return (
     <Box>
       <Stack direction="row" mt="10px" justifyContent="space-around">
@@ -554,9 +548,12 @@ const index = () => {
                                       fontSize={14}
                                       fontWeight={500}
                                     >
+                                      {console.log(
+                                        new Date(dateKey.date).toUTCString()
+                                      )}
                                       {moment(
-                                        dateKey.date,
-                                        "DD/MM/YYYY  HH:mm"
+                                        dateKey.date
+                                        // "DD.MM.YYYY  HH:mm"
                                       ).format("DD.MM.YYYY  HH:mm")}
                                     </Typography>
                                   </Stack>
@@ -971,26 +968,30 @@ const index = () => {
                         color="#474747"
                         mb="5px"
                       >
-                        Proýekti saýla
+                        Proýekti saýlaa
                       </Typography>
-                      {console.log(noteAdmin ? noteAdmin.projectId : "")}
                       <Autocomplete
                         id="combo-box-demo"
                         options={projects}
-                        value={
+                        defaultValue={
                           projects.find(
                             (project) =>
                               project.name ===
                               (noteAdmin ? noteAdmin.projectId : "")
                           ) || null
                         }
+                        // defaultValue={projectId}
                         // value={noteAdmin ? noteAdmin.projectId : []}
                         getOptionLabel={(option) =>
                           `${Capitalize(option.name)}`
                         }
-                        onChange={(e, newValues) =>
-                          setProjectId(newValues.name)
-                        }
+                        onChange={(e, newValues) => {
+                          if (newValues) {
+                            setProjectId(newValues.name);
+                          } else {
+                            setProjectId("");
+                          }
+                        }}
                         renderInput={(params) => (
                           <TextField
                             sx={{
@@ -1023,7 +1024,6 @@ const index = () => {
                       >
                         Işgärler
                       </Typography>
-                      {console.log(noteAdmin)}
                       <Autocomplete
                         id="combo-box-demo"
                         options={UsersData}
@@ -1291,9 +1291,7 @@ const index = () => {
                                   fullWidth
                                   onChange={(newValue) => {
                                     if (newValue) {
-                                      setDateNote(
-                                        newValue.format("YYYY-MM-DD")
-                                      );
+                                      setDateNote(newValue);
                                     } else {
                                       setDateNote(null);
                                     }
@@ -1482,7 +1480,7 @@ const index = () => {
                           color="#474747"
                           mb="5px"
                         >
-                          Duýduryş
+                          DuýduryşY
                         </Typography>
                         <TextField
                           fullWidth
@@ -1588,18 +1586,16 @@ const index = () => {
                                 <DatePicker
                                   fullWidth
                                   defaultValue={
-                                    dayjs(date, "DD/MM/YYYY HH:mm").isValid()
-                                      ? dayjs(date, "DD/MM/YYYY HH:mm")
-                                      : null
+                                    dayjs(date).isValid() ? dayjs(date) : null
                                   }
                                   onChange={(newValue) => {
                                     setDateNote2(
                                       newValue
-                                        ? newValue.format("YYYY-MM-DD")
+                                        ? dayjs(newValue).format("YYYY-MM-DD")
                                         : null
                                     );
                                   }}
-                                  format="DD/MM/YYYY"
+                                  format="DD.MM.YYYY"
                                   slotProps={{
                                     textField: {
                                       size: "small",
@@ -1617,6 +1613,7 @@ const index = () => {
                                   }}
                                 />
                               </Stack>
+
                               <Stack
                                 width="100%"
                                 direction="column"
@@ -1631,12 +1628,11 @@ const index = () => {
                                 >
                                   Wagty
                                 </Typography>
+                                {console.log(date)}
                                 <MobileTimePicker
                                   ampm={false}
                                   defaultValue={
-                                    dayjs(date, "DD/MM/YYYY HH:mm").isValid()
-                                      ? dayjs(date, "DD/MM/YYYY HH:mm")
-                                      : null
+                                    dayjs(date).isValid() ? dayjs(date) : null
                                   }
                                   onChange={(newValue) => {
                                     setDateHour(
