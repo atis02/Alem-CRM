@@ -585,7 +585,7 @@ const index = () => {
               disableAutoFocus
             >
               <Grow in={modalOpen}>
-                <Box sx={style} height="565px">
+                <Box sx={style} height="605px">
                   <Stack
                     direction="row"
                     alignItems="center"
@@ -625,7 +625,7 @@ const index = () => {
                     direction="row"
                     justifyContent="center"
                     spacing="20px"
-                    pt="20px"
+                    pt="10px"
                     pb="10px"
                     sx={{
                       ...(moment().isSame(selectedDay, "day")
@@ -679,6 +679,41 @@ const index = () => {
                       Gitdim
                     </Button>
                   </Stack>
+                  <Stack
+                    spacing="10px"
+                    direction="row"
+                    justifyContent="space-between"
+                    p="0 10px 20px 30px"
+                    width="100%"
+                  >
+                    <Typography
+                      fontWeight={500}
+                      fontFamily="Montserrat"
+                      color="#474747"
+                      fontSize={15}
+                      textAlign="center"
+                    >
+                      Gelen wagty
+                    </Typography>
+                    <Typography
+                      fontWeight={500}
+                      fontFamily="Montserrat"
+                      color="#474747"
+                      textAlign="center"
+                      fontSize={15}
+                    >
+                      Giden wagty
+                    </Typography>
+                    <Typography
+                      fontWeight={500}
+                      fontFamily="Montserrat"
+                      color="#474747"
+                      textAlign="center"
+                      fontSize={15}
+                    >
+                      Işlän sagady
+                    </Typography>
+                  </Stack>
                   {status === "loading..." ? (
                     <Stack
                       direction="column"
@@ -712,83 +747,33 @@ const index = () => {
                           ...(moment().isSame(selectedDay, "day")
                             ? {
                                 minHeight: "33%",
-                                maxHeight: "37%",
+                                maxHeight: "28%",
                               }
                             : {
-                                mt: -7,
-                                height: "80%",
+                                // mt: -7,
+                                height: "30%",
                               }),
                         }}
                         className="times"
                         overflow="scroll"
                       >
-                        {data.map((item, index) => (
-                          <Stack
-                            direction="column"
-                            key={index}
-                            width="100%"
-                            spacing="20px"
-                            height="90%"
-                          >
-                            <Stack
-                              spacing="10px"
-                              direction="row"
-                              justifyContent="space-between"
-                              p="0 10px 0 30px"
-                              width="100%"
-                            >
-                              <Typography
-                                fontWeight={500}
-                                fontFamily="Montserrat"
-                                color="#474747"
-                                fontSize={15}
-                                textAlign="center"
-                                sx={{
-                                  ...(index == 0
-                                    ? { display: "flex" }
-                                    : { display: "none" }),
-                                }}
-                              >
-                                Gelen wagty
-                              </Typography>
-                              <Typography
-                                fontWeight={500}
-                                fontFamily="Montserrat"
-                                color="#474747"
-                                textAlign="center"
-                                fontSize={15}
-                                sx={{
-                                  ...(index == 0
-                                    ? { display: "flex" }
-                                    : { display: "none" }),
-                                }}
-                              >
-                                Işlän sagady
-                              </Typography>
-                              <Typography
-                                fontWeight={500}
-                                fontFamily="Montserrat"
-                                color="#474747"
-                                textAlign="center"
-                                fontSize={15}
-                                sx={{
-                                  ...(index == 0
-                                    ? { display: "flex" }
-                                    : { display: "none" }),
-                                }}
-                              >
-                                Giden wagty
-                              </Typography>
-                            </Stack>
+                        <Stack
+                          direction="column"
+                          key={index}
+                          width="100%"
+                          spacing="10px"
+                          // height="10%"
+                        >
+                          {data.map((item, index) => (
                             <Stack
                               direction="row"
                               alignItems="center"
                               justifyContent="space-between"
-                              spacing={2}
+                              spacing={1}
                             >
                               <Typography
                                 fontFamily="Montserrat"
-                                color="#A6A6A6"
+                                color="#000"
                                 textAlign="center"
                                 fontSize={15}
                               >
@@ -796,7 +781,7 @@ const index = () => {
                               </Typography>
                               <Stack
                                 width="100%"
-                                spacing="10px"
+                                spacing="5px"
                                 direction="row"
                                 alignItems="center"
                                 justifyContent="space-between"
@@ -806,7 +791,7 @@ const index = () => {
                                 backgroundColor="#F5F6FA"
                               >
                                 <Stack
-                                  height={55}
+                                  height={25}
                                   color="#A6A6A6"
                                   fontSize={15}
                                   fontWeight={400}
@@ -824,7 +809,7 @@ const index = () => {
                                   </Typography>
                                 </Stack>
                                 <Stack
-                                  height={55}
+                                  height={35}
                                   color="#A6A6A6"
                                   fontSize={15}
                                   fontWeight={400}
@@ -836,7 +821,7 @@ const index = () => {
                                     : ""}
                                 </Stack>
                                 <Stack
-                                  height={55}
+                                  height={25}
                                   fontSize={15}
                                   fontWeight={400}
                                   alignItems="start"
@@ -863,8 +848,8 @@ const index = () => {
                                 </Stack>
                               </Stack>
                             </Stack>
-                          </Stack>
-                        ))}
+                          ))}
+                        </Stack>
                       </Stack>
                     )
                   ) : (
@@ -973,7 +958,7 @@ const index = () => {
                               borderRadius: "50px",
                               border: "1px solid #D5D5D5",
                               height: 55,
-                              mt: -2,
+                              mt: -0.5,
                               "&:hover": {
                                 background: "#78a880",
                                 color: "#F5F6FA",

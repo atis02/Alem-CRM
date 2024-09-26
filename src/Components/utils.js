@@ -45,19 +45,31 @@ export const getRandomNumber = (min, max) => {
 };
 export const style = {
   position: "absolute",
-  top: "15%",
+  top: "10%",
   left: "35%",
   transform: "translate(-50%, -50%)",
   width: 535,
   bgcolor: "#fff",
   boxShadow: 2,
   borderRadius: "30px",
-  p: "30px",
-  height: "565px",
-  overflow: "scroll",
-  "&::-webkit-scrollbar": {
-    display: "none",
-  },
+  p: "10px 30px ",
+  height: "575px",
+  // overflow: "scroll",
+  // "&::-webkit-scrollbar": {
+  //   display: "none",
+  // },
+};
+export const style3 = {
+  position: "absolute",
+  top: "10%",
+  left: "35%",
+  transform: "translate(-50%, -50%)",
+  width: 535,
+  bgcolor: "#fff",
+  boxShadow: 2,
+  borderRadius: "30px",
+  p: "30px ",
+  height: "575px",
 };
 export const style2 = {
   position: "absolute",

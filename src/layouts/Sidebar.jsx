@@ -35,7 +35,7 @@ export default function SidebarNav(data, sendingData) {
     localStorage.removeItem("CRM_USER");
     setTimeout(() => navigate("/login"), 500);
     // window.location.reload();
-    toast.success("Succesfully Logout!");
+    toast.success("Üstünlikli çykyş!");
   };
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));

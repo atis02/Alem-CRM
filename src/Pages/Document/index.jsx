@@ -172,6 +172,7 @@ const index = () => {
                         color: "#474747",
                         width: "80%",
                       }}
+                      target="_blank"
                     >
                       <Stack direction="row" alignItems="center" spacing={2}>
                         <FolderOpenIcon

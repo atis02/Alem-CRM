@@ -2,6 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import mdx from "@mdx-js/rollup";
 import { terser } from "rollup-plugin-terser";
+import legacy from "@vitejs/plugin-legacy";
 
 export default defineConfig({
   plugins: [
@@ -15,6 +16,9 @@ export default defineConfig({
       output: {
         comments: false,
       },
+    }),
+    legacy({
+      targets: ["defaults", "not IE 11", "iOS >= 10"],
     }),
   ],
 });

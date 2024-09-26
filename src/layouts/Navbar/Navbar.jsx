@@ -215,7 +215,7 @@ export default function Navbar() {
               fontSize={16}
               fontWeight={500}
             >
-              {admin.name}.{admin.surname}
+              {admin.name} {admin.surname}
             </Typography>
 
             <Typography

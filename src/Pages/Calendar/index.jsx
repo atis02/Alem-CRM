@@ -26,6 +26,7 @@ import {
   RandomBgColor,
   style,
   style2,
+  style3,
   user,
 } from "../../Components/utils";
 import Calendar from "./components/Calendar";
@@ -117,7 +118,7 @@ const index = () => {
   const [selectedUser, setSelectedUser] = useState(defaultSelectedUsers);
   console.log(filteredUsersData);
   console.log(defaultSelectedUsers);
-  const [users, setUsers] = useState(filteredUsersData);
+  const [users, setUsers] = useState([]);
   console.log(users);
 
   const dispatch = useDispatch();
@@ -203,7 +204,10 @@ const index = () => {
     setSelectedDay(day);
     setModalOpen(true);
   };
-  console.log(dateNote2);
+  const userIds = defaultSelectedUsers.map((user) => ({
+    id: user.userId,
+  }));
+  console.log(userIds);
 
   const handleAddAdminNote = () => {
     const filteredUsers = users.map((item) => ({ id: item.id }));
@@ -341,11 +345,14 @@ const index = () => {
       startDate: startDate,
       endDate: endDate,
       authorId: user.id,
-      users: users,
+      users: users.length == 0 ? userIds : users,
       color: selectedColor,
     };
 
-    if (notify !== "" && users.length !== 0) {
+    if (
+      notify !== "" &&
+      (users.length !== 0 || defaultSelectedUsers.length !== 0)
+    ) {
       dispatch(updateAdminNotes(body));
       handleClose();
     } else {
@@ -366,6 +373,8 @@ const index = () => {
       authorId: user.id,
       noteId: noteID,
       content: notify,
+      projectId: projectId,
+      userId: userId,
     };
     if (notify !== "") {
       dispatch(updateAdminNote(body));
@@ -766,7 +775,7 @@ const index = () => {
                         id="combo-box-demo"
                         options={projects}
                         getOptionLabel={(option) =>
-                          `${Capitalize(option.name)}`
+                          `${Capitalize(option.name)} `
                         }
                         onChange={(e, newValues) =>
                           setProjectId(newValues.name)
@@ -810,7 +819,7 @@ const index = () => {
                         getOptionLabel={
                           (option) =>
                             `${Capitalize(option.name)} ${Capitalize(
-                              option.surname
+                              option.surname == null ? "" : option.surname
                             )}`
                           // " " +
                           // `(${option.position.name})`
@@ -968,7 +977,13 @@ const index = () => {
                       <Autocomplete
                         id="combo-box-demo"
                         options={projects}
-                        // value={noteAdmin ? noteAdmin.projectId : ""}
+                        value={
+                          projects.find(
+                            (project) =>
+                              project.name ===
+                              (noteAdmin ? noteAdmin.projectId : "")
+                          ) || null
+                        }
                         // value={noteAdmin ? noteAdmin.projectId : []}
                         getOptionLabel={(option) =>
                           `${Capitalize(option.name)}`
@@ -1008,13 +1023,19 @@ const index = () => {
                       >
                         Işgärler
                       </Typography>
-
+                      {console.log(noteAdmin)}
                       <Autocomplete
                         id="combo-box-demo"
                         options={UsersData}
+                        value={
+                          UsersData.find(
+                            (user) =>
+                              user.id === (noteAdmin ? noteAdmin.userId : "")
+                          ) || null
+                        }
                         getOptionLabel={(option) =>
                           `${Capitalize(option.name)} ${Capitalize(
-                            option.surname
+                            option.surname == null ? "" : option.surname
                           )}`
                         }
                         onChange={(e, newValues) => setUserId(newValues.id)}
@@ -1125,7 +1146,7 @@ const index = () => {
             >
               <Grow in={modalOpen}>
                 {
-                  <Box sx={style}>
+                  <Box sx={style3}>
                     <Stack>
                       <Stack
                         sx={{
@@ -1203,7 +1224,7 @@ const index = () => {
                             options={UsersData}
                             getOptionLabel={(option) =>
                               `${Capitalize(option.name)} ${Capitalize(
-                                option.surname
+                                option.surname == null ? "" : option.surname
                               )}`
                             }
                             onChange={handleChangeStep}
@@ -1433,7 +1454,7 @@ const index = () => {
             >
               <Grow in={adminModalOpen}>
                 {
-                  <Box sx={style} height="565px">
+                  <Box sx={style3} height="565px">
                     <Stack>
                       <Stack
                         sx={{
@@ -1503,7 +1524,7 @@ const index = () => {
                           filterSelectedOptions
                           getOptionLabel={(option) =>
                             `${Capitalize(option.name)} ${Capitalize(
-                              option.surname
+                              option.surname == null ? "" : option.surname
                             )}`
                           }
                           onChange={handleChangeStep}
