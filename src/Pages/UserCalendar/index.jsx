@@ -571,402 +571,404 @@ const index = () => {
             ) : (
               ""
             )}
-
-            <Modal
-              closeAfterTransition
-              open={modalOpen}
-              onClose={handleClose}
-              BackdropProps={{
-                style: {
-                  backgroundColor: "#7F7F7F",
-                  opacity: "0.2",
-                },
-              }}
-              disableAutoFocus
-            >
-              <Grow in={modalOpen}>
-                <Box sx={style} height="605px">
-                  <Stack
-                    direction="row"
-                    alignItems="center"
-                    justifyContent="space-between"
-                    sx={{
-                      ...(moment().isSame(selectedDay, "day")
-                        ? {
-                            marginBottom: "0px",
-                          }
-                        : {
-                            marginBottom: "85px",
-                          }),
-                    }}
-                  >
-                    <Typography
-                      textAlign="end"
-                      fontFamily="Montserrat"
-                      fontSize={32}
-                      width="70%"
-                      color="#474747"
-                      fontWeight={500}
-                    >
-                      {moment(selectedDay).format("DD.MM.YYYY")}
-                    </Typography>
-                    <IconButton onClick={handleClose}>
-                      <CloseIcon
-                        sx={{
-                          width: 38,
-                          height: 38,
-                          color: "#DC6262",
-                        }}
-                      />
-                    </IconButton>
-                  </Stack>
-                  <Stack
-                    alignItems="center"
-                    direction="row"
-                    justifyContent="center"
-                    spacing="20px"
-                    pt="10px"
-                    pb="10px"
-                    sx={{
-                      ...(moment().isSame(selectedDay, "day")
-                        ? {
-                            display: "flex",
-                          }
-                        : {
-                            display: "none",
-                          }),
-                    }}
-                  >
-                    <Button
-                      disabled={filteredData.length > 0}
-                      sx={{
-                        ...(filteredData.length == 0
-                          ? { backgroundColor: "#9FC2A5", color: "#fff" }
-                          : { backgroundColor: "#F5F6FA", color: "#474747" }),
-                        textTransform: "revert",
-                        fontFamily: "Montserrat",
-                        fontSize: 18,
-                        fontWeight: 600,
-                        width: 185,
-                        border: "1px solid #D5D5D5",
-                        borderRadius: "50px",
-                        height: 55,
-                        "&:hover": { background: "#78a880" },
-                      }}
-                      onClick={handleAddCameTime}
-                    >
-                      Geldim
-                    </Button>
-                    <Button
-                      disabled={filteredData.length == 0}
-                      sx={{
-                        ...(filteredData.length > 0
-                          ? { backgroundColor: "#9FC2A5", color: "#fff" }
-                          : { backgroundColor: "#F5F6FA", color: "#474747" }),
-                        textTransform: "revert",
-                        fontFamily: "Montserrat",
-                        fontSize: 18,
-                        fontWeight: 600,
-                        width: 185,
-                        borderRadius: "50px",
-                        border: "1px solid #D5D5D5",
-                        height: 55,
-
-                        "&:hover": { background: "#78a880" },
-                      }}
-                      onClick={handleAddLeaveTime}
-                    >
-                      Gitdim
-                    </Button>
-                  </Stack>
-                  <Stack
-                    spacing="10px"
-                    direction="row"
-                    justifyContent="space-between"
-                    p="0 10px 20px 30px"
-                    width="100%"
-                  >
-                    <Typography
-                      fontWeight={500}
-                      fontFamily="Montserrat"
-                      color="#474747"
-                      fontSize={15}
-                      textAlign="center"
-                    >
-                      Gelen wagty
-                    </Typography>
-                    <Typography
-                      fontWeight={500}
-                      fontFamily="Montserrat"
-                      color="#474747"
-                      textAlign="center"
-                      fontSize={15}
-                    >
-                      Giden wagty
-                    </Typography>
-                    <Typography
-                      fontWeight={500}
-                      fontFamily="Montserrat"
-                      color="#474747"
-                      textAlign="center"
-                      fontSize={15}
-                    >
-                      Işlän sagady
-                    </Typography>
-                  </Stack>
-                  {status === "loading..." ? (
+            {moment(selectedDay).isAfter(moment(), "day") ? (
+              ""
+            ) : (
+              <Modal
+                closeAfterTransition
+                open={modalOpen}
+                onClose={handleClose}
+                BackdropProps={{
+                  style: {
+                    backgroundColor: "#7F7F7F",
+                    opacity: "0.2",
+                  },
+                }}
+                disableAutoFocus
+              >
+                <Grow in={modalOpen}>
+                  <Box sx={style} height="605px">
                     <Stack
-                      direction="column"
-                      height="100%"
+                      direction="row"
                       alignItems="center"
-                      sx={{ gap: "10px", mt: "20px" }}
-                    >
-                      <CircularProgress />
-                      Loading...
-                    </Stack>
-                  ) : status === "failed" ? (
-                    <Typography
-                      textAlign="center"
+                      justifyContent="space-between"
                       sx={{
                         ...(moment().isSame(selectedDay, "day")
-                          ? { height: "32%" }
-                          : { height: "36%" }),
+                          ? {
+                              marginBottom: "0px",
+                            }
+                          : {
+                              marginBottom: "85px",
+                            }),
                       }}
-                      mt={4}
-                      fontSize={35}
                     >
-                      Maglumat ýok
-                    </Typography>
-                  ) : status === "succeeded" ? (
-                    data.length === 0 ? (
-                      <Typography>Maglumat ýok</Typography>
-                    ) : (
-                      <Stack
-                        // p="6px"
-                        sx={{
-                          ...(moment().isSame(selectedDay, "day")
-                            ? {
-                                minHeight: "33%",
-                                maxHeight: "28%",
-                              }
-                            : {
-                                // mt: -7,
-                                height: "30%",
-                              }),
-                        }}
-                        className="times"
-                        overflow="scroll"
+                      <Typography
+                        textAlign="end"
+                        fontFamily="Montserrat"
+                        fontSize={32}
+                        width="70%"
+                        color="#474747"
+                        fontWeight={500}
                       >
-                        <Stack
-                          direction="column"
-                          key={index}
-                          width="100%"
-                          spacing="10px"
-                          // height="10%"
-                        >
-                          {data.map((item, index) => (
-                            <Stack
-                              direction="row"
-                              alignItems="center"
-                              justifyContent="space-between"
-                              spacing={1}
-                            >
-                              <Typography
-                                fontFamily="Montserrat"
-                                color="#000"
-                                textAlign="center"
-                                fontSize={15}
-                              >
-                                {index + 1}
-                              </Typography>
-                              <Stack
-                                width="100%"
-                                spacing="5px"
-                                direction="row"
-                                alignItems="center"
-                                justifyContent="space-between"
-                                border="1px solid #d5d5d5"
-                                p="0 40px"
-                                borderRadius="50px"
-                                backgroundColor="#F5F6FA"
-                              >
-                                <Stack
-                                  height={25}
-                                  color="#A6A6A6"
-                                  fontSize={15}
-                                  fontWeight={400}
-                                  justifyContent="flex-start"
-                                  alignItems="center"
-                                  direction="row"
-                                >
-                                  <Typography
-                                    fontFamily="Montserrat"
-                                    color="#A6A6A6"
-                                    textAlign="center"
-                                    fontSize={15}
-                                  >
-                                    {moment(item.comeTime).format("HH:mm")}
-                                  </Typography>
-                                </Stack>
-                                <Stack
-                                  height={35}
-                                  color="#A6A6A6"
-                                  fontSize={15}
-                                  fontWeight={400}
-                                  alignItems="start"
-                                  justifyContent="center"
-                                >
-                                  {item.leaveTime != null
-                                    ? moment(item.leaveTime).format("HH:mm")
-                                    : ""}
-                                </Stack>
-                                <Stack
-                                  height={25}
-                                  fontSize={15}
-                                  fontWeight={400}
-                                  alignItems="start"
-                                  color="#A6A6A6"
-                                  justifyContent="center"
-                                >
-                                  {item.comeTime && item.leaveTime
-                                    ? moment
-                                        .duration(
-                                          moment(item.leaveTime).diff(
-                                            moment(item.comeTime)
-                                          )
-                                        )
-                                        .hours() +
-                                      ":" +
-                                      moment
-                                        .duration(
-                                          moment(item.leaveTime).diff(
-                                            moment(item.comeTime)
-                                          )
-                                        )
-                                        .minutes()
-                                    : ""}
-                                </Stack>
-                              </Stack>
-                            </Stack>
-                          ))}
-                        </Stack>
-                      </Stack>
-                    )
-                  ) : (
-                    ""
-                  )}
-                  <Stack
-                    direction="column"
-                    sx={{
-                      ...(moment().isSame(selectedDay, "day")
-                        ? {
-                            display: "flex",
-                          }
-                        : {
-                            display: "none",
-                          }),
-                    }}
-                  >
-                    <Stack spacing="10px" width="100%" pt="10px">
+                        {moment(selectedDay).format("DD.MM.YYYY")}
+                      </Typography>
+                      <IconButton onClick={handleClose}>
+                        <CloseIcon
+                          sx={{
+                            width: 38,
+                            height: 38,
+                            color: "#DC6262",
+                          }}
+                        />
+                      </IconButton>
+                    </Stack>
+                    <Stack
+                      alignItems="center"
+                      direction="row"
+                      justifyContent="center"
+                      spacing="20px"
+                      pt="10px"
+                      pb="10px"
+                      sx={{
+                        ...(moment().isSame(selectedDay, "day")
+                          ? {
+                              display: "flex",
+                            }
+                          : {
+                              display: "none",
+                            }),
+                      }}
+                    >
+                      <Button
+                        disabled={filteredData.length > 0}
+                        sx={{
+                          ...(filteredData.length == 0
+                            ? { backgroundColor: "#9FC2A5", color: "#fff" }
+                            : { backgroundColor: "#F5F6FA", color: "#474747" }),
+                          textTransform: "revert",
+                          fontFamily: "Montserrat",
+                          fontSize: 18,
+                          fontWeight: 600,
+                          width: 185,
+                          border: "1px solid #D5D5D5",
+                          borderRadius: "50px",
+                          height: 55,
+                          "&:hover": { background: "#78a880" },
+                        }}
+                        onClick={handleAddCameTime}
+                      >
+                        Geldim
+                      </Button>
+                      <Button
+                        disabled={filteredData.length == 0}
+                        sx={{
+                          ...(filteredData.length > 0
+                            ? { backgroundColor: "#9FC2A5", color: "#fff" }
+                            : { backgroundColor: "#F5F6FA", color: "#474747" }),
+                          textTransform: "revert",
+                          fontFamily: "Montserrat",
+                          fontSize: 18,
+                          fontWeight: 600,
+                          width: 185,
+                          borderRadius: "50px",
+                          border: "1px solid #D5D5D5",
+                          height: 55,
+
+                          "&:hover": { background: "#78a880" },
+                        }}
+                        onClick={handleAddLeaveTime}
+                      >
+                        Gitdim
+                      </Button>
+                    </Stack>
+                    <Stack
+                      spacing="10px"
+                      direction="row"
+                      justifyContent="space-between"
+                      p="0 10px 20px 30px"
+                      width="100%"
+                    >
                       <Typography
                         fontWeight={500}
                         fontFamily="Montserrat"
                         color="#474747"
                         fontSize={15}
-                        mb="9px"
+                        textAlign="center"
                       >
-                        Bellik
+                        Gelen wagty
                       </Typography>
-                      <TextField
-                        id="outlined-basic"
-                        label="Text"
-                        type="text"
-                        variant="outlined"
-                        value={eventText}
-                        autoComplete="off"
-                        name="username"
-                        onChange={(e) => setEventText(e.target.value)}
-                        sx={{
-                          fontFamily: "Montserrat",
-                          "& .MuiOutlinedInput-root": {
-                            height: "60px",
-                            borderRadius: "100px",
-                            background: "#F5F6FA",
-                          },
-                          width: "100%",
-                        }}
-                        InputLabelProps={{
-                          sx: {
-                            color: "#757575", // Set the label color
-                          },
-                        }}
-                      />
+                      <Typography
+                        fontWeight={500}
+                        fontFamily="Montserrat"
+                        color="#474747"
+                        textAlign="center"
+                        fontSize={15}
+                      >
+                        Giden wagty
+                      </Typography>
+                      <Typography
+                        fontWeight={500}
+                        fontFamily="Montserrat"
+                        color="#474747"
+                        textAlign="center"
+                        fontSize={15}
+                      >
+                        Işlän sagady
+                      </Typography>
                     </Stack>
-                    <Stack direction="row" alignItems="center">
-                      <Stack spacing="10px" width="100%" pt="8px">
+                    {status === "loading..." ? (
+                      <Stack
+                        direction="column"
+                        height="100%"
+                        alignItems="center"
+                        sx={{ gap: "10px", mt: "20px" }}
+                      >
+                        <CircularProgress />
+                        Loading...
+                      </Stack>
+                    ) : status === "failed" ? (
+                      <Typography
+                        textAlign="center"
+                        sx={{
+                          ...(moment().isSame(selectedDay, "day")
+                            ? { height: "32%" }
+                            : { height: "36%" }),
+                        }}
+                        mt={4}
+                        fontSize={35}
+                      >
+                        Maglumat ýok
+                      </Typography>
+                    ) : status === "succeeded" ? (
+                      data.length === 0 ? (
+                        <Typography>Maglumat ýok</Typography>
+                      ) : (
+                        <Stack
+                          // p="6px"
+                          sx={{
+                            ...(moment().isSame(selectedDay, "day")
+                              ? {
+                                  minHeight: "33%",
+                                  maxHeight: "28%",
+                                }
+                              : {
+                                  // mt: -7,
+                                  height: "30%",
+                                }),
+                          }}
+                          className="times"
+                          overflow="scroll"
+                        >
+                          <Stack
+                            direction="column"
+                            key={index}
+                            width="100%"
+                            spacing="10px"
+                            // height="10%"
+                          >
+                            {data.map((item, index) => (
+                              <Stack
+                                direction="row"
+                                alignItems="center"
+                                justifyContent="space-between"
+                                spacing={1}
+                              >
+                                <Typography
+                                  fontFamily="Montserrat"
+                                  color="#000"
+                                  textAlign="center"
+                                  fontSize={15}
+                                >
+                                  {index + 1}
+                                </Typography>
+                                <Stack
+                                  width="100%"
+                                  spacing="5px"
+                                  direction="row"
+                                  alignItems="center"
+                                  justifyContent="space-between"
+                                  border="1px solid #d5d5d5"
+                                  p="0 40px"
+                                  borderRadius="50px"
+                                  backgroundColor="#F5F6FA"
+                                >
+                                  <Stack
+                                    height={25}
+                                    color="#A6A6A6"
+                                    fontSize={15}
+                                    fontWeight={400}
+                                    justifyContent="flex-start"
+                                    alignItems="center"
+                                    direction="row"
+                                  >
+                                    <Typography
+                                      fontFamily="Montserrat"
+                                      color="#A6A6A6"
+                                      textAlign="center"
+                                      fontSize={15}
+                                    >
+                                      {moment(item.comeTime).format("HH:mm")}
+                                    </Typography>
+                                  </Stack>
+                                  <Stack
+                                    height={35}
+                                    color="#A6A6A6"
+                                    fontSize={15}
+                                    fontWeight={400}
+                                    alignItems="start"
+                                    justifyContent="center"
+                                  >
+                                    {item.leaveTime != null
+                                      ? moment(item.leaveTime).format("HH:mm")
+                                      : ""}
+                                  </Stack>
+                                  <Stack
+                                    height={25}
+                                    fontSize={15}
+                                    fontWeight={400}
+                                    alignItems="start"
+                                    color="#A6A6A6"
+                                    justifyContent="center"
+                                  >
+                                    {item.comeTime && item.leaveTime
+                                      ? moment
+                                          .duration(
+                                            moment(item.leaveTime).diff(
+                                              moment(item.comeTime)
+                                            )
+                                          )
+                                          .hours() +
+                                        ":" +
+                                        moment
+                                          .duration(
+                                            moment(item.leaveTime).diff(
+                                              moment(item.comeTime)
+                                            )
+                                          )
+                                          .minutes()
+                                      : ""}
+                                  </Stack>
+                                </Stack>
+                              </Stack>
+                            ))}
+                          </Stack>
+                        </Stack>
+                      )
+                    ) : (
+                      ""
+                    )}
+                    <Stack
+                      direction="column"
+                      sx={{
+                        ...(moment().isSame(selectedDay, "day")
+                          ? {
+                              display: "flex",
+                            }
+                          : {
+                              display: "none",
+                            }),
+                      }}
+                    >
+                      <Stack spacing="10px" width="100%" pt="10px">
                         <Typography
                           fontWeight={500}
                           fontFamily="Montserrat"
                           color="#474747"
                           fontSize={15}
+                          mb="9px"
                         >
-                          Bellik reňkini saýla
+                          Bellik
                         </Typography>
+                        <TextField
+                          id="outlined-basic"
+                          label="Text"
+                          type="text"
+                          variant="outlined"
+                          value={eventText}
+                          autoComplete="off"
+                          name="username"
+                          onChange={(e) => setEventText(e.target.value)}
+                          sx={{
+                            fontFamily: "Montserrat",
+                            "& .MuiOutlinedInput-root": {
+                              height: "60px",
+                              borderRadius: "100px",
+                              background: "#F5F6FA",
+                            },
+                            width: "100%",
+                          }}
+                          InputLabelProps={{
+                            sx: {
+                              color: "#757575", // Set the label color
+                            },
+                          }}
+                        />
+                      </Stack>
+                      <Stack direction="row" alignItems="center">
+                        <Stack spacing="10px" width="100%" pt="8px">
+                          <Typography
+                            fontWeight={500}
+                            fontFamily="Montserrat"
+                            color="#474747"
+                            fontSize={15}
+                          >
+                            Bellik reňkini saýla
+                          </Typography>
 
-                        <Stack
-                          direction="row"
-                          justifyContent="space-between"
-                          width="100%"
-                        >
                           <Stack
                             direction="row"
                             justifyContent="space-between"
-                            spacing="9px"
+                            width="100%"
                           >
-                            {colors.map((item) => (
-                              <Stack
-                                key={item.color}
-                                onClick={() => handleColorClick(item.color)}
-                                style={{
-                                  backgroundColor: item.color,
-                                  width: "52px",
-                                  height: "52px",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                  borderRadius: "100%",
-                                  color: "#fff",
-                                }}
-                              >
-                                {selectedColor === item.color ? (
-                                  <CheckIcon />
-                                ) : (
-                                  ""
-                                )}
-                              </Stack>
-                            ))}
-                          </Stack>
-                          <Button
-                            sx={{
-                              backgroundColor: "#F5F6FA",
-                              color: "#474747",
-                              textTransform: "revert",
-                              fontFamily: "Montserrat",
-                              fontSize: 18,
-                              fontWeight: 600,
-                              width: 185,
-                              borderRadius: "50px",
-                              border: "1px solid #D5D5D5",
-                              height: 55,
-                              mt: -0.5,
-                              "&:hover": {
-                                background: "#78a880",
-                                color: "#F5F6FA",
-                              },
-                            }}
-                            onClick={handleEventSave}
-                          >
-                            {/* <CheckIcon
+                            <Stack
+                              direction="row"
+                              justifyContent="space-between"
+                              spacing="9px"
+                            >
+                              {colors.map((item) => (
+                                <Stack
+                                  key={item.color}
+                                  onClick={() => handleColorClick(item.color)}
+                                  style={{
+                                    backgroundColor: item.color,
+                                    width: "52px",
+                                    height: "52px",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    borderRadius: "100%",
+                                    color: "#fff",
+                                  }}
+                                >
+                                  {selectedColor === item.color ? (
+                                    <CheckIcon />
+                                  ) : (
+                                    ""
+                                  )}
+                                </Stack>
+                              ))}
+                            </Stack>
+                            <Button
+                              sx={{
+                                backgroundColor: "#F5F6FA",
+                                color: "#474747",
+                                textTransform: "revert",
+                                fontFamily: "Montserrat",
+                                fontSize: 18,
+                                fontWeight: 600,
+                                width: 185,
+                                borderRadius: "50px",
+                                border: "1px solid #D5D5D5",
+                                height: 55,
+                                mt: -0.5,
+                                "&:hover": {
+                                  background: "#78a880",
+                                  color: "#F5F6FA",
+                                },
+                              }}
+                              onClick={handleEventSave}
+                            >
+                              {/* <CheckIcon
                         sx={{
                           width: 38,
                           height: 38,
@@ -974,15 +976,17 @@ const index = () => {
                         }}
                         
                       /> */}
-                            Goşmak
-                          </Button>
-                        </Stack>
-                      </Stack>{" "}
+                              Goşmak
+                            </Button>
+                          </Stack>
+                        </Stack>{" "}
+                      </Stack>
                     </Stack>
-                  </Stack>
-                </Box>
-              </Grow>
-            </Modal>
+                  </Box>
+                </Grow>
+              </Modal>
+            )}
+
             <Modal
               closeAfterTransition
               open={modalOpenNoteUpdate}
