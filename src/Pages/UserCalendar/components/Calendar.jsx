@@ -85,8 +85,6 @@ const CustomCalendar = ({ openModal, events, setStartDate, setEndDate }) => {
   };
   useEffect(() => {
     const { startDay, endDay } = generateCalendar();
-    console.log(startDay.format("YYYY-MM-DD"));
-    console.log(endDay.format("YYYY-MM-DD"));
 
     setStartDate(startDay.format("YYYY-MM-DD"));
     setEndDate(endDay.format("YYYY-MM-DD"));
@@ -107,7 +105,6 @@ const CustomCalendar = ({ openModal, events, setStartDate, setEndDate }) => {
     // setOpen(true);
   };
   // monthWorkData;
-  console.log(events);
 
   const isMarked = (day) => {
     // console.log(day.format("DD.MM.YYYY"));
@@ -125,7 +122,6 @@ const CustomCalendar = ({ openModal, events, setStartDate, setEndDate }) => {
         ? moment(item.comeTime).isSame(day, "day")
         : moment(item.date, "DD/MM/YYYY").isSame(day, "day")
     );
-  console.log(events);
 
   //   });
 

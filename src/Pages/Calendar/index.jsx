@@ -217,7 +217,6 @@ const index = () => {
       endDate: endDate,
       users: users,
     };
-    console.log(body);
 
     if (notify !== "" && dateNote !== null && dateHour !== undefined) {
       dispatch(postAdminNote(body));
@@ -288,8 +287,6 @@ const index = () => {
       // );
     }
   };
-  console.log(moment(dateNote2).format("YYYY-MM-DD"));
-  console.log(dateHour);
 
   const handleDeleteUser = (id) => {
     const deleted = users.filter((elem) => elem.id !== id);
@@ -373,7 +370,6 @@ const index = () => {
       //   ) || null
       // : userId,
     };
-    console.log(body);
 
     if (notify !== "" && projectId !== "") {
       dispatch(updateAdminNote(body));
@@ -548,9 +544,6 @@ const index = () => {
                                       fontSize={14}
                                       fontWeight={500}
                                     >
-                                      {console.log(
-                                        new Date(dateKey.date).toUTCString()
-                                      )}
                                       {moment(
                                         dateKey.date
                                         // "DD.MM.YYYY  HH:mm"
@@ -1628,7 +1621,6 @@ const index = () => {
                                 >
                                   Wagty
                                 </Typography>
-                                {console.log(date)}
                                 <MobileTimePicker
                                   ampm={false}
                                   defaultValue={

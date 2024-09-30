@@ -63,13 +63,11 @@ const index = () => {
   const monthWorkData = useSelector(
     (state) => state.getWorkDate.employeerTime.employeerTime
   );
-  console.log(users);
 
   const adminNotes = useSelector((state) => state.getWorkDate.adminNotes);
   const adminNotesForProject = useSelector(
     (state) => state.getWorkDate.adminNote
   );
-  console.log(adminNotes);
 
   const adminNoteStatus = useSelector(
     (state) => state.getWorkDate.statusAdminNote
@@ -104,8 +102,6 @@ const index = () => {
     };
     startDate !== "" ? dispatch(getUserMonthWorkTime(body)) : "";
   }, [startDate, dispatch]);
-  console.log(startDate);
-  console.log(endDate);
 
   useEffect(() => {
     const body = {
@@ -131,7 +127,6 @@ const index = () => {
       }
       return acc;
     }, {});
-  console.log(adminNotes);
 
   const groupedByDatee =
     adminNoteStatus === "succeeded" &&
@@ -203,7 +198,6 @@ const index = () => {
     eventText !== "" && dispatch(postNote(body));
     setEventText("");
   };
-  console.log(data);
 
   const handleUpdateNote = () => {
     const body = {
@@ -234,7 +228,6 @@ const index = () => {
     }
   };
   const handleEventUpdate = () => {
-    console.log("data");
     handleUpdateNote();
     setEvent({
       text: eventText,

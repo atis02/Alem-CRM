@@ -48,7 +48,6 @@ const index = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [date, setDate] = useState(dayjs());
   const dispatch = useDispatch();
-  console.log(data);
 
   const navigate = useNavigate();
 

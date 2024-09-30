@@ -26,7 +26,6 @@ export const getUserMonthWorkTime = createAsyncThunk(
     const response = await AxiosInstance.get(
       `/time/work/user?userId=${body.userId}&date=${body.date}`
     );
-    console.log(response.data);
 
     if (response.data.status === 404) {
       toast.error(response.data.message);

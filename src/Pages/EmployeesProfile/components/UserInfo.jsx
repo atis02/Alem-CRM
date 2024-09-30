@@ -27,7 +27,6 @@ const UserInfo = ({ data }) => {
     },
     { img: send, title: "Sms", link: "" },
   ];
-  console.log(data);
 
   return (
     <Stack
