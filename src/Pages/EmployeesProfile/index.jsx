@@ -70,7 +70,7 @@ const Index = () => {
         };
       }
 
-      if (entry.leaveTime) {
+      if (entry.comeTime) {
         const comeDate = new Date(entry.comeTime);
         const leaveDate = new Date(entry.leaveTime);
         const diffMinutes = (leaveDate - comeDate) / (1000 * 60); // Difference in minutes
@@ -238,7 +238,9 @@ const Index = () => {
                               )}
                             </TableCell>
                             <TableCell sx={style2}>
-                              {user.totalHours}:{user.totalMinutes}
+                              {user.leaveTime
+                                ? `${user.totalHours}:${user.totalMinutes}`
+                                : ""}
                             </TableCell>
                             <TableCell sx={{ ...style2, color: "tomato" }}>
                               {new Date(user.firstComeTime).getHours() >= 9
@@ -276,18 +278,27 @@ const Index = () => {
                                       {user.workSessions.map((session, idx) => (
                                         <TableRow key={idx}>
                                           <TableCell>
-                                            {moment(session.comeTime).format(
-                                              "HH:mm"
-                                            )}
+                                            {session.comeTime
+                                              ? moment(session.comeTime).format(
+                                                  "HH:mm"
+                                                )
+                                              : "Bellik ýok"}
                                           </TableCell>
                                           <TableCell>
-                                            {moment(session.leaveTime).format(
-                                              "HH:mm"
-                                            )}
+                                            {session.leaveTime
+                                              ? moment(
+                                                  session.leaveTime
+                                                ).format("HH:mm")
+                                              : "Bellik ýok"}
                                           </TableCell>
                                           <TableCell>
-                                            {Math.floor(session.duration / 60)}:
-                                            {Math.ceil(session.duration % 60)}
+                                            {user.leaveTime
+                                              ? `${Math.floor(
+                                                  session.duration / 60
+                                                )}:${Math.ceil(
+                                                  session.duration % 60
+                                                )}`
+                                              : "Bellik ýok"}
                                           </TableCell>
                                         </TableRow>
                                       ))}
