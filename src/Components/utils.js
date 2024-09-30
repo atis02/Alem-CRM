@@ -1,3 +1,5 @@
+import { styled, TableRow } from "@mui/material";
+
 export const getRandomColor = () => {
   const letters = "0123456789ABCDEF";
   let color = "#";
@@ -104,3 +106,20 @@ export const items = [
   { id: 7, title: "Giden wagty" },
   { id: 8, title: "Gijä galan sagady" },
 ];
+export const personalItems = [
+  { id: 1, title: "Sene" },
+  { id: 2, title: "Gelen wagty" },
+  { id: 3, title: "Giden wagty" },
+  { id: 4, title: "Işlän sagady" },
+  { id: 5, title: "Gijä galan sagady" },
+  { id: 6, title: "Bellik" },
+];
+export const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  fontFamily: "DM Sans, sans-serif",
+  "&:nth-of-type(odd)": {
+    backgroundColor: theme.palette.action.hover,
+  },
+  "&:hover": {
+    backgroundColor: theme.palette.action.selected,
+  },
+}));

@@ -279,12 +279,7 @@ const index = () => {
             className="notes"
             overflow="auto"
           >
-            <Stack
-              // minHeight={200}
-              maxHeight="100%"
-              // className="times"
-              // overflow="auto"
-            >
+            <Stack maxHeight="100%">
               <Typography
                 textAlign="start"
                 fontWeight={600}
@@ -329,12 +324,10 @@ const index = () => {
                           sx={{
                             padding: "3px",
                             borderRadius: "5px",
-                            // margin: "5px 0",
                           }}
                           direction="row"
                           alignItems="center"
                           gap="5px"
-                          // mb="20px"
                         >
                           <Stack borderRadius="100%" width={26} height={26}>
                             <img src={mark} alt="" />
@@ -352,9 +345,7 @@ const index = () => {
                               fontSize={14}
                               fontWeight={500}
                             >
-                              {moment(dateKey.date, "DD/MM/YYYY HH:mm").format(
-                                "DD.MM.YYYY HH:mm"
-                              )}
+                              {moment(dateKey.date).format("DD.MM.YYYY HH:mm")}
                             </Typography>
                           </Stack>
                         </Stack>
@@ -681,41 +672,7 @@ const index = () => {
                         Gitdim
                       </Button>
                     </Stack>
-                    <Stack
-                      spacing="10px"
-                      direction="row"
-                      justifyContent="space-between"
-                      p="0 10px 20px 30px"
-                      width="100%"
-                    >
-                      <Typography
-                        fontWeight={500}
-                        fontFamily="Montserrat"
-                        color="#474747"
-                        fontSize={15}
-                        textAlign="center"
-                      >
-                        Gelen wagty
-                      </Typography>
-                      <Typography
-                        fontWeight={500}
-                        fontFamily="Montserrat"
-                        color="#474747"
-                        textAlign="center"
-                        fontSize={15}
-                      >
-                        Giden wagty
-                      </Typography>
-                      <Typography
-                        fontWeight={500}
-                        fontFamily="Montserrat"
-                        color="#474747"
-                        textAlign="center"
-                        fontSize={15}
-                      >
-                        Işlän sagady
-                      </Typography>
-                    </Stack>
+
                     {status === "loading..." ? (
                       <Stack
                         direction="column"
@@ -731,7 +688,7 @@ const index = () => {
                         textAlign="center"
                         sx={{
                           ...(moment().isSame(selectedDay, "day")
-                            ? { height: "32%" }
+                            ? { height: "28%" }
                             : { height: "36%" }),
                         }}
                         mt={4}
@@ -748,17 +705,55 @@ const index = () => {
                           sx={{
                             ...(moment().isSame(selectedDay, "day")
                               ? {
-                                  minHeight: "33%",
+                                  minHeight: "42%",
                                   maxHeight: "28%",
                                 }
                               : {
                                   // mt: -7,
-                                  height: "30%",
+                                  height: "70%",
                                 }),
                           }}
                           className="times"
                           overflow="scroll"
                         >
+                          <Stack
+                            spacing="10px"
+                            direction="row"
+                            justifyContent="space-between"
+                            p="0 10px 20px 30px"
+                            width="100%"
+                            position="sticky"
+                            top="0"
+                            backgroundColor="#fff"
+                          >
+                            <Typography
+                              fontWeight={500}
+                              fontFamily="Montserrat"
+                              color="#474747"
+                              fontSize={15}
+                              textAlign="center"
+                            >
+                              Gelen wagty
+                            </Typography>
+                            <Typography
+                              fontWeight={500}
+                              fontFamily="Montserrat"
+                              color="#474747"
+                              textAlign="center"
+                              fontSize={15}
+                            >
+                              Giden wagty
+                            </Typography>
+                            <Typography
+                              fontWeight={500}
+                              fontFamily="Montserrat"
+                              color="#474747"
+                              textAlign="center"
+                              fontSize={15}
+                            >
+                              Işlän sagady
+                            </Typography>
+                          </Stack>
                           <Stack
                             direction="column"
                             key={index}
@@ -869,118 +864,112 @@ const index = () => {
                             }),
                       }}
                     >
-                      <Stack spacing="10px" width="100%" pt="10px">
-                        <Typography
-                          fontWeight={500}
-                          fontFamily="Montserrat"
-                          color="#474747"
-                          fontSize={15}
-                          mb="9px"
-                        >
-                          Bellik
-                        </Typography>
-                        <TextField
-                          id="outlined-basic"
-                          label="Text"
-                          type="text"
-                          variant="outlined"
-                          value={eventText}
-                          autoComplete="off"
-                          name="username"
-                          onChange={(e) => setEventText(e.target.value)}
-                          sx={{
-                            fontFamily: "Montserrat",
-                            "& .MuiOutlinedInput-root": {
-                              height: "60px",
-                              borderRadius: "100px",
-                              background: "#F5F6FA",
-                            },
-                            width: "100%",
-                          }}
-                          InputLabelProps={{
-                            sx: {
-                              color: "#757575", // Set the label color
-                            },
-                          }}
-                        />
-                      </Stack>
-                      <Stack direction="row" alignItems="center">
-                        <Stack spacing="10px" width="100%" pt="8px">
+                      <form onSubmit={handleEventSave}>
+                        <Stack spacing="10px" width="100%">
                           <Typography
                             fontWeight={500}
                             fontFamily="Montserrat"
                             color="#474747"
                             fontSize={15}
+                            mb="9px"
                           >
-                            Bellik reňkini saýla
+                            Bellik
                           </Typography>
+                          <TextField
+                            id="outlined-basic"
+                            label="Text"
+                            type="text"
+                            variant="outlined"
+                            value={eventText}
+                            autoComplete="off"
+                            name="username"
+                            onChange={(e) => setEventText(e.target.value)}
+                            sx={{
+                              fontFamily: "Montserrat",
+                              "& .MuiOutlinedInput-root": {
+                                height: "60px",
+                                borderRadius: "100px",
+                                background: "#F5F6FA",
+                              },
+                              width: "100%",
+                            }}
+                            InputLabelProps={{
+                              sx: {
+                                color: "#757575", // Set the label color
+                              },
+                            }}
+                          />
+                        </Stack>
+                        <Stack direction="row" alignItems="center">
+                          <Stack spacing="10px" width="100%" pt="8px">
+                            <Typography
+                              fontWeight={500}
+                              fontFamily="Montserrat"
+                              color="#474747"
+                              fontSize={15}
+                            >
+                              Bellik reňkini saýla
+                            </Typography>
 
-                          <Stack
-                            direction="row"
-                            justifyContent="space-between"
-                            width="100%"
-                          >
                             <Stack
                               direction="row"
                               justifyContent="space-between"
-                              spacing="9px"
+                              width="100%"
                             >
-                              {colors.map((item) => (
-                                <Stack
-                                  key={item.color}
-                                  onClick={() => handleColorClick(item.color)}
-                                  style={{
-                                    backgroundColor: item.color,
-                                    width: "52px",
-                                    height: "52px",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    borderRadius: "100%",
-                                    color: "#fff",
-                                  }}
-                                >
-                                  {selectedColor === item.color ? (
-                                    <CheckIcon />
-                                  ) : (
-                                    ""
-                                  )}
-                                </Stack>
-                              ))}
+                              <Stack
+                                direction="row"
+                                justifyContent="space-between"
+                                spacing="9px"
+                              >
+                                {colors.map((item) => (
+                                  <Stack
+                                    key={item.color}
+                                    onClick={() => handleColorClick(item.color)}
+                                    style={{
+                                      backgroundColor: item.color,
+                                      width: "52px",
+                                      height: "52px",
+                                      display: "flex",
+                                      alignItems: "center",
+                                      justifyContent: "center",
+                                      borderRadius: "100%",
+                                      color: "#fff",
+                                    }}
+                                  >
+                                    {selectedColor === item.color ? (
+                                      <CheckIcon />
+                                    ) : (
+                                      ""
+                                    )}
+                                  </Stack>
+                                ))}
+                              </Stack>
+                              <Button
+                                sx={{
+                                  backgroundColor: "#F5F6FA",
+                                  color: "#474747",
+                                  textTransform: "revert",
+                                  fontFamily: "Montserrat",
+                                  fontSize: 18,
+                                  fontWeight: 600,
+                                  width: 185,
+                                  borderRadius: "50px",
+                                  border: "1px solid #D5D5D5",
+                                  height: 55,
+                                  mt: -0.5,
+                                  "&:hover": {
+                                    background: "#78a880",
+                                    color: "#F5F6FA",
+                                  },
+                                }}
+                                type="submit"
+                              >
+                                Goşmak
+                              </Button>
                             </Stack>
-                            <Button
-                              sx={{
-                                backgroundColor: "#F5F6FA",
-                                color: "#474747",
-                                textTransform: "revert",
-                                fontFamily: "Montserrat",
-                                fontSize: 18,
-                                fontWeight: 600,
-                                width: 185,
-                                borderRadius: "50px",
-                                border: "1px solid #D5D5D5",
-                                height: 55,
-                                mt: -0.5,
-                                "&:hover": {
-                                  background: "#78a880",
-                                  color: "#F5F6FA",
-                                },
-                              }}
-                              onClick={handleEventSave}
-                            >
-                              {/* <CheckIcon
-                        sx={{
-                          width: 38,
-                          height: 38,
-                          color: "#9FC2A5",
-                        }}
-                        
-                      /> */}
-                              Goşmak
-                            </Button>
-                          </Stack>
-                        </Stack>{" "}
-                      </Stack>
+                          </Stack>{" "}
+                        </Stack>
+                      </form>
                     </Stack>
                   </Box>
                 </Grow>

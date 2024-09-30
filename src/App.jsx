@@ -6,6 +6,7 @@ import {
 import LandingPageLayout from "./layouts/LandingPageLayout";
 import Account from "./Pages/Account";
 import Employees from "./Pages/Employees";
+import EmployeesProfile from "./Pages/EmployeesProfile";
 import Main from "./Pages/Main";
 import Document from "./Pages/Document";
 import Login from "./layouts/LogIn";
@@ -47,6 +48,10 @@ function App() {
         {
           path: "/employees",
           element: <Employees />,
+        },
+        {
+          path: "/employees/:id",
+          element: <EmployeesProfile />,
         },
         {
           path: "/employees/working",

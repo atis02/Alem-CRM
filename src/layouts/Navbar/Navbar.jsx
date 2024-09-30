@@ -75,7 +75,8 @@ export default function Navbar() {
       height="75px"
       width="100%"
       backgroundColor="#fff"
-      boxShadow="0px 1px 8px #999"
+      // boxShadow="0px 1px 4px -11px #000"
+      // boxShadow=" 0px 11px 11px -6px rgba(71,71,71,1)"
       sx={{
         display: "flex",
         justifyContent: "space-between",

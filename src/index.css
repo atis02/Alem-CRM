@@ -23,6 +23,14 @@ body {
   background-image: linear-gradient(to bottom, #e9eeea, #9FC2A5) ;
   border-radius: 10px;
 }
+.times2::-webkit-scrollbar {
+  width: 4px;
+  background-color: #fff;
+}
+.times2::-webkit-scrollbar-thumb {
+  background-color: #9FC2A5 ;
+  border-radius: 10px;
+}
 .sidebar ::-webkit-scrollbar {
   width: 0.1px;
   background-color: #0B57D0;
@@ -107,6 +115,7 @@ background: #c6c6c6;
   position: absolute;
   opacity: 0;
   z-index: -1;
+  
 }
 
 .file-input-label {

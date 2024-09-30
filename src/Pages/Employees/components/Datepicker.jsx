@@ -27,7 +27,7 @@ const CustomDatePicker = ({ selectedDay, setDateNote }) => {
               sx: {
                 backgroundColor: "#f6e9e2", // Оранжевый цвет фона
                 borderRadius: "40px", // Закругленные углы
-                color: "#FF9E58 !important", // Белый текст
+                color: "#ff730f !important", // Белый текст
                 padding: "0 16px", // Внутренний отступ
                 height: 45,
                 width: 190,
@@ -38,13 +38,12 @@ const CustomDatePicker = ({ selectedDay, setDateNote }) => {
                   border: "1px solid #FF9E58", // Без границ
                 },
                 "& .MuiSvgIcon-root": {
-                  color: "#FF9E58", // Белая иконка календаря
+                  color: "#ff730f", // Белая иконка календаря
                   opacity: 0.7, // Прозрачность иконки
                 },
                 "& .MuiInputBase-input": {
-                  color: "#FF9E58", // Белый текст
+                  color: "#ff730f", // Белый текст
                   fontFamily: "DM Sans",
-                  opacity: 0.7, // Прозрачность текста
                 },
               },
             },
