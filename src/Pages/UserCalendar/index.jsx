@@ -214,7 +214,8 @@ const index = () => {
       : toast.error("Maglumatlary giriziň!");
     setEventText("");
   };
-  const handleEventSave = () => {
+  const handleEventSave = (e) => {
+    e.preventDefault();
     if (selectedDay) {
       const dateKey = selectedDay;
 
@@ -875,7 +876,7 @@ const index = () => {
                             variant="outlined"
                             value={eventText}
                             autoComplete="off"
-                            name="username"
+                            name="eventText"
                             onChange={(e) => setEventText(e.target.value)}
                             sx={{
                               fontFamily: "Montserrat",

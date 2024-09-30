@@ -73,7 +73,10 @@ const Index = () => {
       if (entry.comeTime) {
         const comeDate = new Date(entry.comeTime);
         const leaveDate = new Date(entry.leaveTime);
-        const diffMinutes = (leaveDate - comeDate) / (1000 * 60); // Difference in minutes
+        let diffMinutes = (leaveDate - comeDate) / (1000 * 60);
+        if (diffMinutes < 0) {
+          diffMinutes = 0;
+        }
         acc[date].totalMinutes += diffMinutes;
         acc[date].workSessions.push({
           comeTime: entry.comeTime,
@@ -111,6 +114,7 @@ const Index = () => {
       note,
     };
   });
+  console.log(result);
 
   return (
     <Box height="100%" width="100%" backgroundColor="#f2f9fc" overflow="auto">
@@ -238,9 +242,11 @@ const Index = () => {
                               )}
                             </TableCell>
                             <TableCell sx={style2}>
-                              {user.leaveTime
-                                ? `${user.totalHours}:${user.totalMinutes}`
-                                : ""}
+                              {
+                                // user.leaveTime != null?
+                                `${user.totalHours}:${user.totalMinutes}`
+                                // : ""
+                              }
                             </TableCell>
                             <TableCell sx={{ ...style2, color: "tomato" }}>
                               {new Date(user.firstComeTime).getHours() >= 9
@@ -292,7 +298,7 @@ const Index = () => {
                                               : "Bellik ýok"}
                                           </TableCell>
                                           <TableCell>
-                                            {user.leaveTime
+                                            {session.leaveTime
                                               ? `${Math.floor(
                                                   session.duration / 60
                                                 )}:${Math.ceil(
