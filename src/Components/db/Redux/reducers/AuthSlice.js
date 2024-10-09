@@ -18,8 +18,6 @@ export const login = createAsyncThunk("login", async (credentials) => {
     localStorage.setItem("token", JSON.stringify(token));
     return user;
   } catch (error) {
-    console.log(error);
-
     response.data.message === "error client request"
       ? toast.error("Ulanyjy tapylmady!")
       : toast.error(response.data.message);
@@ -34,12 +32,9 @@ export const register = createAsyncThunk("register", async (credentials) => {
     toast.success(
       response.data.message === "Registration seccseful"
         ? "Üstünlikli"
-        : response.message,
-      console.log(response.data.message)
+        : response.message
     );
   } catch (error) {
-    console.log(error);
-
     toast.error(response.data.message);
   }
 });

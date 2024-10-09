@@ -1,4 +1,4 @@
-import { styled, TableRow } from "@mui/material";
+import { Stack, styled, TableRow, Typography } from "@mui/material";
 
 export const getRandomColor = () => {
   const letters = "0123456789ABCDEF";
@@ -114,12 +114,36 @@ export const personalItems = [
   { id: 5, title: "Gijä galan sagady" },
   { id: 6, title: "Bellik" },
 ];
+export const projectTitles = [
+  { id: 1, title: "Proýekt" },
+  { id: 2, title: "Ýerine ýetirýän" },
+  { id: 3, title: "Wagty" },
+  { id: 4, title: "Derejesi" },
+  { id: 5, title: "Wajyplygy" },
+  { id: 6, title: "Statusy" },
+];
+export const projectTitlesForUser = [
+  { id: 1, title: "Proýekt" },
+  { id: 2, title: "Ýerine ýetirýän" },
+  { id: 3, title: "Wagty" },
+  { id: 4, title: "Derejesi" },
+  { id: 5, title: "Wajyplygy" },
+  { id: 6, title: "Statusy" },
+  { id: 7, title: "" },
+];
+export const projectTitlesFor = [
+  { id: 1, title: "Proýekt" },
+  { id: 3, title: "Wagty" },
+  { id: 4, title: "Derejesi" },
+  { id: 5, title: "Wajyplygy" },
+  { id: 6, title: "Statusy" },
+];
 export const StyledTableRow = styled(TableRow)(({ theme }) => ({
   fontFamily: "DM Sans, sans-serif",
   "&:nth-of-type(odd)": {
-    backgroundColor: theme.palette.action.hover,
+    backgroundColor: "#f9fafc",
   },
   "&:hover": {
-    backgroundColor: theme.palette.action.selected,
+    backgroundColor: "#f9fafc",
   },
 }));

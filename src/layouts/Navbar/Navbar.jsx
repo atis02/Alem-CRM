@@ -85,7 +85,7 @@ export default function Navbar() {
     >
       <TextField
         id="input-with-icon-textfield"
-        placeholder="Ähli resminamalary gözle"
+        placeholder="Gözle..."
         fullWidth
         sx={{
           width: { lg: "430px", md: "100%", sm: "100%", xs: "100%" },
@@ -229,7 +229,7 @@ export default function Navbar() {
               fontWeight={400}
               lineHeight="15px"
             >
-              {admin.position == null ? "ADMIN" : admin.position.name}
+              {admin.position != null && admin.position.name}
             </Typography>
           </Stack>
         </Link>

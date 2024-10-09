@@ -1,8 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import AxiosInstance from "./AxiosHelper";
 import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
-import { user } from "../../../utils";
 import moment from "moment";
 
 const initialState = {
@@ -161,7 +159,6 @@ export const postAdminNote = createAsyncThunk("postAdminNote", async (body) => {
   if (data.title !== "" && data.date !== null && data.users.length !== 0) {
     const resp = await AxiosInstance.post(`/holidays/post`, data);
     resp.data == "OK" ? toast.success("Üstünlikli!") : toast.error("Şowsuz!");
-    console.log(resp.data);
   } else {
     toast.error("Maglumatlary giriziň");
   }
@@ -197,7 +194,6 @@ export const postAdminNotes = createAsyncThunk(
       resp.data.message == "OK"
         ? toast.success("Üstünlikli!")
         : toast.error("Şowsuz!");
-      console.log(resp.data);
     } else {
       toast.error("Maglumatlary giriziň");
     }
@@ -220,7 +216,6 @@ export const updateAdminNote = createAsyncThunk(
       resp.data.message == "Successfully"
         ? toast.success("Üstünlikli!")
         : toast.error("Şowsuz!");
-      console.log(resp.data);
     } else {
       toast.error("Maglumatlary giriziň");
     }
@@ -240,7 +235,6 @@ export const deleteAdminNote = createAsyncThunk(
   async (body) => {
     const resp = await AxiosInstance.delete(`/holidays/remove?id=${body.id}`);
     resp.data == "OK" ? toast.success("Üstünlikli!") : toast.error("Şowsuz!");
-    console.log(resp.data);
     const response = await AxiosInstance.get(
       `/holidays/get?startDate=${body.startDate}&endDate=${body.endDate}`
     );
@@ -260,7 +254,6 @@ export const deleteAdminNotes = createAsyncThunk(
     resp.data.message == "Successfully"
       ? toast.success("Üstünlikli!")
       : toast.error("Şowsuz!");
-    console.log(resp.data);
 
     const response = await AxiosInstance.get(
       `/note/my/sent/notes?userId=${body.authorId}`
@@ -272,33 +265,10 @@ export const deleteAdminNotes = createAsyncThunk(
     return response.data;
   }
 );
-// export const updateAdminNote = createAsyncThunk(
-//   "updateAdminNote",
-//   async (body) => {
-//     const data = {
-//       id: body.id,
-//       title: body.title,
-//       color: body.color,
-//     };
 
-//     const resp = await AxiosInstance.patch(`/holidays/edit`, data);
-//     resp.data == "OK" ? toast.success("Üstünlikli!") : toast.error("Şowsuz!");
-//     console.log(resp.data);
-
-//     const response = await AxiosInstance.get(
-//       `/holidays/get?startDate=${body.startDate}&endDate=${body.endDate}`
-//     );
-
-//     if (response.data.status === 404) {
-//       toast.error(response.data.message);
-//     }
-//     return response.data;
-//   }
-// );
 export const updateAdminNotes = createAsyncThunk(
   "updateAdminNotes",
   async (body) => {
-    console.log(body);
     const data = {
       holidayId: body.noteId,
       title: body.content,
@@ -310,7 +280,6 @@ export const updateAdminNotes = createAsyncThunk(
     resp.data.msg == "OK"
       ? toast.success("Üstünlikli!")
       : toast.error("Şowsuz!");
-    console.log(resp.data);
 
     const response = await AxiosInstance.get(
       `holidays/get?startDate=${body.startDate}&endDate=${body.endDate}`
@@ -357,6 +326,25 @@ export const deleteUserNote = createAsyncThunk(
       toast.error(response.data.message);
     }
     return response.data;
+  }
+);
+export const postUserStatus = createAsyncThunk(
+  "postUserStatus",
+  async ({ body, data }) => {
+    const resp = await AxiosInstance.patch(`/user/updata/status`, data);
+
+    if (resp.data.status === 200) {
+      const response = await AxiosInstance.get(
+        `/time/work/user?userId=${body.userId}&date=${body.date}`
+      );
+
+      if (response.data.status === 404) {
+        toast.error(response.data.message);
+      }
+      return response.data;
+    } else {
+      toast.error("Ýalňyşlyk!");
+    }
   }
 );
 // Create the slice

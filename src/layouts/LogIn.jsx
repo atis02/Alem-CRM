@@ -58,7 +58,6 @@ const Login = () => {
           pass: password,
         });
 
-        console.log(response.data);
         if (response.data.status === 404) {
           toast.error(
             response.data.message == "Неправелный пароль"
@@ -77,16 +76,13 @@ const Login = () => {
         }
       }
     } catch (error) {
-      toast.error(
-        error.message === "Network Error"
-          ? "Internet baglanyşygy ýok"
-          : error.response.status
-          ? "Login ýada Açar söz nädogry!"
-          : error.response.data.message,
-        console.log(error.response),
+      error.message === "Network Error"
+        ? toast.error("Internet baglanyşygy ýok")
+        : error.response.status
+        ? toast.error("Login ýada Açar söz nädogry!")
+        : error.response.data.message,
+        dispatch(loginFailure(error.message || "Login failed"));
 
-        dispatch(loginFailure(error.message || "Login failed"))
-      );
       setLoading(false);
     }
   };

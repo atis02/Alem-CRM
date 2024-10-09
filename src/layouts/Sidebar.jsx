@@ -12,6 +12,7 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import Diversity3Icon from "@mui/icons-material/Diversity3";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import {
   MenuItem,
   Menu,
@@ -19,13 +20,14 @@ import {
   sidebarClasses,
   SubMenu,
 } from "react-pro-sidebar";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { logout } from "../Components/db/Redux/reducers/AuthSlice";
 import signOut from "../../public/images/Sign Out.png";
 import logo from "../../public/images/Logo.png";
-
+import projectIcon from "../../public/images/project.png";
+import projectWhiteIcon from "../../public/images/projectWhite.png";
 export default function SidebarNav(data, sendingData) {
   const user = JSON.parse(localStorage.getItem("CRM_USER"));
   const navigate = useNavigate();
@@ -37,6 +39,7 @@ export default function SidebarNav(data, sendingData) {
     // window.location.reload();
     toast.success("Üstünlikli çykyş!");
   };
+  const location = useLocation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -153,6 +156,29 @@ export default function SidebarNav(data, sendingData) {
                 icon={<CheckCircleOutlineIcon />}
               >
                 {user.role === "USER" ? "Bellikler" : "Kalendar"}
+              </MenuItem>
+              <MenuItem
+                component={<NavLink className="sideNav" to="/projects" />}
+                icon={
+                  // <img
+                  //   src={
+                  //     location.pathname === "/projects" ||
+                  //     location.pathname == "/projects/"
+                  //       ? projectIcon
+                  //       : projectWhiteIcon
+                  //   }
+                  //   alt=""
+                  //   style={{ width: 24, height: 24 }}
+                  // />
+                  <InventoryOutlinedIcon />
+                }
+                // style={{
+                //   ...(user.role === "USER"
+                //     ? { display: "none" }
+                //     : { display: "flex" }),
+                // }}
+              >
+                Edilmeli işler
               </MenuItem>
               <SubMenu
                 label="Işgärler"

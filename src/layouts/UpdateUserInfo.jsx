@@ -50,7 +50,6 @@ const UpdateUserInfo = ({ img, setFile }) => {
   const [live, setLive] = useState(admin.whereLive);
   const [value, setValue] = useState(dayjs(admin.birthday)); //user birthday
   const [position, setPosition] = useState([]);
-  console.log(dayjs(admin.birthday));
 
   const handleChange = (event) => {
     setSelectedValue(event.target.value);

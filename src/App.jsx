@@ -5,9 +5,11 @@ import {
 } from "react-router-dom";
 import LandingPageLayout from "./layouts/LandingPageLayout";
 import Account from "./Pages/Account";
+import Projects from "./Pages/Projects";
 import Employees from "./Pages/Employees";
 import EmployeesProfile from "./Pages/EmployeesProfile";
 import Main from "./Pages/Main";
+import ProjectDetail from "./Pages/ProjectDetail";
 import Document from "./Pages/Document";
 import Login from "./layouts/LogIn";
 import Regulating from "./Pages/Employees/components/Regulating";
@@ -21,6 +23,7 @@ function App() {
     }
     return children; // Render child component if logged in
   };
+  const user = JSON.parse(localStorage.getItem("CRM_USER"));
 
   const router = createBrowserRouter([
     {
@@ -44,6 +47,10 @@ function App() {
           path: "/document",
           element: <Document />,
         },
+        {
+          path: "/account",
+          element: <Account />,
+        },
 
         {
           path: "/employees",
@@ -62,8 +69,12 @@ function App() {
           element: <Regulating />,
         },
         {
-          path: "/account",
-          element: <Account />,
+          path: "/projects",
+          element: <Projects />,
+        },
+        {
+          path: "/projects/:id",
+          element: <ProjectDetail />,
         },
       ],
     },

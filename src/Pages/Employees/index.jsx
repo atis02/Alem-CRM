@@ -2,11 +2,13 @@ import {
   Box,
   Button,
   CircularProgress,
+  FormControlLabel,
   IconButton,
   Modal,
   Paper,
   Stack,
   styled,
+  Switch,
   Table,
   TableBody,
   TableCell,
@@ -29,6 +31,7 @@ import { getWorkTimeForDay } from "../../Components/db/Redux/api/GetComeTimeUser
 import dayjs from "dayjs";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
+import Register from "./components/Register";
 
 const index = () => {
   const [titleSearch, setTitleSearch] = useState("");
@@ -108,14 +111,13 @@ const index = () => {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: 650,
-    minHeight: "60%",
+    width: "40%",
     bgcolor: "background.paper",
-    borderRadius: "10px",
-    border: "1px solid green",
-    boxShadow: 44,
+    border: "1px solid lightgray",
     gap: "10px",
-    p: 4,
+    height: 650,
+    justifyContent: "center",
+    borderRadius: "20px",
     display: "flex",
     alignItems: "center",
     flexDirection: "column",
@@ -129,6 +131,7 @@ const index = () => {
       </Typography>
     );
   };
+
   const currentDate = moment()
     .set({
       year: 2024,
@@ -145,7 +148,7 @@ const index = () => {
       height="100vh"
       width="100%"
       backgroundColor="#f2f9fc"
-      overflow="scroll"
+      overflow="auto"
       p="10px"
     >
       <Stack
@@ -209,7 +212,7 @@ const index = () => {
       </Stack>
       <Stack
         backgroundColor="#fff"
-        minHeight="80vh"
+        minHeight="78vh"
         borderRadius="20px"
         pb="10px"
         boxShadow=" 0px 0px 8px -5px rgba(0,0,0,0.75)"
@@ -224,7 +227,7 @@ const index = () => {
             aria-describedby="modal-modal-description"
           >
             <Box sx={style}>
-              <Stack alignItems="end" width="100%" mt={-2}>
+              <Stack alignItems="end" width="100%" p="0 20px" mt={2}>
                 <IconButton
                   sx={{ fontWeight: 600, fontSize: 20 }}
                   onClick={handleClose}
@@ -232,204 +235,8 @@ const index = () => {
                   X
                 </IconButton>
               </Stack>
-              <Stack
-                direction="column"
-                alignItems="center"
-                justifyContent="center"
-                width={"100%"}
-              >
-                <Stack
-                  width="90%"
-                  height={450}
-                  borderRadius="20px"
-                  justifyContent="center"
-                >
-                  <Typography
-                    mb="10px"
-                    color="#474747"
-                    fontSize="30px"
-                    fontFamily="Montserrat"
-                    fontWeight="600"
-                    textAlign="start"
-                    ml={3}
-                  >
-                    Ulanyjy Goş
-                  </Typography>
-                  <form
-                    onSubmit={handleSubmit}
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      width: "100%",
-                      gap: "40px",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Stack direction="row" width="90%" spacing={2}>
-                      <TextField
-                        id="outlined-basic"
-                        label="Login"
-                        type="text"
-                        variant="outlined"
-                        autoComplete="off"
-                        name="username"
-                        onChange={(e) => setLogin(e.target.value)}
-                        sx={{
-                          borderRadius: "50px",
-                          fontFamily: "Montserrat",
-                          width: {
-                            lg: "70%",
-                            md: "70%",
-                            sm: "90%",
-                            xs: "90%",
-                          },
-                        }}
-                      />
-                      <TextField
-                        id="outlined-basic"
-                        label="Açar söz"
-                        type="text"
-                        name="password"
-                        onChange={(e) => setPassword(e.target.value)}
-                        variant="outlined"
-                        autoComplete="off"
-                        sx={{
-                          borderRadius: "50px",
-                          width: {
-                            lg: "70%",
-                            md: "70%",
-                            sm: "90%",
-                            xs: "90%",
-                          },
-                          fontFamily: "Montserrat",
-                        }}
-                      />
-                    </Stack>
-                    <Stack direction="row" width="90%" spacing={2}>
-                      <TextField
-                        id="outlined-basic"
-                        label="Adyňyz"
-                        type="text"
-                        name="password"
-                        onChange={(e) => setName(e.target.value)}
-                        variant="outlined"
-                        autoComplete="off"
-                        sx={{
-                          borderRadius: "50px",
-                          width: {
-                            lg: "70%",
-                            md: "70%",
-                            sm: "90%",
-                            xs: "90%",
-                          },
-                          fontFamily: "Montserrat",
-                        }}
-                      />
-                      <TextField
-                        id="outlined-basic"
-                        label="Familiýaňyz"
-                        type="text"
-                        name="password"
-                        onChange={(e) => setSurname(e.target.value)}
-                        variant="outlined"
-                        autoComplete="off"
-                        sx={{
-                          borderRadius: "50px",
-                          width: {
-                            lg: "70%",
-                            md: "70%",
-                            sm: "90%",
-                            xs: "90%",
-                          },
-                          fontFamily: "Montserrat",
-                        }}
-                      />
-                    </Stack>
-                    <Stack direction="row" width="90%" spacing={2}>
-                      <TextField
-                        id="outlined-basic"
-                        label="Poçtaňyz"
-                        type="email"
-                        name="password"
-                        onChange={(e) => setEmail(e.target.value)}
-                        variant="outlined"
-                        autoComplete="off"
-                        sx={{
-                          borderRadius: "50px",
-                          width: {
-                            lg: "70%",
-                            md: "70%",
-                            sm: "90%",
-                            xs: "90%",
-                          },
-                          fontFamily: "Montserrat",
-                        }}
-                      />
-                      <TextField
-                        id="outlined-basic"
-                        label="Telefon belgiňiz"
-                        type="text"
-                        name="password"
-                        value={phoneNumber}
-                        onChange={(e) => setPhoneNumber(e.target.value)}
-                        variant="outlined"
-                        autoComplete="off"
-                        sx={{
-                          borderRadius: "50px",
-                          width: {
-                            lg: "70%",
-                            md: "70%",
-                            sm: "90%",
-                            xs: "90%",
-                          },
-                          fontFamily: "Montserrat",
-                        }}
-                      />
-                    </Stack>
-                    <Stack
-                      // direction="row"
-                      direction={{
-                        lg: "row",
-                        md: "row",
-                        sm: "row",
-                        xs: "column",
-                      }}
-                      alignItems="center"
-                      justifyContent="flex-end"
-                      spacing={2}
-                      width="90%"
-                    >
-                      <Button
-                        type="submit"
-                        sx={{
-                          backgroundColor: "blue",
-                          color: "#fff",
-                          "&:hover": { background: "black" },
-                          fontFamily: "Montserrat",
-                          height: "55px",
-                          width: {
-                            lg: "160px",
-                            md: "160px",
-                            sm: "100%",
-                            xs: "100%",
-                          },
 
-                          borderRadius: "100px",
-                        }}
-                      >
-                        {loading ? (
-                          <Stack alignItems="center">
-                            <CircularProgress sx={{ color: "#fff" }} />
-                          </Stack>
-                        ) : (
-                          "Ulanyjy Goş"
-                        )}
-                      </Button>
-                    </Stack>
-                  </form>
-                </Stack>
-              </Stack>
+              <Register />
             </Box>
           </Modal>
         </Stack>
@@ -453,13 +260,24 @@ const index = () => {
                   Ulanyjy tapylmady!
                 </Typography>
               ) : (
-                <TableContainer sx={{ p: "10px" }}>
+                <TableContainer
+                  sx={{
+                    height: "77vh",
+                    overflowY: "scroll",
+                    borderRadius: "20px",
+                  }}
+                  className="times2"
+                >
                   <Table>
                     <TableHead>
                       <TableRow
                         sx={{
                           backgroundColor: "#F6FDFD",
                           fontFamily: "DM Sans",
+                          position: "sticky",
+                          top: 0,
+                          zIndex: 100,
+                          boxShadow: " 0px 12px 7px -14px rgba(71,71,71,1)",
                         }}
                       >
                         {items.map((elem) => (
@@ -481,11 +299,15 @@ const index = () => {
                       {filteredUsers.map((user, index) => (
                         <StyledTableRow
                           key={user.id}
-                          onClick={() => navigate(`/employees/${user.id}`)}
+                          onClick={() =>
+                            navigate(`/employees/${user.id}?date=${date}`)
+                          }
                           style={{ cursor: "pointer" }}
                         >
                           <TableCell sx={style2}>{index + 1}</TableCell>
-                          <TableCell sx={style2}>{user.name}</TableCell>
+                          <TableCell sx={{ ...style2, textAlign: "start" }}>
+                            {user.name}
+                          </TableCell>
                           <TableCell sx={style2}>{user.surname}</TableCell>
                           <TableCell sx={style2}>{user.phoneNumber}</TableCell>
                           <TableCell

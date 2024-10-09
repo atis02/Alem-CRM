@@ -19,6 +19,7 @@ import {
   turkmenMonths,
   turkmenWeekdays,
 } from "../../../Components/utils";
+import pattern from "../../../../public/images/pattern.png";
 
 const CustomCalendar = ({ openModal, events, setStartDate, setEndDate }) => {
   moment.locale("tk");
@@ -183,7 +184,7 @@ const CustomCalendar = ({ openModal, events, setStartDate, setEndDate }) => {
                       ...(day.month() === currentDate.month()
                         ? ""
                         : {
-                            backgroundImage: `url('/images/pattern.png')`,
+                            backgroundImage: `url(${pattern})`,
                             backgroundSize: "cover",
                             backgroundPosition: "center",
                           }),

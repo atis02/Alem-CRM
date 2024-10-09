@@ -1473,7 +1473,7 @@ const index = () => {
                           color="#474747"
                           mb="5px"
                         >
-                          DuýduryşY
+                          Duýduryş
                         </Typography>
                         <TextField
                           fullWidth

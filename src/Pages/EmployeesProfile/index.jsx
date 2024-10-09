@@ -14,21 +14,29 @@ import {
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { getUserMonthWorkTime } from "../../Components/db/Redux/api/ComeTimeSlice";
 import moment from "moment";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 import UserInfo from "./components/UserInfo";
 import { personalItems } from "../../Components/utils";
+import EmployeesProjects from "./components/EmployeesProjects";
 
 const Index = () => {
   const { id } = useParams();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const status = useSelector((state) => state.getWorkDate.statusMonth);
   const error = useSelector((state) => state.getWorkDate.errorMonth);
   const data = useSelector((state) => state.getWorkDate.employeerTime);
+  const params = searchParams.get("date");
 
   // State to track which day is expanded
   const [expandedDay, setExpandedDay] = useState(null);
@@ -36,7 +44,7 @@ const Index = () => {
   useEffect(() => {
     const body = {
       userId: id,
-      date: moment().format("YYYY-MM-DD"),
+      date: moment(params).format("YYYY-MM-DD"),
     };
     dispatch(getUserMonthWorkTime(body));
   }, [dispatch]);
@@ -65,12 +73,12 @@ const Index = () => {
           totalMinutes: 0,
           firstComeTime: entry.comeTime,
           lastLeaveTime: entry.leaveTime,
-          workSessions: [],
           note: entry.note,
+          workSessions: [],
         };
       }
 
-      if (entry.comeTime) {
+      if (entry.comeTime && entry.id) {
         const comeDate = new Date(entry.comeTime);
         const leaveDate = new Date(entry.leaveTime);
         let diffMinutes = (leaveDate - comeDate) / (1000 * 60);
@@ -82,6 +90,7 @@ const Index = () => {
           comeTime: entry.comeTime,
           leaveTime: entry.leaveTime,
           duration: diffMinutes,
+          note: entry.note,
         });
 
         if (acc[date].firstComeTime > entry.comeTime) {
@@ -92,6 +101,9 @@ const Index = () => {
           acc[date].lastLeaveTime < entry.leaveTime
         ) {
           acc[date].lastLeaveTime = entry.leaveTime;
+        }
+        if (!acc[date].note && entry.note) {
+          acc[date].note = entry.note;
         }
       }
 
@@ -114,7 +126,6 @@ const Index = () => {
       note,
     };
   });
-  console.log(result);
 
   return (
     <Box height="100%" width="100%" backgroundColor="#f2f9fc" overflow="auto">
@@ -145,6 +156,7 @@ const Index = () => {
           </Typography>
         </Link>
       </Stack>
+
       <Stack
         p={1}
         direction="row"
@@ -252,8 +264,10 @@ const Index = () => {
                               {new Date(user.firstComeTime).getHours() >= 9
                                 ? new Date(user.firstComeTime).getHours() -
                                   9 +
+                                  "(sag)" +
                                   ":" +
-                                  new Date(user.firstComeTime).getMinutes()
+                                  new Date(user.firstComeTime).getMinutes() +
+                                  "(min)"
                                 : ""}
                             </TableCell>
                             <TableCell sx={style2}>{user.note}</TableCell>
@@ -278,6 +292,7 @@ const Index = () => {
                                         <TableCell>Gelen wagty</TableCell>
                                         <TableCell>Giden wagty</TableCell>
                                         <TableCell>Işlän sagady</TableCell>
+                                        <TableCell>Belligi</TableCell>
                                       </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -301,10 +316,13 @@ const Index = () => {
                                             {session.leaveTime
                                               ? `${Math.floor(
                                                   session.duration / 60
-                                                )}:${Math.ceil(
+                                                )}(sag):${Math.ceil(
                                                   session.duration % 60
-                                                )}`
+                                                )}(min)`
                                               : "Bellik ýok"}
+                                          </TableCell>
+                                          <TableCell>
+                                            {session.note ? session.note : ""}
                                           </TableCell>
                                         </TableRow>
                                       ))}
@@ -326,6 +344,7 @@ const Index = () => {
           </Stack>
         </Stack>
       </Stack>
+      <EmployeesProjects data={data.projects} />
     </Box>
   );
 };

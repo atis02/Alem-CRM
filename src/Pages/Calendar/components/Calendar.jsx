@@ -45,7 +45,7 @@ const CustomCalendar = ({ openModal, events, setStartDate, setEndDate }) => {
         .clone()
         .endOf("month")
         .endOf("isoWeek")
-        .subtract(1, "day"); // End on Sunday
+        .subtract(1, "day");
     } else if (viewMode === "week") {
       startDay = currentDate.clone().startOf("isoWeek"); // Start from Monday
       endDay = currentDate.clone().endOf("isoWeek").subtract(1, "day"); // End on Sunday
@@ -55,7 +55,6 @@ const CustomCalendar = ({ openModal, events, setStartDate, setEndDate }) => {
     const day = startDay.clone().subtract(1, "day");
     const calendar = [];
 
-    // Generate the calendar weeks
     while (day.isBefore(endDay, "day")) {
       calendar.push(
         Array(7)
@@ -92,33 +91,17 @@ const CustomCalendar = ({ openModal, events, setStartDate, setEndDate }) => {
   }, [currentDate, viewMode, setStartDate, setEndDate]);
   const isSunday = (day) => day.day() === 0;
 
-  // const { calendar, firstDay, lastDay } = generateCalendar();
-
   const handleDayClick = (day) => {
     setSelectedDay(day),
       isSunday(day) ? "" : openModal(day.format("YYYY-MM-DD"));
-    // setSelectedDay(day);
-    // setEventText(events[day.format("YYYY-MM-DD")] || "");
-    // setOpen(true);
   };
-  // monthWorkData;
 
   const isMarked = (day) => {
-    // console.log(day.format("DD.MM.YYYY"));
-    return events.some((item) =>
-      user.role === "USER"
-        ? moment(item.comeTime).isSame(day, "day")
-        : // console.log(moment(item.comeTime).format("DD/MM/YYYY"))
-          moment(item.date, "DD/MM/YYYY").isSame(day, "day")
-    );
+    return events.some((item) => moment(item.date).isSame(day, "day"));
   };
 
   const filteredEvents = (day) =>
-    events.filter((item) =>
-      user.role === "USER"
-        ? moment(item.comeTime).isSame(day, "day")
-        : moment(item.date, "DD/MM/YYYY").isSame(day, "day")
-    );
+    events.filter((item) => moment(item.date).isSame(day, "day"));
 
   const renderCalendar = () => {
     if (viewMode === "day") {
@@ -208,125 +191,62 @@ const CustomCalendar = ({ openModal, events, setStartDate, setEndDate }) => {
                       {day.format("D")}
                     </Stack>
 
-                    {isMarked(day) && user.role === "USER"
-                      ? events
-                          .filter((item) =>
-                            moment(item.comeTime).isSame(day, "day")
-                          )
-                          .map((item, index) => (
-                            <Stack
-                              style={{
-                                fontSize: "14px",
-                                backgroundColor: item.color
-                                  ? "#e5dffb"
-                                  : "white",
-                                color: day ? item.color : "blue",
-                                borderLeft: `6px solid ${item.color}`,
-                                height: 25,
-                                fontWeight: 600,
-                                whiteSpace: "nowrap",
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                                width: "100%",
-                                display: " flex",
-                                position: "absolute",
-                                bottom: 0,
-                                alignItems: "center",
-                                justifyContent: "center",
-                              }}
-                              width="100%"
-                              direction="row"
-                              justifyContent="space-evenly"
-                              spacing={1}
-                              key={index}
+                    {isMarked(day) &&
+                      events
+                        .filter((item) => moment(item.date).isSame(day, "day"))
+                        .map((item, index) => (
+                          <Stack
+                            style={{
+                              fontSize: "14px",
+                              backgroundColor: item.color ? "#e5dffb" : "white",
+                              color: day ? item.color : "blue",
+                              borderLeft: `6px solid ${item.color}`,
+                              height: 25,
+                              fontWeight: 600,
+                              whiteSpace: "nowrap",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              width: "100%",
+                              display: " flex",
+                              position: "absolute",
+                              bottom: 0,
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                            width="100%"
+                            direction="row"
+                            justifyContent="space-evenly"
+                            spacing={1}
+                            key={index}
+                          >
+                            <Typography
+                              width="70%"
+                              whiteSpace="nowrap"
+                              overflow="hidden"
+                              textOverflow="ellipsis"
+                              textAlign="center"
                             >
-                              <Typography
-                                width="70%"
-                                whiteSpace="nowrap"
-                                overflow="hidden"
-                                textOverflow="ellipsis"
-                                textAlign="center"
+                              {user.role === "USER"
+                                ? Capitalize(item.note)
+                                : Capitalize(item.title)}
+                            </Typography>
+                            {filteredEvents(day).length !== (1 || 0) && (
+                              <Stack
+                                width={20}
+                                height={20}
+                                backgroundColor={item.color}
+                                color="#fff"
+                                alignItems="center"
+                                justifyContent="center"
+                                fontFamily="Montserrat"
+                                borderRadius="100%"
+                                fontSize={12}
                               >
-                                {user.role === "USER"
-                                  ? Capitalize(item.note)
-                                  : Capitalize(item.title)}
-                              </Typography>
-                              {filteredEvents(day).length !== (1 || 0) && (
-                                <Stack
-                                  width={20}
-                                  height={20}
-                                  backgroundColor={item.color}
-                                  color="#fff"
-                                  alignItems="center"
-                                  justifyContent="center"
-                                  fontFamily="Montserrat"
-                                  borderRadius="100%"
-                                  fontSize={12}
-                                >
-                                  + {filteredEvents(day).length - 1}
-                                </Stack>
-                              )}
-                            </Stack>
-                          ))
-                      : events
-                          .filter((item) =>
-                            moment(item.date, "DD/MM/YYYY").isSame(day, "day")
-                          )
-                          .map((item, index) => (
-                            <Stack
-                              style={{
-                                fontSize: "14px",
-                                backgroundColor: item.color
-                                  ? "#e5dffb"
-                                  : "white",
-                                color: day ? item.color : "blue",
-                                borderLeft: `6px solid ${item.color}`,
-                                height: 25,
-                                fontWeight: 600,
-                                whiteSpace: "nowrap",
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                                width: "100%",
-                                display: " flex",
-                                position: "absolute",
-                                bottom: 0,
-                                alignItems: "center",
-                                justifyContent: "center",
-                              }}
-                              width="100%"
-                              direction="row"
-                              justifyContent="space-evenly"
-                              spacing={1}
-                              key={index}
-                            >
-                              <Typography
-                                width="70%"
-                                whiteSpace="nowrap"
-                                overflow="hidden"
-                                textOverflow="ellipsis"
-                                textAlign="center"
-                              >
-                                {user.role === "USER"
-                                  ? Capitalize(item.note)
-                                  : Capitalize(item.title)}
-                              </Typography>
-                              {filteredEvents(day).length !== (1 || 0) && (
-                                <Stack
-                                  width={20}
-                                  height={20}
-                                  backgroundColor={item.color}
-                                  color="#fff"
-                                  alignItems="center"
-                                  justifyContent="center"
-                                  fontFamily="Montserrat"
-                                  borderRadius="100%"
-                                  fontSize={12}
-                                >
-                                  + {filteredEvents(day).length - 1}
-                                </Stack>
-                              )}
-                            </Stack>
-                          ))}
+                                + {filteredEvents(day).length - 1}
+                              </Stack>
+                            )}
+                          </Stack>
+                        ))}
                   </TableCell>
                 ))}
               </TableRow>
