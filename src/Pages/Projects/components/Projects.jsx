@@ -70,6 +70,7 @@ const Projects = () => {
     textOverflow: "ellipsis",
     fontWeight: 500,
   };
+
   const handleDeleteProject = (id) => {
     if (id) {
       const body = {

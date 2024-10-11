@@ -406,7 +406,7 @@ const index = () => {
             <Button
               sx={{
                 color: "#fff",
-                background: "#84D9AB",
+                background: "#DC6262",
                 textTransform: "revert",
                 width: "240px",
                 minHeight: "45px",

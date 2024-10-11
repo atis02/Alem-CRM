@@ -31,7 +31,14 @@ body {
   background-color: #9FC2A5 ;
   border-radius: 10px;
 }
-
+.css-honxw6 {
+  display: none !important;
+}
+.css-jn69v9 {
+  display: none !important;
+  
+  
+}
 .sidebar ::-webkit-scrollbar {
   width: 0.1px;
   background-color: #0B57D0;

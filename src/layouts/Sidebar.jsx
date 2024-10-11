@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Button,
   Stack,
@@ -14,6 +14,11 @@ import FileCopyIcon from "@mui/icons-material/FileCopy";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import {
+  KeyboardArrowDown as KeyboardArrowDownIcon,
+  KeyboardArrowUp as KeyboardArrowUpIcon,
+} from "@mui/icons-material";
+
+import {
   MenuItem,
   Menu,
   Sidebar,
@@ -28,7 +33,14 @@ import signOut from "../../public/images/Sign Out.png";
 import logo from "../../public/images/Logo.png";
 import projectIcon from "../../public/images/project.png";
 import projectWhiteIcon from "../../public/images/projectWhite.png";
+
 export default function SidebarNav(data, sendingData) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [activeMenu, setActiveMenu] = useState(null); // State to track active SubMenu
+
+  const handleMenuClick = () => {
+    setActiveMenu(!activeMenu);
+  };
   const user = JSON.parse(localStorage.getItem("CRM_USER"));
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -139,6 +151,10 @@ export default function SidebarNav(data, sendingData) {
             </MenuItem> */}
 
               <MenuItem
+                onClick={() => {
+                  setActiveMenu(false);
+                  setIsExpanded(false);
+                }}
                 component={<NavLink className="sideNav" to="/account" />}
                 icon={<AccountCircleIcon />}
               >
@@ -146,18 +162,30 @@ export default function SidebarNav(data, sendingData) {
               </MenuItem>
 
               <MenuItem
+                onClick={() => {
+                  setActiveMenu(false);
+                  setIsExpanded(false);
+                }}
                 component={<NavLink className="sideNav" to="/document" />}
                 icon={<FileCopyIcon />}
               >
                 Resminama
               </MenuItem>
               <MenuItem
+                onClick={() => {
+                  setActiveMenu(false);
+                  setIsExpanded(false);
+                }}
                 component={<NavLink className="sideNav" to="/" />}
                 icon={<CheckCircleOutlineIcon />}
               >
                 {user.role === "USER" ? "Bellikler" : "Kalendar"}
               </MenuItem>
               <MenuItem
+                onClick={() => {
+                  setActiveMenu(false);
+                  setIsExpanded(false);
+                }}
                 component={<NavLink className="sideNav" to="/projects" />}
                 icon={
                   // <img
@@ -185,6 +213,18 @@ export default function SidebarNav(data, sendingData) {
                 title="Işgärler"
                 component={<NavLink className="sideNav" to="/employees" />}
                 icon={<Diversity3Icon />}
+                suffix={
+                  isExpanded ? (
+                    <KeyboardArrowDownIcon sx={{ width: 30, height: 30 }} />
+                  ) : (
+                    <ArrowForwardIosIcon />
+                  )
+                }
+                open={activeMenu == true}
+                onClick={() => {
+                  handleMenuClick();
+                  setIsExpanded(!isExpanded);
+                }}
                 style={{
                   ...(user.role === "USER"
                     ? { display: "none" }
