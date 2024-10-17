@@ -8,6 +8,8 @@ import Project from "./components/Project";
 import { useSelector } from "react-redux";
 import AddTask from "./components/AddTask";
 import AddIcon from "@mui/icons-material/Add";
+import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
+
 
 const index = () => {
   const [projectName, setProjectName] = useState("");
@@ -53,11 +55,11 @@ const index = () => {
               ? ""
               : { justifyContent: "space-between" }),
           }}
-          p="0 20px"
+          p="10px 20px"
           borderRadius="12px"
           direction="row"
         >
-          <Stack>
+          <Stack direction='row'alignItems='center'spacing={2}>
             <Link
               to="#"
               onClick={() => navigate(-1)}
@@ -72,28 +74,18 @@ const index = () => {
               }}
             >
               <ArrowBackIcon />
+              </Link>
               <Typography
-                p="5px 10px"
-                fontSize="23px"
-                fontFamily="DM Sans"
-                fontWeight="600"
-                sx={{
-                  "&:hover": { textDecoration: "underline" },
-                }}
-              >
-                Proýektler
-              </Typography>
-            </Link>
-          </Stack>
-          <Typography
             width="90%"
             textAlign="center"
             fontSize="24px"
             fontFamily="DM Sans"
             fontWeight="600"
           >
-            {projectName !== "" && projectName[0].name}
+            {projectName !== "" &&projectName&& projectName[0].name}
           </Typography>
+          </Stack>
+          
           <Stack
             // width="20%"
             height="100%"
@@ -108,12 +100,25 @@ const index = () => {
                 : { display: "block" }),
             }}
           >
-            <IconButton
-              sx={{ color: "#757575", width: 45, height: 45 }}
-              onClick={handleOpenUserModal}
-            >
-              <AddIcon sx={{ color: "#000", width: 30, height: 30 }} />
-            </IconButton>
+           
+            <Button
+            sx={{
+              color: "#9A93FF",
+              textTransform: "revert",
+              background: "#e7e7fb",
+              "&:hover": { background: "#e7e7fb" },
+              gap: "10px",
+              width: 190,
+              height: 45,
+              borderRadius: "20px",
+            }}
+            variant="outlined"
+            onClick={handleOpenUserModal}
+
+          >
+            <PersonAddAltIcon />
+            Ýerine Ýetirýän
+          </Button>
           </Stack>
         </Stack>
         <Project setProjectName={handleChange} />

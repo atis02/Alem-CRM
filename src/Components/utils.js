@@ -100,11 +100,10 @@ export const items = [
   { id: 1, title: "№" },
   { id: 2, title: "Ady" },
   { id: 3, title: "Familiýasy" },
-  { id: 4, title: "Telefon belgisi" },
-  { id: 5, title: "Bellik" },
-  { id: 6, title: "Gelen wagty" },
-  { id: 7, title: "Giden wagty" },
-  { id: 8, title: "Gijä galan sagady" },
+  { id: 5, title: "Gelen wagty" },
+  { id: 6, title: "Giden wagty" },
+  { id: 7, title: "Gijä galan sagady" },
+  { id: 8, title: "Bellik" },
 ];
 export const personalItems = [
   { id: 1, title: "Sene" },

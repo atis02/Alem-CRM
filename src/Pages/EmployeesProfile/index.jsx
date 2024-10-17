@@ -247,7 +247,7 @@ const Index = () => {
                             <TableCell sx={style2}>
                               {user.lastLeaveTime == null ? (
                                 <Typography color="tomato">
-                                  Bellik ýok
+                                 -
                                 </Typography>
                               ) : (
                                 moment(user.lastLeaveTime).format("HH:mm")
@@ -261,15 +261,23 @@ const Index = () => {
                               }
                             </TableCell>
                             <TableCell sx={{ ...style2, color: "tomato" }}>
-                              {new Date(user.firstComeTime).getHours() >= 9
-                                ? new Date(user.firstComeTime).getHours() -
-                                  9 +
-                                  "(sag)" +
-                                  ":" +
-                                  new Date(user.firstComeTime).getMinutes() +
-                                  "(min)"
-                                : ""}
-                            </TableCell>
+  {new Date(user.firstComeTime).getHours() >= 9 ? (
+    (new Date(user.firstComeTime).getHours() - 9 > 0 || new Date(user.firstComeTime).getMinutes() > 0) ? (
+      <>
+        {new Date(user.firstComeTime).getHours() - 9 > 0 && (new Date(user.firstComeTime).getHours() - 9) + "(sag)"}
+        {new Date(user.firstComeTime).getMinutes() > 0 && (
+          <>
+            {new Date(user.firstComeTime).getHours() - 9 > 0 && ":"}
+            {new Date(user.firstComeTime).getMinutes()}(min)
+          </>
+        )}
+      </>
+    ) : ""
+  ) : (
+    ""
+  )}
+</TableCell>
+
                             <TableCell sx={style2}>{user.note}</TableCell>
                           </TableRow>
                           <TableRow>
@@ -303,14 +311,14 @@ const Index = () => {
                                               ? moment(session.comeTime).format(
                                                   "HH:mm"
                                                 )
-                                              : "Bellik ýok"}
+                                              : "-"}
                                           </TableCell>
                                           <TableCell>
                                             {session.leaveTime
                                               ? moment(
                                                   session.leaveTime
                                                 ).format("HH:mm")
-                                              : "Bellik ýok"}
+                                              : "-"}
                                           </TableCell>
                                           <TableCell>
                                             {session.leaveTime
@@ -319,7 +327,7 @@ const Index = () => {
                                                 )}(sag):${Math.ceil(
                                                   session.duration % 60
                                                 )}(min)`
-                                              : "Bellik ýok"}
+                                              : "-"}
                                           </TableCell>
                                           <TableCell>
                                             {session.note ? session.note : ""}

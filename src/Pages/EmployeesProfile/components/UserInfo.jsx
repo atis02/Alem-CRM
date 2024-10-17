@@ -41,12 +41,13 @@ const UserInfo = ({ data }) => {
       title: "Jaň ",
       link: `tel:${data.user && data.user.phoneNumber}`,
     },
+   
+    { img: send, title: "Sms", link: "" },
     {
       img: mail,
       title: "Poçta",
       link: `mailto:${data.user && data.user.mail}`,
     },
-    { img: send, title: "Sms", link: "" },
   ];
   useEffect(() => {
     setIsChecked(data.user && data.user.status);
@@ -135,6 +136,7 @@ const UserInfo = ({ data }) => {
             direction="row"
             alignItems="center"
             justifyContent="center"
+            spacing={1}
           >
             {userButtonsData.map((elem, index) => (
               <Stack
@@ -144,7 +146,7 @@ const UserInfo = ({ data }) => {
                     ? { display: "none" }
                     : { display: "block" }),
                 }}
-                width={60}
+                width={50}
                 alignItems="center"
               >
                 <IconButton
@@ -157,7 +159,8 @@ const UserInfo = ({ data }) => {
                     justifyContent: "center",
                   }}
                 >
-                  <a href={elem.link} target="_blank" rel="noopener noreferrer">
+                  <a href={elem.link} 
+                   style={{ width: 25, height: 25 }}target="_blank" rel="noopener noreferrer">
                     <img
                       src={elem.img}
                       style={{ width: 25, height: 25 }}
@@ -178,14 +181,7 @@ const UserInfo = ({ data }) => {
           </Stack>
         </Stack>
         <Stack width="60%">
-          <Typography
-            fontFamily="DM Sans"
-            fontWeight="500"
-            mt={1}
-            fontSize={16}
-          >
-            Hasap maglumatlary
-          </Typography>
+         
           <Stack>
             {data.user && data.user.mail && (
               <Stack direction="row" alignItems="center" spacing={1} mt="16px">
@@ -252,14 +248,7 @@ const UserInfo = ({ data }) => {
               </Stack>
             )}
           </Stack>
-          <Typography
-            fontFamily="DM Sans"
-            fontWeight="500"
-            mt={3}
-            fontSize={16}
-          >
-            Şahsy maglumatlar
-          </Typography>
+         
           <Stack>
             {data.user && data.user.birthday && (
               <Stack direction="row" alignItems="center" spacing={1} mt="16px">

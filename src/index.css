@@ -105,7 +105,6 @@ background-color: lightgray;
   height:  15px !important;
 }
 .active {
-  margin-left:2px ;
   border-top-left-radius:30px ;
   /* border-bottom-left-radius:40px ; */
   color: #9FC2A6 !important;
@@ -158,13 +157,12 @@ background: #c6c6c6;
   height:100px;
   cursor: pointer;
   font-size: 16px;
-  background-image: url('/images/camera.png');
+  background-image: url('../public/images/camera.svg');
   background-size: 40% 35%;
   background-repeat: no-repeat;
   transition: all ease 0.4s;
   background-color: transparent;
 }
-
 
 .pl { 
   width: 8em; 

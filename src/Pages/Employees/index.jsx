@@ -127,7 +127,7 @@ const index = () => {
   const Note = () => {
     return (
       <Typography color="tomato" fontSize={14}>
-        Bellik ýok
+        -
       </Typography>
     );
   };
@@ -309,22 +309,7 @@ const index = () => {
                             {user.name}
                           </TableCell>
                           <TableCell sx={style2}>{user.surname}</TableCell>
-                          <TableCell sx={style2}>{user.phoneNumber}</TableCell>
-                          <TableCell
-                            key={index}
-                            sx={{
-                              maxWidth: "150px",
-                              whiteSpace: "nowrap",
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                              textAlign: "center",
-                            }}
-                          >
-                            {user.employeeRegistrationTimes.length > 0 &&
-                            user.employeeRegistrationTimes[0]?.note
-                              ? user.employeeRegistrationTimes[0].note
-                              : ""}
-                          </TableCell>
+                          
 
                           <TableCell sx={style2}>
                             {user.employeeRegistrationTimes.length > 0 &&
@@ -358,38 +343,68 @@ const index = () => {
                             )}
                           </TableCell>
                           <TableCell sx={{ ...style2, color: "tomato" }}>
-                            {/* {user.employeeRegistrationTimes.length > 0 &&
-                            user.employeeRegistrationTimes[0]?.workingHours ? (
-                              user.employeeRegistrationTimes[0].workingHours
-                            ) : (
-                              <Note />
-                            )} */}
-                            {/* {console.log(
-                              new Date(
-                                user.employeeRegistrationTimes[0]?.comeTime
-                                  ? user.employeeRegistrationTimes[0].comeTime
-                                  : ""
-                              )
-                                .getHours()
-                                .toLocaleString()
-                            )} */}
-                            {new Date(
-                              user.employeeRegistrationTimes[0]?.comeTime
-                                ? user.employeeRegistrationTimes[0].comeTime
-                                : ""
-                            ).getHours() >= 9
-                              ? new Date(
-                                  user.employeeRegistrationTimes[0]?.comeTime
-                                    ? user.employeeRegistrationTimes[0].comeTime
-                                    : ""
-                                ).getHours() -
-                                9 +
-                                ":" +
-                                new Date(
-                                  user.employeeRegistrationTimes[0]?.comeTime
-                                    ? user.employeeRegistrationTimes[0].comeTime
-                                    : ""
-                                ).getMinutes()
+  {new Date(
+    user.employeeRegistrationTimes[0]?.comeTime
+      ? user.employeeRegistrationTimes[0].comeTime
+      : ""
+  ).getHours() >= 9 ? (
+    (new Date(
+      user.employeeRegistrationTimes[0]?.comeTime
+        ? user.employeeRegistrationTimes[0].comeTime
+        : ""
+    ).getHours() - 9 > 0 || new Date(
+      user.employeeRegistrationTimes[0]?.comeTime
+        ? user.employeeRegistrationTimes[0].comeTime
+        : ""
+    ).getMinutes() > 0) ? (
+      <>
+        {new Date(
+          user.employeeRegistrationTimes[0]?.comeTime
+            ? user.employeeRegistrationTimes[0].comeTime
+            : ""
+        ).getHours() - 9 > 0 && (new Date(
+          user.employeeRegistrationTimes[0]?.comeTime
+            ? user.employeeRegistrationTimes[0].comeTime
+            : ""
+        ).getHours() - 9) + '(sag)'}
+        {new Date(
+          user.employeeRegistrationTimes[0]?.comeTime
+            ? user.employeeRegistrationTimes[0].comeTime
+            : ""
+        ).getMinutes() > 0 && (
+          <>
+            {new Date(
+              user.employeeRegistrationTimes[0]?.comeTime
+                ? user.employeeRegistrationTimes[0].comeTime
+                : ""
+            ).getHours() - 9 > 0 && ":"}
+            {new Date(
+              user.employeeRegistrationTimes[0]?.comeTime
+                ? user.employeeRegistrationTimes[0].comeTime
+                : ""
+            ).getMinutes()}(min)
+          </>
+        )}
+      </>
+    ) : ""
+  ) : (
+    ""
+  )}
+</TableCell>
+
+                          <TableCell
+                            key={index}
+                            sx={{
+                              maxWidth: "230px",
+                              whiteSpace: "nowrap",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              textAlign: "center",
+                            }}
+                          >
+                            {user.employeeRegistrationTimes.length > 0 &&
+                            user.employeeRegistrationTimes[0]?.note
+                              ? user.employeeRegistrationTimes[0].note
                               : ""}
                           </TableCell>
                         </StyledTableRow>

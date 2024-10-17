@@ -118,7 +118,7 @@ export default function SidebarNav(data, sendingData) {
               </Stack>
             </Link>
           </Stack>
-          <Stack height="100%" mt={-15} justifyContent="center">
+          <Stack height="100%"  justifyContent="center">
             <Menu
               menuItemStyles={{
                 button: {

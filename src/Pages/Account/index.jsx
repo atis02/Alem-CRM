@@ -17,7 +17,6 @@ import {
 import React, { useEffect, useState } from "react";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import QRCodeComponent from "./components/QRCodeComponent";
 import { useDispatch, useSelector } from "react-redux";
 import { updateImg } from "../../Components/db/Redux/api/ImageUpdateSlice";
 import AxiosInstance from "../../Components/db/Redux/api/AxiosHelper";
