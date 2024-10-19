@@ -74,7 +74,7 @@ const Index = () => {
       <Typography
         p="10px 20px"
         fontSize={{ lg: "32px", md: "30px", sm: "25px", xs: "20px" }}
-        fontFamily="Poppins"
+        fontFamily="Montserrat"
         fontWeight="500"
       >
         Resminama saýla
@@ -108,8 +108,10 @@ const Index = () => {
             />
             <label htmlFor="file" className="file-input-label"></label>
             {files ? (
-              <Stack >
-                <Typography>Ady: {files.name} - {(files.size / 1024).toFixed(2)} KB</Typography>
+              <Stack>
+                <Typography>
+                  Ady: {files.name} - {(files.size / 1024).toFixed(2)} KB
+                </Typography>
               </Stack>
             ) : (
               <Typography>Faýl saýlaň</Typography>
@@ -132,17 +134,17 @@ const Index = () => {
             + Goş
           </Button>
         </Stack>
-        
+
         {status === "loading..." ? (
           <Stack
             direction="column"
             height="100%"
-            width='40%'
+            width="40%"
             alignItems="center"
             sx={{ gap: "10px", mt: "20px" }}
           >
             <CircularProgress />
-            <Typography>{progress }% Loading...</Typography>
+            <Typography>{progress}% Loading...</Typography>
           </Stack>
         ) : status === "failed" ? (
           <Typography textAlign="center" height="43%" mt={4}>
@@ -189,7 +191,7 @@ const Index = () => {
                         </Typography>
                       </Stack>
                     </NavLink>
-                    <IconButton  onClick={() => handleDeletePdf(elem.id)}>
+                    <IconButton onClick={() => handleDeletePdf(elem.id)}>
                       <img
                         style={{ width: 24, height: 24 }}
                         src={deleteIcon}

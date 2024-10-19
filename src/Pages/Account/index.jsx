@@ -76,7 +76,12 @@ export default function Account() {
       overflow="scroll"
     >
       <Stack>
-        <Typography p="5px 20px" fontSize="30px" fontWeight="600">
+        <Typography
+          p="5px 20px"
+          fontSize="30px"
+          fontWeight="500"
+          fontFamily="Montserrat"
+        >
           Profil
         </Typography>
         <Stack

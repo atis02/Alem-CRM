@@ -13,6 +13,7 @@ import Diversity3Icon from "@mui/icons-material/Diversity3";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
+import ForumIcon from '@mui/icons-material/Forum';
 import {
   KeyboardArrowDown as KeyboardArrowDownIcon,
   KeyboardArrowUp as KeyboardArrowUpIcon,
@@ -255,8 +256,19 @@ export default function SidebarNav(data, sendingData) {
                   >
                     Tertip - düzgünnama
                   </MenuItem>
+                
                 </Stack>
               </SubMenu>
+              <MenuItem
+                onClick={() => {
+                  setActiveMenu(false);
+                  setIsExpanded(false);
+                }}
+                component={<NavLink className="sideNav" to="/chat" />}
+                icon={<ForumIcon />}
+              >
+                Söhbetdeşlik
+              </MenuItem>
             </Menu>
           </Stack>
         </Stack>

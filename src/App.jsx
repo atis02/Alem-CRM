@@ -9,6 +9,7 @@ import Projects from "./Pages/Projects";
 import Employees from "./Pages/Employees";
 import EmployeesProfile from "./Pages/EmployeesProfile";
 import Main from "./Pages/Main";
+import Chat from './Pages/Chat'
 import ProjectDetail from "./Pages/ProjectDetail";
 import Document from "./Pages/Document";
 import Login from "./layouts/LogIn";
@@ -71,6 +72,10 @@ function App() {
         {
           path: "/projects",
           element: <Projects />,
+        },
+        {
+          path: "/chat",
+          element: <Chat />,
         },
         {
           path: "/projects/:id",

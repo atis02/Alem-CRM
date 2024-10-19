@@ -155,13 +155,13 @@ const index = () => {
         direction="row"
         alignItems="center"
         justifyContent="space-between"
-        p="0 30px 0 0"
+        p="0 30px 8px 0"
       >
         <Typography
-          p="10px 20px"
+          p="0px 20px 0px 10px"
           fontSize={{ lg: "30px", md: "30px", sm: "25px", xs: "20px" }}
           fontFamily="Montserrat"
-          fontWeight="600"
+          fontWeight="500"
         >
           Işgärler
         </Typography>
@@ -309,7 +309,6 @@ const index = () => {
                             {user.name}
                           </TableCell>
                           <TableCell sx={style2}>{user.surname}</TableCell>
-                          
 
                           <TableCell sx={style2}>
                             {user.employeeRegistrationTimes.length > 0 &&
@@ -343,54 +342,75 @@ const index = () => {
                             )}
                           </TableCell>
                           <TableCell sx={{ ...style2, color: "tomato" }}>
-  {new Date(
-    user.employeeRegistrationTimes[0]?.comeTime
-      ? user.employeeRegistrationTimes[0].comeTime
-      : ""
-  ).getHours() >= 9 ? (
-    (new Date(
-      user.employeeRegistrationTimes[0]?.comeTime
-        ? user.employeeRegistrationTimes[0].comeTime
-        : ""
-    ).getHours() - 9 > 0 || new Date(
-      user.employeeRegistrationTimes[0]?.comeTime
-        ? user.employeeRegistrationTimes[0].comeTime
-        : ""
-    ).getMinutes() > 0) ? (
-      <>
-        {new Date(
-          user.employeeRegistrationTimes[0]?.comeTime
-            ? user.employeeRegistrationTimes[0].comeTime
-            : ""
-        ).getHours() - 9 > 0 && (new Date(
-          user.employeeRegistrationTimes[0]?.comeTime
-            ? user.employeeRegistrationTimes[0].comeTime
-            : ""
-        ).getHours() - 9) + '(sag)'}
-        {new Date(
-          user.employeeRegistrationTimes[0]?.comeTime
-            ? user.employeeRegistrationTimes[0].comeTime
-            : ""
-        ).getMinutes() > 0 && (
-          <>
-            {new Date(
-              user.employeeRegistrationTimes[0]?.comeTime
-                ? user.employeeRegistrationTimes[0].comeTime
-                : ""
-            ).getHours() - 9 > 0 && ":"}
-            {new Date(
-              user.employeeRegistrationTimes[0]?.comeTime
-                ? user.employeeRegistrationTimes[0].comeTime
-                : ""
-            ).getMinutes()}(min)
-          </>
-        )}
-      </>
-    ) : ""
-  ) : (
-    ""
-  )}
-</TableCell>
+                            {new Date(
+                              user.employeeRegistrationTimes[0]?.comeTime
+                                ? user.employeeRegistrationTimes[0].comeTime
+                                : ""
+                            ).getHours() >= 9 ? (
+                              new Date(
+                                user.employeeRegistrationTimes[0]?.comeTime
+                                  ? user.employeeRegistrationTimes[0].comeTime
+                                  : ""
+                              ).getHours() -
+                                9 >
+                                0 ||
+                              new Date(
+                                user.employeeRegistrationTimes[0]?.comeTime
+                                  ? user.employeeRegistrationTimes[0].comeTime
+                                  : ""
+                              ).getMinutes() > 0 ? (
+                                <>
+                                  {new Date(
+                                    user.employeeRegistrationTimes[0]?.comeTime
+                                      ? user.employeeRegistrationTimes[0]
+                                          .comeTime
+                                      : ""
+                                  ).getHours() -
+                                    9 >
+                                    0 &&
+                                    new Date(
+                                      user.employeeRegistrationTimes[0]
+                                        ?.comeTime
+                                        ? user.employeeRegistrationTimes[0]
+                                            .comeTime
+                                        : ""
+                                    ).getHours() -
+                                      9 +
+                                      "(sag)"}
+                                  {new Date(
+                                    user.employeeRegistrationTimes[0]?.comeTime
+                                      ? user.employeeRegistrationTimes[0]
+                                          .comeTime
+                                      : ""
+                                  ).getMinutes() > 0 && (
+                                    <>
+                                      {new Date(
+                                        user.employeeRegistrationTimes[0]
+                                          ?.comeTime
+                                          ? user.employeeRegistrationTimes[0]
+                                              .comeTime
+                                          : ""
+                                      ).getHours() -
+                                        9 >
+                                        0 && ":"}
+                                      {new Date(
+                                        user.employeeRegistrationTimes[0]
+                                          ?.comeTime
+                                          ? user.employeeRegistrationTimes[0]
+                                              .comeTime
+                                          : ""
+                                      ).getMinutes()}
+                                      (min)
+                                    </>
+                                  )}
+                                </>
+                              ) : (
+                                ""
+                              )
+                            ) : (
+                              ""
+                            )}
+                          </TableCell>
 
                           <TableCell
                             key={index}
