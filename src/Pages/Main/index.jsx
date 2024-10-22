@@ -1,6 +1,6 @@
 import React from "react";
-import Calendar from "../Calendar";
 import UserCalendar from "../UserCalendar";
+import Employees from "../Employees";
 import { Box } from "@mui/material";
 
 const index = () => {
@@ -14,7 +14,7 @@ const index = () => {
       backgroundColor="#f5f6fa"
       overflow="auto"
     >
-      {user.role === "USER" ? <UserCalendar /> : <Calendar />}
+      {user.role === "USER" ? <UserCalendar /> : <Employees />}
     </Box>
   );
 };

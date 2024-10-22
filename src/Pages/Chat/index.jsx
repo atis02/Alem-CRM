@@ -94,7 +94,6 @@ const Regulating = () => {
     const user = JSON.parse(localStorage.getItem("CRM_USER"));
     setCurrentUser(user.id);
   }, [currentUser]);
-  console.log(selectChatHistory);
 
   useEffect(() => {
     const userChats = async () => {
@@ -109,7 +108,7 @@ const Regulating = () => {
       const temp = await getUsersChatApiIO(currentUser);
       setUsers(temp.users);
       setChats(temp.chats);
-      inputRef.current.focus();
+      inputRef.current && inputRef.current.focus();
     };
     fetchUsers();
 
@@ -117,7 +116,6 @@ const Regulating = () => {
     socket.emit("register", currentUser);
     socket.on("message", (data) => {
       const { senderId, receiverId, text } = data;
-      console.log(data);
 
       setSelectChatHistory((prevMessages) => [
         ...prevMessages,
@@ -130,6 +128,7 @@ const Regulating = () => {
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+      inputRef.current && inputRef.current.focus();
     }
   }, [selectChatHistory]);
 
@@ -162,7 +161,7 @@ const Regulating = () => {
       const { chatHistory } = data;
       setSelectChatHistory(chatHistory);
     });
-    inputRef.current.focus();
+    inputRef.current && inputRef.current.focus();
     return () => socket.off("getchat");
   };
 
@@ -194,7 +193,6 @@ const Regulating = () => {
     createChat(Id, userId);
     setShowModal(false);
   };
-  console.log(selectChatHistory);
 
   return (
     <Box
@@ -241,7 +239,6 @@ const Regulating = () => {
                   ))}
             </ul>
           </div> */}
-          {/* {console.log(chats)} */}
           <Stack
             width="30%"
             height="100%"
@@ -499,7 +496,6 @@ const Regulating = () => {
                       ref={inputRef}
                       type="text"
                       placeholder="Tekst..."
-                      focused
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
                     />

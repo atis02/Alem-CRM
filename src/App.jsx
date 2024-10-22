@@ -15,6 +15,7 @@ import Document from "./Pages/Document";
 import Login from "./layouts/LogIn";
 import Regulating from "./Pages/Employees/components/Regulating";
 import WorkTime from "./Pages/Employees/components/WorkTime";
+import Calendar from "./Pages/Calendar";
 function App() {
   const ProtectedRoute = ({ children }) => {
     const isLoggedIn = localStorage.getItem("CRM_USER");
@@ -43,6 +44,10 @@ function App() {
         {
           path: "/",
           element: <Main />,
+        },
+        {
+          path: "/calendar",
+          element: <Calendar />,
         },
         {
           path: "/document",

@@ -23,6 +23,7 @@ import AxiosInstance from "../../Components/db/Redux/api/AxiosHelper";
 import axios from "axios";
 import { Capitalize } from "../../Components/utils";
 import UpdateUserInfo from "../../layouts/UpdateUserInfo";
+import { ToastContainer } from "react-toastify";
 
 export default function Account() {
   const admin = JSON.parse(localStorage.getItem("CRM_USER"));
@@ -69,12 +70,8 @@ export default function Account() {
 
   const currentPassword = "AlemTilsimat50";
   return (
-    <Box
-      height="100vh"
-      width="100%"
-      backgroundColor="#F5F6FA"
-      overflow="scroll"
-    >
+    <Box height="100vh" width="100%" backgroundColor="#F5F6FA" overflow="auto">
+      <ToastContainer />
       <Stack>
         <Typography
           p="5px 20px"
@@ -87,13 +84,13 @@ export default function Account() {
         <Stack
           backgroundColor="#fff"
           direction="column"
-          spacing={1}
-          minHeight="79vh"
+          // spacing={1}
+          minHeight="80vh"
           borderRadius="20px"
           m="0px 20px 10px 20px"
           boxShadow=" 0px 0px 5px -2px rgba(0,0,0,0.75)"
         >
-          <Stack alignItems="center" direction="column" pt={2}>
+          <Stack alignItems="center" direction="column" pt={1}>
             <IconButton
               sx={{
                 "&:hover .file-input-label2": {
@@ -113,8 +110,8 @@ export default function Account() {
                 <label htmlFor="file" className="file-input-label2"></label>
               </Stack>
               <Stack
-                width={80}
-                height={80}
+                width={70}
+                height={70}
                 borderRadius="100px"
                 alignItems="center"
                 justifyContent="center"
@@ -133,8 +130,8 @@ export default function Account() {
                 ) : (
                   <CameraAltIcon
                     sx={{
-                      width: 25,
-                      height: 25,
+                      width: 23,
+                      height: 23,
                     }}
                   />
                 )}
@@ -150,216 +147,6 @@ export default function Account() {
             direction={{ lg: "row", md: "row", sm: "column", xs: "column" }}
             justifyContent="center"
           >
-            {/* <Stack alignItems="center">
-              <form
-                // onSubmit={handleSubmit}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  width: 360,
-                  gap: "35px",
-                }}
-              >
-                <Stack direction="column" justifyContent="space-between">
-                  <Typography
-                    fontSize={15}
-                    fontWeight={600}
-                    textAlign="start"
-                    color="#474747"
-                    mb="5px"
-                  >
-                    Ady
-                  </Typography>
-                  <TextField
-                    fullWidth
-                    value={username.toUpperCase()}
-                    placeholder="Adyňyz"
-                    type="text"
-                    name="password"
-                    onChange={(e) => setUserName(e.target.value)}
-                    variant="outlined"
-                    InputProps={{
-                      sx: {
-                        transition: "all ease-in-out 0.2s",
-                        borderRadius: "35px",
-                        backgroundColor: "#F5F6FA",
-                        height: "55px",
-                        color: "#000",
-                        outline: "none",
-                        boxShadow: "none",
-                      },
-                    }}
-                  />
-                </Stack>
-                <Stack direction="column" justifyContent="space-between">
-                  <Typography
-                    fontSize={15}
-                    fontWeight={600}
-                    textAlign="start"
-                    color="#474747"
-                    mb="5px"
-                  >
-                    Poçta
-                  </Typography>
-                  <TextField
-                    fullWidth
-                    value={email.toUpperCase()}
-                    placeholder="@gmail.com"
-                    type="email"
-                    name="email"
-                    onChange={(e) => setEmail(e.target.value)}
-                    variant="outlined"
-                    InputProps={{
-                      sx: {
-                        transition: "all ease-in-out 0.2s",
-                        borderRadius: "35px",
-                        backgroundColor: "#F5F6FA",
-                        height: "55px",
-                        color: "#000",
-                        outline: "none",
-                        boxShadow: "none",
-                      },
-                    }}
-                  />
-                </Stack>
-                <Stack direction="column" justifyContent="space-between">
-                  <Typography
-                    fontSize={15}
-                    fontWeight={600}
-                    textAlign="start"
-                    color="#474747"
-                    mb="5px"
-                  >
-                    Telefon belgi
-                  </Typography>
-                  <TextField
-                    fullWidth
-                    value={phoneNumber}
-                    placeholder="Telefon Belgi"
-                    type="text"
-                    variant="outlined"
-                    name="username"
-                    onChange={(e) => setPhoneNumber(e.target.value)}
-                    InputProps={{
-                      sx: {
-                        transition: "all ease-in-out 0.2s",
-                        borderRadius: "35px",
-                        backgroundColor: "#F5F6FA",
-                        height: "55px",
-                        color: "#000",
-                        outline: "none",
-                        boxShadow: "none",
-                      },
-                    }}
-                  />
-                </Stack>
-              </form>
-            </Stack> 
-             <Stack alignItems="center">
-              <form
-                // onSubmit={handleSubmit}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  width: 360,
-                  gap: "35px",
-                }}
-              >
-                <Stack direction="column" justifyContent="space-between">
-                  <Typography
-                    fontSize={15}
-                    fontWeight={600}
-                    textAlign="start"
-                    color="#474747"
-                    mb="5px"
-                  >
-                    Familiýasy
-                  </Typography>
-                  <TextField
-                    fullWidth
-                    value={lastName.toUpperCase()}
-                    placeholder="Familiýasy"
-                    type="text"
-                    name="lastName"
-                    onChange={(e) => setLastName(e.target.value)}
-                    variant="outlined"
-                    InputProps={{
-                      sx: {
-                        transition: "all ease-in-out 0.2s",
-                        borderRadius: "35px",
-                        backgroundColor: "#F5F6FA",
-                        height: "55px",
-                        color: "#000",
-                        outline: "none",
-                        boxShadow: "none",
-                      },
-                    }}
-                  />
-                </Stack>
-                <Stack direction="column" justifyContent="space-between">
-                  <Typography
-                    fontSize={15}
-                    fontWeight={600}
-                    textAlign="start"
-                    color="#474747"
-                    mb="5px"
-                  >
-                    Wezipe
-                  </Typography>
-                  <TextField
-                    fullWidth
-                    value={position.toUpperCase()}
-                    placeholder="Işleýän wezipäňiz"
-                    type="text"
-                    name="Işleýän wezipäňiz"
-                    onChange={(e) => setPosition(e.target.value)}
-                    variant="outlined"
-                    InputProps={{
-                      sx: {
-                        transition: "all ease-in-out 0.2s",
-                        borderRadius: "35px",
-                        backgroundColor: "#F5F6FA",
-                        height: "55px",
-                        color: "#000",
-                        outline: "none",
-                        boxShadow: "none",
-                      },
-                    }}
-                  />
-                </Stack>
-                <Stack direction="column" justifyContent="space-between">
-                  <Typography
-                    fontSize={15}
-                    fontWeight={600}
-                    textAlign="start"
-                    color="#474747"
-                    mb="5px"
-                  >
-                    Salgy
-                  </Typography>
-                  <TextField
-                    fullWidth
-                    value={address}
-                    placeholder="Öz ýaşaýan salgyňyz"
-                    type="text"
-                    variant="outlined"
-                    name="salgy"
-                    onChange={(e) => setAddress(e.target.value)}
-                    InputProps={{
-                      sx: {
-                        transition: "all ease-in-out 0.2s",
-                        borderRadius: "35px",
-                        backgroundColor: "#F5F6FA",
-                        height: "55px",
-                        color: "#000",
-                        outline: "none",
-                        boxShadow: "none",
-                      },
-                    }}
-                  />
-                </Stack>
-              </form>
-            </Stack>  */}
             <UpdateUserInfo img={file} setFile={() => setFile(null)} />
           </Stack>
         </Stack>

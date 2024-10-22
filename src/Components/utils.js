@@ -105,6 +105,12 @@ export const items = [
   { id: 7, title: "Gijä galan sagady" },
   { id: 8, title: "Bellik" },
 ];
+export const NonActiveUserItems = [
+  { id: 1, title: "№" },
+  { id: 2, title: "Ady" },
+  { id: 3, title: "Familiýasy" },
+  { id: 4, title: "Statusy" },
+];
 export const personalItems = [
   { id: 1, title: "Sene" },
   { id: 2, title: "Gelen wagty" },
@@ -146,3 +152,10 @@ export const StyledTableRow = styled(TableRow)(({ theme }) => ({
     backgroundColor: "#f9fafc",
   },
 }));
+export const  docTypes= [
+ { id:0, title:'Dogluş hakynda şahadatnama'},
+ { id:1, title:'Pasport'},
+ { id:2, title:'Nika hakynda şahadatnama'},
+ { id:3, title:'Diplom , Attestat'},
+ { id:4, title:'Sertifikat'},
+]

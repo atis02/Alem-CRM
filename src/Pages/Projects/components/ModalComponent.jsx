@@ -164,7 +164,7 @@ const ModalComponent = ({ open, handleClose }) => {
               fontWeight={400}
               fontFamily="DM Sans"
             >
-              Täze proýekt döretmek
+              Täze proýekt
             </Typography>
             <IconButton onClick={handleClose}>
               <CloseIcon sx={{ color: "#fff" }} />

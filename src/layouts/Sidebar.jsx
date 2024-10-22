@@ -14,6 +14,7 @@ import FileCopyIcon from "@mui/icons-material/FileCopy";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import ForumIcon from '@mui/icons-material/Forum';
+import SettingsIcon from "@mui/icons-material/Settings";
 import {
   KeyboardArrowDown as KeyboardArrowDownIcon,
   KeyboardArrowUp as KeyboardArrowUpIcon,
@@ -119,7 +120,7 @@ export default function SidebarNav(data, sendingData) {
               </Stack>
             </Link>
           </Stack>
-          <Stack height="100%"  justifyContent="center">
+          <Stack height="100%" justifyContent="center">
             <Menu
               menuItemStyles={{
                 button: {
@@ -131,31 +132,7 @@ export default function SidebarNav(data, sendingData) {
                 },
               }}
             >
-              {/* <MenuItem
-              component={<NavLink className="sideNav" to="/" />}
-              icon={<HomeIcon />}
-            >
-              Baş sahypa
-            </MenuItem>
-            <MenuItem
-              component={<NavLink className="sideNav" to="/dashboard" />}
-              icon={<DashboardIcon />}
-            >
-              Dolandyryş
-            </MenuItem> */}
-
-              {/* <MenuItem
-              component={<NavLink className="sideNav" to="/chat" />}
-              icon={<TelegramIcon />}
-            >
-              Söhbetdeşlik
-            </MenuItem> */}
-
               <MenuItem
-                onClick={() => {
-                  setActiveMenu(false);
-                  setIsExpanded(false);
-                }}
                 component={<NavLink className="sideNav" to="/account" />}
                 icon={<AccountCircleIcon />}
               >
@@ -163,56 +140,32 @@ export default function SidebarNav(data, sendingData) {
               </MenuItem>
 
               <MenuItem
-                onClick={() => {
-                  setActiveMenu(false);
-                  setIsExpanded(false);
-                }}
                 component={<NavLink className="sideNav" to="/document" />}
                 icon={<FileCopyIcon />}
               >
                 Resminama
               </MenuItem>
               <MenuItem
-                onClick={() => {
-                  setActiveMenu(false);
-                  setIsExpanded(false);
-                }}
-                component={<NavLink className="sideNav" to="/" />}
+                component={
+                  <NavLink
+                    className="sideNav"
+                    to={user.role === "USER" ? "/" : "/calendar"}
+                  />
+                }
                 icon={<CheckCircleOutlineIcon />}
               >
                 {user.role === "USER" ? "Bellikler" : "Kalendar"}
               </MenuItem>
               <MenuItem
-                onClick={() => {
-                  setActiveMenu(false);
-                  setIsExpanded(false);
-                }}
                 component={<NavLink className="sideNav" to="/projects" />}
-                icon={
-                  // <img
-                  //   src={
-                  //     location.pathname === "/projects" ||
-                  //     location.pathname == "/projects/"
-                  //       ? projectIcon
-                  //       : projectWhiteIcon
-                  //   }
-                  //   alt=""
-                  //   style={{ width: 24, height: 24 }}
-                  // />
-                  <InventoryOutlinedIcon />
-                }
-                // style={{
-                //   ...(user.role === "USER"
-                //     ? { display: "none" }
-                //     : { display: "flex" }),
-                // }}
+                icon={<InventoryOutlinedIcon />}
               >
                 Edilmeli işler
               </MenuItem>
-              <SubMenu
+              {/* <SubMenu
                 label="Işgärler"
                 title="Işgärler"
-                component={<NavLink className="sideNav" to="/employees" />}
+                component={<NavLink className="sideNav" to="/" />}
                 icon={<Diversity3Icon />}
                 suffix={
                   isExpanded ? (
@@ -246,24 +199,28 @@ export default function SidebarNav(data, sendingData) {
                   >
                     Iş wagtlary
                   </MenuItem>
-                  <MenuItem
-                    component={
-                      <NavLink
-                        className="sideNav2"
-                        to="/employees/regulating"
-                      />
-                    }
-                  >
-                    Tertip - düzgünnama
-                  </MenuItem>
-                
                 </Stack>
-              </SubMenu>
+              </SubMenu> */}
               <MenuItem
-                onClick={() => {
-                  setActiveMenu(false);
-                  setIsExpanded(false);
+                component={<NavLink className="sideNav" to="/" />}
+                icon={<Diversity3Icon />}
+                style={{
+                  ...(user.role === "USER"
+                    ? { display: "none" }
+                    : { display: "flex" }),
                 }}
+              >
+                Işgärler
+              </MenuItem>
+              <MenuItem
+                icon={<SettingsIcon />}
+                component={
+                  <NavLink className="sideNav" to="/employees/working" />
+                }
+              >
+                Sazlamalar
+              </MenuItem>
+              <MenuItem
                 component={<NavLink className="sideNav" to="/chat" />}
                 icon={<ForumIcon />}
               >

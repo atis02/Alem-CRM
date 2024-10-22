@@ -142,13 +142,9 @@ const UpdateUserInfo = ({ img, setFile }) => {
             width="90%"
             spacing={2}
           >
-            <Stack
-              direction="column"
-              width="100%"
-              justifyContent="space-between"
-            >
+            <Stack direction="column" width="100%" justifyContent="flex-start">
               <Typography
-                fontSize={15}
+                fontSize={13}
                 fontWeight={600}
                 textAlign="start"
                 color="#474747"
@@ -167,20 +163,16 @@ const UpdateUserInfo = ({ img, setFile }) => {
                 sx={{
                   "& .MuiOutlinedInput-root": {
                     borderRadius: "100px",
-                    height: "60px",
+                    height: "45px",
                   },
                   width: "100%",
                   fontFamily: "Montserrat",
                 }}
               />
             </Stack>
-            <Stack
-              direction="column"
-              width="100%"
-              justifyContent="space-between"
-            >
+            <Stack direction="column" width="100%" justifyContent="flex-start">
               <Typography
-                fontSize={15}
+                fontSize={13}
                 fontWeight={600}
                 textAlign="start"
                 color="#474747"
@@ -199,7 +191,7 @@ const UpdateUserInfo = ({ img, setFile }) => {
                 sx={{
                   "& .MuiOutlinedInput-root": {
                     borderRadius: "100px",
-                    height: "60px",
+                    height: "45px",
                   },
                   width: "100%",
                   fontFamily: "Montserrat",
@@ -213,13 +205,9 @@ const UpdateUserInfo = ({ img, setFile }) => {
             width="90%"
             spacing={2}
           >
-            <Stack
-              direction="column"
-              width="100%"
-              justifyContent="space-between"
-            >
+            <Stack direction="column" width="100%" justifyContent="flex-start">
               <Typography
-                fontSize={15}
+                fontSize={13}
                 fontWeight={600}
                 textAlign="start"
                 color="#474747"
@@ -234,7 +222,7 @@ const UpdateUserInfo = ({ img, setFile }) => {
                   value={selectedValue}
                   onChange={handleChange}
                   sx={{
-                    height: "60px",
+                    height: "45px",
                     borderRadius: "100px",
                     width: { lg: "100%", md: "70%", sm: "90%", xs: "90%" },
                   }}
@@ -261,7 +249,7 @@ const UpdateUserInfo = ({ img, setFile }) => {
               justifyContent="space-between"
             >
               <Typography
-                fontSize={15}
+                fontSize={13}
                 fontWeight={600}
                 textAlign="start"
                 color="#474747"
@@ -280,7 +268,7 @@ const UpdateUserInfo = ({ img, setFile }) => {
                   sx={{
                     "& .MuiOutlinedInput-root": {
                       borderRadius: "100px",
-                      height: "60px",
+                      height: "45px",
                       width: "100%",
                       paddingTop: 0, // Set padding-top to 0
                     },
@@ -292,13 +280,9 @@ const UpdateUserInfo = ({ img, setFile }) => {
                 />
               </LocalizationProvider>
             </Stack>
-            <Stack
-              direction="column"
-              width="100%"
-              justifyContent="space-between"
-            >
+            <Stack direction="column" width="100%" justifyContent="flex-start">
               <Typography
-                fontSize={15}
+                fontSize={13}
                 fontWeight={600}
                 textAlign="start"
                 color="#474747"
@@ -317,7 +301,7 @@ const UpdateUserInfo = ({ img, setFile }) => {
                 sx={{
                   "& .MuiOutlinedInput-root": {
                     borderRadius: "100px",
-                    height: "60px",
+                    height: "45px",
                   },
                   width: "100%",
                   fontFamily: "Montserrat",
@@ -331,13 +315,9 @@ const UpdateUserInfo = ({ img, setFile }) => {
             width="90%"
             spacing={2}
           >
-            <Stack
-              direction="column"
-              width="100%"
-              justifyContent="space-between"
-            >
+            <Stack direction="column" width="100%" justifyContent="flex-start">
               <Typography
-                fontSize={15}
+                fontSize={13}
                 fontWeight={600}
                 textAlign="start"
                 color="#474747"
@@ -357,7 +337,7 @@ const UpdateUserInfo = ({ img, setFile }) => {
                 sx={{
                   "& .MuiOutlinedInput-root": {
                     borderRadius: "100px",
-                    height: "60px",
+                    height: "45px",
                   },
                   width: "100%",
                   fontFamily: "Montserrat",
@@ -365,13 +345,9 @@ const UpdateUserInfo = ({ img, setFile }) => {
               />
             </Stack>
 
-            <Stack
-              direction="column"
-              width="100%"
-              justifyContent="space-between"
-            >
+            <Stack direction="column" width="100%" justifyContent="flex-start">
               <Typography
-                fontSize={15}
+                fontSize={13}
                 fontWeight={600}
                 textAlign="start"
                 color="#474747"
@@ -391,7 +367,7 @@ const UpdateUserInfo = ({ img, setFile }) => {
                 sx={{
                   "& .MuiOutlinedInput-root": {
                     borderRadius: "100px",
-                    height: "60px",
+                    height: "45px",
                   },
                   width: "100%",
                   fontFamily: "Montserrat",
@@ -405,13 +381,9 @@ const UpdateUserInfo = ({ img, setFile }) => {
             width="90%"
             spacing={2}
           >
-            <Stack
-              direction="column"
-              width="100%"
-              justifyContent="space-between"
-            >
+            <Stack direction="column" width="100%" justifyContent="flex-start">
               <Typography
-                fontSize={15}
+                fontSize={13}
                 fontWeight={600}
                 textAlign="start"
                 color="#474747"
@@ -430,20 +402,16 @@ const UpdateUserInfo = ({ img, setFile }) => {
                 sx={{
                   "& .MuiOutlinedInput-root": {
                     borderRadius: "100px",
-                    height: "60px",
+                    height: "45px",
                   },
                   width: "100%",
                   fontFamily: "Montserrat",
                 }}
               />
             </Stack>
-            <Stack
-              direction="column"
-              width="100%"
-              justifyContent="space-between"
-            >
+            <Stack direction="column" width="100%" justifyContent="flex-start">
               <Typography
-                fontSize={15}
+                fontSize={13}
                 fontWeight={600}
                 textAlign="start"
                 color="#474747"
@@ -457,7 +425,7 @@ const UpdateUserInfo = ({ img, setFile }) => {
                   value={selectedValueLang}
                   onChange={handleChangeLng}
                   sx={{
-                    height: "60px",
+                    height: "45px",
                     borderRadius: "100px",
                     width: { lg: "100%", md: "70%", sm: "90%", xs: "90%" },
                   }}
@@ -470,7 +438,7 @@ const UpdateUserInfo = ({ img, setFile }) => {
             </Stack>
           </Stack>
         </form>
-        <Stack alignItems="center" pt={4}>
+        <Stack alignItems="center" pt={2}>
           <Button
             onClick={handleSubmit}
             disabled={admin.name === email && admin.surname === lastName}
@@ -479,7 +447,7 @@ const UpdateUserInfo = ({ img, setFile }) => {
               background: "#9FC2A6",
               color: "#fff",
               "&:hover": { background: "#9FC2A6" },
-              height: "55px",
+              height: "50px",
               width: "250px",
               borderRadius: "50px",
               textTransform: "revert",

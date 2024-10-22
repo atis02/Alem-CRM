@@ -53,7 +53,7 @@ function ProjectHead() {
       title: "Tamamlanan",
       value: filteredProjectsBuStatus.length,
       percentage: null,
-      width: 3.5,
+      width: 3,
     },
     {
       id: 2,
@@ -62,7 +62,7 @@ function ProjectHead() {
       title: "Dowam edýän",
       value: filteredProjectsByPriority.length,
       percentage: `${Math.ceil(totalCompletion)}%`,
-      width: 3.5,
+      width: 3,
     },
     {
       id: 3,
@@ -71,7 +71,7 @@ function ProjectHead() {
       title: "Täze goşulan",
       value: filteredProjects.length,
       percentage: null,
-      width: 3.5,
+      width: 3,
     },
     {
       id: 4,
@@ -80,7 +80,7 @@ function ProjectHead() {
       title: "Täze proýekt",
       value: null,
       percentage: null,
-      width: 1.5,
+      width: 3,
     },
   ];
   return (
@@ -102,7 +102,7 @@ function ProjectHead() {
               sx={{
                 ...(elem.id == 4
                   ? {
-                      flexDirection: "column",
+                      // flexDirection: "column",
                       cursor: "pointer",
                       justifyContent: "center",
                       alignItems: "center",
