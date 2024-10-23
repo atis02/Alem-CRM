@@ -1,8 +1,11 @@
 import {
   Avatar,
+  Box,
+  CircularProgress,
   Divider,
   FormControlLabel,
   IconButton,
+  Modal,
   Stack,
   Switch,
   Typography,
@@ -20,17 +23,30 @@ import location from "../../../../public/images/location.png";
 import mail2 from "../../../../public/images/mail.png";
 import portfel from "../../../../public/images/portfel.png";
 import DescriptionIcon from "@mui/icons-material/Description";
+import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
+import addIcon from "../../../../public/images/addDoc.png";
 import moment from "moment";
 import EmployeesProjects from "./EmployeesProjects";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   getUserMonthWorkTime,
   postUserStatus,
 } from "../../../Components/db/Redux/api/ComeTimeSlice";
 import { useParams, useSearchParams } from "react-router-dom";
-const UserInfo = ({ data }) => {
+import UpdateUserInfo from "./UpdateUserInfo";
+import UpdateUserDocs from "./UpdateUserDocs";
+
+const UserInfo = () => {
+  const [open, setOpen] = useState(false);
+  const [openDocs, setOpenDocs] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const handleOpenDocsModal = () => setOpenDocs(true);
+  const handleCloseDocsModal = () => setOpenDocs(false);
   const { id } = useParams();
   const [searchParams] = useSearchParams();
+  const status = useSelector((state) => state.getWorkDate.statusMonth);
+  const data = useSelector((state) => state.getWorkDate.employeerTime);
 
   const params = searchParams.get("date");
   const [isChecked, setIsChecked] = useState(data.user && data.user.status);
@@ -41,7 +57,7 @@ const UserInfo = ({ data }) => {
       title: "Jaň ",
       link: `tel:${data.user && data.user.phoneNumber}`,
     },
-   
+
     { img: send, title: "Sms", link: "" },
     {
       img: mail,
@@ -52,7 +68,13 @@ const UserInfo = ({ data }) => {
   useEffect(() => {
     setIsChecked(data.user && data.user.status);
   }, [data]);
-
+  useEffect(() => {
+    const body = {
+      userId: id,
+      date: moment(params).format("YYYY-MM-DD"),
+    };
+    dispatch(getUserMonthWorkTime(body));
+  }, [dispatch]);
   const handleSetStatus = () => {
     const body = {
       userId: id,
@@ -73,6 +95,24 @@ const UserInfo = ({ data }) => {
       handleSetStatus();
     }
   };
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "35%",
+    bgcolor: "background.paper",
+    border: "1px solid lightgray",
+    gap: "10px",
+    height: 550,
+    justifyContent: "center",
+    borderRadius: "20px",
+    display: "flex",
+    alignItems: "center",
+    flexDirection: "column",
+  };
+  console.log(data);
+
   return (
     <Stack
       backgroundColor="#fff"
@@ -89,209 +129,354 @@ const UserInfo = ({ data }) => {
         spacing="30px"
         height="65%"
       >
-        <Stack width="40%" alignItems="center">
-          <Stack alignItems="center">
-            <IconButton sx={{ height: 96, width: 96 }}>
-              {data.user && data.user.img === null ? (
-                <Avatar
-                  alt={data.user && data.user.name}
-                  src={data.user && data.user.img}
-                  sx={{ background: "#9FC2A6", height: 96, width: 96 }}
-                />
-              ) : (
-                <img
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    borderRadius: "100px",
-                  }}
-                  src={`http://192.168.1.46/images/${
-                    data.user && data.user.img
-                  }`}
-                  alt=""
-                />
-              )}
-            </IconButton>
-            <Typography
-              fontFamily="DM Sans"
-              fontWeight="400"
-              mt={1}
-              fontSize={18}
-            >
-              {data.user && data.user.name} {data.user && data.user.surname}
-            </Typography>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={isChecked} // Bind switch to state
-                  onChange={handleSwitchChange} // Update state on toggle
-                  color="primary"
-                />
-              }
-              label={`Işgär ${isChecked ? "Aktiw" : "Aktiw däl"}`} // Label showing switch state
-            />
-          </Stack>
+        {status === "loading..." ? (
           <Stack
-            mt={3}
-            direction="row"
+            direction="column"
+            height="100%"
+            width="40%"
             alignItems="center"
-            justifyContent="center"
-            spacing={1}
+            sx={{ gap: "10px", mt: "20px" }}
           >
-            {userButtonsData.map((elem, index) => (
-              <Stack
-                key={index}
-                sx={{
-                  ...(elem.link == "tel:null" || elem.link == "mailto:null"
-                    ? { display: "none" }
-                    : { display: "block" }),
-                }}
-                width={50}
-                alignItems="center"
-              >
-                <IconButton
-                  sx={{
-                    width: 50,
-                    height: 50,
-                    borderRadius: "100%",
-                    border: "1px solid #000",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
+            <CircularProgress />
+          </Stack>
+        ) : status === "failed" ? (
+          <Typography textAlign="center" height="43%" mt={4}>
+            Maglumat ýok
+          </Typography>
+        ) : status === "succeeded" ? (
+          data.length === 0 ? (
+            <Typography width="100%" pt={5} textAlign="center" fontSize={25}>
+              Goşmaça resminama ýok
+            </Typography>
+          ) : (
+            <>
+              <Stack width="40%" alignItems="center">
+                <Stack alignItems="center">
+                  <IconButton sx={{ height: 96, width: 96 }}>
+                    {data.user && data.user.img === null ? (
+                      <Avatar
+                        alt={data.user && data.user.name}
+                        src={data.user && data.user.img}
+                        sx={{ background: "#9FC2A6", height: 96, width: 96 }}
+                      />
+                    ) : (
+                      <img
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          borderRadius: "100px",
+                        }}
+                        src={`http://192.168.1.46/images/${
+                          data.user && data.user.img
+                        }`}
+                        alt=""
+                      />
+                    )}
+                  </IconButton>
+                  <Typography
+                    fontFamily="DM Sans"
+                    fontWeight="400"
+                    mt={1}
+                    fontSize={18}
+                  >
+                    {data.user && data.user.name}{" "}
+                    {data.user && data.user.surname}
+                  </Typography>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={isChecked} // Bind switch to state
+                        onChange={handleSwitchChange} // Update state on toggle
+                        color="primary"
+                      />
+                    }
+                    label={`Işgär ${isChecked ? "Aktiw" : "Aktiw däl"}`} // Label showing switch state
+                  />
+                </Stack>
+                <Stack
+                  mt={3}
+                  direction="row"
+                  alignItems="center"
+                  justifyContent="center"
+                  spacing={1}
                 >
-                  <a href={elem.link} 
-                   style={{ width: 25, height: 25 }}target="_blank" rel="noopener noreferrer">
-                    <img
-                      src={elem.img}
-                      style={{ width: 25, height: 25 }}
-                      alt=""
+                  {userButtonsData.map((elem, index) => (
+                    <Stack
+                      key={index}
+                      sx={{
+                        ...(elem.link == "tel:null" ||
+                        elem.link == "mailto:null"
+                          ? { display: "none" }
+                          : { display: "block" }),
+                      }}
+                      width={50}
+                      alignItems="center"
+                    >
+                      <IconButton
+                        sx={{
+                          width: 50,
+                          height: 50,
+                          borderRadius: "100%",
+                          border: "1px solid #000",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <a
+                          href={elem.link}
+                          style={{ width: 25, height: 25 }}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <img
+                            src={elem.img}
+                            style={{ width: 25, height: 25 }}
+                            alt=""
+                          />
+                        </a>
+                      </IconButton>
+                      <Typography
+                        mt="7px"
+                        textAlign="center"
+                        fontSize={14}
+                        color="#727272"
+                      >
+                        {elem.title}
+                      </Typography>
+                    </Stack>
+                  ))}
+                </Stack>
+              </Stack>
+              <Stack width="60%">
+                <Stack alignItems="end">
+                  <IconButton
+                    // onClick={() => {
+                    //   handleOpen();
+                    //   setDetails(user);
+                    // }}
+                    onClick={handleOpen}
+                  >
+                    <BorderColorOutlinedIcon
+                      sx={{
+                        color: "#727272",
+                        width: 20,
+                        height: 20,
+                      }}
                     />
-                  </a>
-                </IconButton>
-                <Typography
-                  mt="7px"
-                  textAlign="center"
-                  fontSize={14}
-                  color="#727272"
-                >
-                  {elem.title}
-                </Typography>
+                  </IconButton>
+                  <Modal
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                  >
+                    <Box sx={style}>
+                      <Stack alignItems="end" width="100%" p="0 20px" mt={2}>
+                        <IconButton
+                          sx={{ fontWeight: 600, fontSize: 20 }}
+                          onClick={handleClose}
+                        >
+                          X
+                        </IconButton>
+                      </Stack>
+
+                      <UpdateUserInfo
+                        userData={data}
+                        userId={data.user && data.user.id}
+                        params={params}
+                        handleClose={handleClose}
+                      />
+                    </Box>
+                  </Modal>
+                </Stack>
+                <Stack>
+                  {data.user && data.user.mail && (
+                    <Stack
+                      direction="row"
+                      alignItems="center"
+                      spacing={1}
+                      mt="16px"
+                    >
+                      <img
+                        src={mail2}
+                        style={{ width: 25, height: 25 }}
+                        alt="mail2"
+                      />
+                      <Typography
+                        mt="7px"
+                        textAlign="center"
+                        fontSize={16}
+                        color="#727272"
+                      >
+                        {data.user && data.user.mail}
+                      </Typography>
+                    </Stack>
+                  )}
+                  {data.user && data.user.phoneNumber && (
+                    <Stack
+                      direction="row"
+                      alignItems="center"
+                      spacing={1}
+                      mt="10px"
+                    >
+                      <img
+                        src={Call}
+                        style={{ width: 25, height: 25 }}
+                        alt="mail2"
+                      />
+                      <Typography
+                        mt="7px"
+                        textAlign="center"
+                        fontSize={16}
+                        color="#727272"
+                      >
+                        {data.user && data.user.phoneNumber}
+                      </Typography>
+                    </Stack>
+                  )}
+                  {data.user && data.user.languages && (
+                    <Stack
+                      direction="row"
+                      alignItems="center"
+                      spacing={1}
+                      mt="10px"
+                    >
+                      <img
+                        src={globus}
+                        style={{ width: 25, height: 25 }}
+                        alt="mail2"
+                      />
+                      <Typography
+                        mt="7px"
+                        textAlign="center"
+                        fontSize={16}
+                        color="#727272"
+                      >
+                        {data.user && data.user.languages}
+                      </Typography>
+                    </Stack>
+                  )}
+                  {data.user && data.user.whereStudy && (
+                    <Stack
+                      direction="row"
+                      alignItems="center"
+                      spacing={1}
+                      mt="10px"
+                    >
+                      <img
+                        src={portfel}
+                        style={{ width: 25, height: 25 }}
+                        alt="mail2"
+                      />
+                      <Typography
+                        mt="7px"
+                        textAlign="center"
+                        fontSize={16}
+                        color="#727272"
+                      >
+                        {data.user && data.user.whereStudy}
+                      </Typography>
+                    </Stack>
+                  )}
+                </Stack>
+
+                <Stack>
+                  {data.user && data.user.birthday && (
+                    <Stack
+                      direction="row"
+                      alignItems="center"
+                      spacing={1}
+                      mt="16px"
+                    >
+                      <img
+                        src={calendar}
+                        style={{ width: 25, height: 25 }}
+                        alt="mail2"
+                      />
+                      <Typography
+                        mt="7px"
+                        textAlign="center"
+                        fontSize={16}
+                        color="#727272"
+                      >
+                        {moment(data.user && data.user.birthday).format(
+                          "DD/MM/YYYY"
+                        )}
+                      </Typography>
+                    </Stack>
+                  )}
+                  {data.user && data.user.whereLive && (
+                    <Stack
+                      direction="row"
+                      alignItems="center"
+                      spacing={1}
+                      mt="10px"
+                    >
+                      <img
+                        src={location}
+                        style={{ width: 25, height: 25 }}
+                        alt="mail2"
+                      />
+                      <Typography
+                        mt="7px"
+                        textAlign="center"
+                        fontSize={16}
+                        color="#727272"
+                      >
+                        {data.user && data.user.whereLive}
+                      </Typography>
+                    </Stack>
+                  )}
+                </Stack>
               </Stack>
-            ))}
-          </Stack>
-        </Stack>
-        <Stack width="60%">
-         
-          <Stack>
-            {data.user && data.user.mail && (
-              <Stack direction="row" alignItems="center" spacing={1} mt="16px">
-                <img
-                  src={mail2}
-                  style={{ width: 25, height: 25 }}
-                  alt="mail2"
-                />
-                <Typography
-                  mt="7px"
-                  textAlign="center"
-                  fontSize={16}
-                  color="#727272"
-                >
-                  {data.user && data.user.mail}
-                </Typography>
-              </Stack>
-            )}
-            {data.user && data.user.phoneNumber && (
-              <Stack direction="row" alignItems="center" spacing={1} mt="10px">
-                <img src={Call} style={{ width: 25, height: 25 }} alt="mail2" />
-                <Typography
-                  mt="7px"
-                  textAlign="center"
-                  fontSize={16}
-                  color="#727272"
-                >
-                  {data.user && data.user.phoneNumber}
-                </Typography>
-              </Stack>
-            )}
-            {data.user && data.user.languages && (
-              <Stack direction="row" alignItems="center" spacing={1} mt="10px">
-                <img
-                  src={globus}
-                  style={{ width: 25, height: 25 }}
-                  alt="mail2"
-                />
-                <Typography
-                  mt="7px"
-                  textAlign="center"
-                  fontSize={16}
-                  color="#727272"
-                >
-                  {data.user && data.user.languages}
-                </Typography>
-              </Stack>
-            )}
-            {data.user && data.user.whereStudy && (
-              <Stack direction="row" alignItems="center" spacing={1} mt="10px">
-                <img
-                  src={portfel}
-                  style={{ width: 25, height: 25 }}
-                  alt="mail2"
-                />
-                <Typography
-                  mt="7px"
-                  textAlign="center"
-                  fontSize={16}
-                  color="#727272"
-                >
-                  {data.user && data.user.whereStudy}
-                </Typography>
-              </Stack>
-            )}
-          </Stack>
-         
-          <Stack>
-            {data.user && data.user.birthday && (
-              <Stack direction="row" alignItems="center" spacing={1} mt="16px">
-                <img
-                  src={calendar}
-                  style={{ width: 25, height: 25 }}
-                  alt="mail2"
-                />
-                <Typography
-                  mt="7px"
-                  textAlign="center"
-                  fontSize={16}
-                  color="#727272"
-                >
-                  {moment(data.user && data.user.birthday).format("DD/MM/YYYY")}
-                </Typography>
-              </Stack>
-            )}
-            {data.user && data.user.whereLive && (
-              <Stack direction="row" alignItems="center" spacing={1} mt="10px">
-                <img
-                  src={location}
-                  style={{ width: 25, height: 25 }}
-                  alt="mail2"
-                />
-                <Typography
-                  mt="7px"
-                  textAlign="center"
-                  fontSize={16}
-                  color="#727272"
-                >
-                  {data.user && data.user.whereLive}
-                </Typography>
-              </Stack>
-            )}
-          </Stack>
-        </Stack>
+            </>
+          )
+        ) : null}
       </Stack>
       <Divider />
       <Stack>
-        <Typography mt={2} fontFamily="DM Sans" fontWeight="400" fontSize={18}>
-          Resminamalar
-        </Typography>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          mt={2}
+        >
+          <Typography fontFamily="DM Sans" fontWeight="400" fontSize={18}>
+            Resminamalar
+          </Typography>
+          <IconButton
+            onClick={handleOpenDocsModal}
+            sx={{
+              width: 44,
+              height: 36,
+              bgcolor: "#eff5fc",
+              border: "0.5px solid #90BAEB",
+              borderRadius: "10px",
+            }}
+          >
+            <img style={{ width: 24, height: 24 }} src={addIcon} alt="Delete" />
+          </IconButton>
+          <Modal
+            open={openDocs}
+            onClose={handleCloseDocsModal}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={style}>
+              <Stack alignItems="end" width="100%" p="0 20px" mt={2}>
+                <IconButton
+                  sx={{ fontWeight: 600, fontSize: 20 }}
+                  onClick={handleCloseDocsModal}
+                >
+                  X
+                </IconButton>
+              </Stack>
+
+              <UpdateUserDocs id={data.user && data.user.id} />
+            </Box>
+          </Modal>
+        </Stack>
+        {console.log(data.user && data.user.id)}
         {data.documents && data.documents.length == 0 ? (
           <Typography
             color="#727272"

@@ -15,34 +15,39 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NonActiveUserItems, StyledTableRow } from "../../../Components/utils";
 import {
-  getStatusUsers,
+  // getStatusUsers,
   postStatusUser,
 } from "../../../Components/db/Redux/api/UserSlice";
 import moment from "moment";
 import { toast } from "react-toastify";
+import AxiosInstance from "../../../Components/db/Redux/api/AxiosHelper";
+
 const NonActiveUsers = () => {
-  const statusData = useSelector((state) => state.users.status);
-  const error = useSelector((state) => state.users.error);
-  const data = useSelector((state) => state.users.data);
+  const [statusData, setStatusData] = useState(false);
+  const [statusUsersData, setStatusUsersData] = useState([]);
   const dispatch = useDispatch();
 
   // Manage checked status for each user
   const [checkedStates, setCheckedStates] = useState({});
 
   useEffect(() => {
-    dispatch(getStatusUsers());
-  }, [dispatch]);
+    const getStatusUsers = async () => {
+      setStatusData(true);
+      const response = await AxiosInstance.get("/user/status").then((resp) => {
+        setStatusUsersData(resp.data.messagge);
+        setStatusData(false);
+      });
+    };
+    getStatusUsers();
+  }, []);
 
   useEffect(() => {
-    if (statusData === "succeeded") {
-      // Initialize the switch states for each user
-      const initialCheckedStates = data.messagge.reduce((acc, user) => {
-        acc[user.id] = user.status; // Set initial switch state based on user status
-        return acc;
-      }, {});
-      setCheckedStates(initialCheckedStates);
-    }
-  }, [statusData, data]);
+    const initialCheckedStates = statusUsersData.reduce((acc, user) => {
+      acc[user.id] = user.status;
+      return acc;
+    }, {});
+    setCheckedStates(initialCheckedStates);
+  }, [statusUsersData]);
 
   const handleSetStatus = (id) => {
     const updatedStatus = checkedStates[id] === true ? false : true;
@@ -62,24 +67,26 @@ const NonActiveUsers = () => {
     handleSetStatus(id); // Call API to update user status
   };
 
-  const filteredUsers =
-    statusData === "succeeded"
-      ? data.messagge.filter((item) => item.status === false)
-      : [];
+  const filteredUsers = statusUsersData.filter((item) => item.status === false);
   const style2 = { p: 1, textAlign: "center", fontFamily: "DM Sans" };
+  console.log(statusUsersData);
 
   return (
     <Stack
       backgroundColor="#fff"
-      width="100%"
+      width="97.5%"
       height="62vh"
       borderRadius="20px"
       pb="10px"
       boxShadow="0px 0px 8px -5px rgba(0,0,0,0.75)"
-      p="30px 24px 17px"
+      p="10px 24px 17px"
+      m="15px 0 10px 15px"
     >
+      <Typography textAlign="center" mb={2} fontSize={20}>
+        Ulanyjylar
+      </Typography>
       <Stack>
-        {statusData === "loading" ? (
+        {statusData === true ? (
           <Stack
             direction="column"
             height="100%"
@@ -89,18 +96,16 @@ const NonActiveUsers = () => {
             <CircularProgress />
             Loading...
           </Stack>
-        ) : statusData === "failed" ? (
-          toast.error(error)
-        ) : statusData === "succeeded" ? (
+        ) : (
           <Stack>
-            {filteredUsers.length === 0 ? (
+            {statusUsersData.length === 0 ? (
               <Typography textAlign="center" fontSize={20}>
                 Ulanyjy tapylmady!
               </Typography>
             ) : (
               <TableContainer
                 sx={{
-                  minHeight: "100%",
+                  height: "380px",
                   overflowY: "auto",
                   borderRadius: "20px",
                 }}
@@ -132,13 +137,16 @@ const NonActiveUsers = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {filteredUsers.map((user, index) => (
+                    {statusUsersData.map((user, index) => (
                       <TableRow key={user.id}>
                         <TableCell sx={style2}>{index + 1}</TableCell>
                         <TableCell sx={style2}>{user.name}</TableCell>
                         <TableCell sx={style2}>
                           {user.surname || "Yok"}
                         </TableCell>
+                        {/* <TableCell sx={style2}>
+                          {user.position || "Yok"}
+                        </TableCell> */}
                         <TableCell sx={style2}>
                           <FormControlLabel
                             control={
@@ -148,9 +156,7 @@ const NonActiveUsers = () => {
                                 color="primary"
                               />
                             }
-                            label={`Işgär ${
-                              checkedStates[user.id] ? "Aktiw" : "Aktiw däl"
-                            }`}
+                            label={` ${checkedStates[user.id] ? "" : ""}`}
                           />
                         </TableCell>
                       </TableRow>
@@ -160,7 +166,7 @@ const NonActiveUsers = () => {
               </TableContainer>
             )}
           </Stack>
-        ) : null}
+        )}
       </Stack>
     </Stack>
   );

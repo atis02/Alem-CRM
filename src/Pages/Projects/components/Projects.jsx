@@ -31,6 +31,7 @@ import { useNavigate } from "react-router-dom";
 import deleteIcon from "../../../../public/images/Delete.png";
 import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import UpdateModalComponent from "./UpdateModalComponent";
+import { getUsers } from "../../../Components/db/Redux/api/UserSlice";
 
 const Projects = () => {
   const [age, setAge] = useState("");
@@ -39,6 +40,7 @@ const Projects = () => {
   const error = useSelector((state) => state.project.error);
   const data = useSelector((state) => state.project.data);
   const UsersData = useSelector((state) => state.users.data);
+  const UsersDataStatus = useSelector((state) => state.users.status);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -49,6 +51,9 @@ const Projects = () => {
     setAge(event.target.value);
   };
   const user = JSON.parse(localStorage.getItem("CRM_USER"));
+  useEffect(() => {
+    dispatch(getUsers());
+  }, [dispatch]);
   useEffect(() => {
     if (age !== "") {
       dispatch(getProjectForUser(age.id));
@@ -88,6 +93,7 @@ const Projects = () => {
   const handleBlur = () => {
     setIsFocused(false); // Set focused state to false
   };
+
   return (
     <Box mt={2} width="100%" backgroundColor="#f4f5f9">
       <Stack
@@ -120,56 +126,58 @@ const Projects = () => {
             alignItems="center"
             justifyContent="center"
           >
-         <FormControl>
-         <InputLabel
-          id="age-label"
-          shrink={isFocused || !!age} 
-          sx={{
-            position: 'absolute',
-            top: (isFocused || !!age) ? 0 : '50%',
-            left: 14, 
-            transform: (isFocused || !!age) ? 'translateY(-50%)' : 'translateY(-50%)', // Move label above the select
-            padding: 0,
-            paddingRight: 1,
-            margin: 0,
-            fontSize: '16px',
-            transition: 'all 0.2s ease-in-out',
-            color: "#474747",
-            fontFamily: "DM Sans",
-          }}
-        >
-          Işgärler
-        </InputLabel>
-        <Select
-          labelId="age-label"
-          value={age}
-          label="Işgärler   "
-          onChange={handleChange}
-          onFocus={handleFocus} 
-          onBlur={handleBlur} 
-          sx={{
-            borderRadius: "20px",
-            backgroundColor: "#F0F7FF",
-            minWidth: 230,
-            height: 45,
-            padding: 0, // No padding for the select
-            "& .MuiSelect-select": {
-
-              padding: "10px 14px", 
-              display: 'flex', 
-              alignItems: 'center', 
-            },
-         
-          }}
-        >
-          {/* Replace UsersData with your actual data */}
-          {UsersData.map((elem) => (
-            <MenuItem key={elem.id} value={elem}>
-              {elem.name} {elem.surname}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+            <FormControl>
+              <InputLabel
+                id="age-label"
+                shrink={isFocused || !!age}
+                sx={{
+                  position: "absolute",
+                  top: isFocused || !!age ? 0 : "50%",
+                  left: 14,
+                  transform:
+                    isFocused || !!age
+                      ? "translateY(-50%)"
+                      : "translateY(-50%)", // Move label above the select
+                  padding: 0,
+                  paddingRight: 1,
+                  margin: 0,
+                  fontSize: "16px",
+                  transition: "all 0.2s ease-in-out",
+                  color: "#474747",
+                  fontFamily: "DM Sans",
+                }}
+              >
+                Işgärler
+              </InputLabel>
+              <Select
+                labelId="age-label"
+                value={age}
+                label="Işgärler   "
+                onChange={handleChange}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+                sx={{
+                  borderRadius: "20px",
+                  backgroundColor: "#F0F7FF",
+                  minWidth: 230,
+                  height: 45,
+                  padding: 0, // No padding for the select
+                  "& .MuiSelect-select": {
+                    padding: "10px 14px",
+                    display: "flex",
+                    alignItems: "center",
+                  },
+                }}
+              >
+                {/* Replace UsersData with your actual data */}
+                {UsersDataStatus == "succeeded" &&
+                  UsersData.map((elem) => (
+                    <MenuItem key={elem.id} value={elem}>
+                      {elem.name} {elem.surname}
+                    </MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
             <Button
               sx={{
                 textTransform: "revert",

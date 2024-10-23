@@ -20,10 +20,10 @@ export const getUsers = createAsyncThunk("getUsers", async () => {
   });
   return response.data;
 });
-export const getStatusUsers = createAsyncThunk("getStatusUsers", async () => {
-  const response = await AxiosInstance.get("/user/status");
-  return response.data;
-});
+// export const getStatusUsers = createAsyncThunk("getStatusUsers", async () => {
+//   const response = await AxiosInstance.get("/user/status");
+//   return response.data;
+// });
 export const updateImg = createAsyncThunk("updateImg", async (body) => {
   const resp = await AxiosInstance.post(`/user/updata-img`, body);
   resp.data.message == "User profil photo updated successfully"
@@ -68,18 +68,18 @@ const users = createSlice({
         state.error = action.error.message;
       })
       //get all user's status
-      .addCase(getStatusUsers.pending, (state) => {
-        state.status = "loading...";
-      })
-      .addCase(getStatusUsers.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        state.data = action.payload;
-      })
-      .addCase(getStatusUsers.rejected, (state, action) => {
-        state.loading = false;
-        state.status = "failed";
-        state.error = action.error.message;
-      })
+      // .addCase(getStatusUsers.pending, (state) => {
+      //   state.status = "loading...";
+      // })
+      // .addCase(getStatusUsers.fulfilled, (state, action) => {
+      //   state.status = "succeeded";
+      //   state.data = action.payload;
+      // })
+      // .addCase(getStatusUsers.rejected, (state, action) => {
+      //   state.loading = false;
+      //   state.status = "failed";
+      //   state.error = action.error.message;
+      // })
       .addCase(updateImg.pending, (state) => {
         state.status = "loading...";
       })
