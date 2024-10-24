@@ -1,18 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Stack, TextField, Typography } from "@mui/material";
-import { createPdf } from "../../../Components/db/Redux/api/PdfSlice";
+import {
+  createPdf,
+  createPdfByAdmin,
+  deletePdf,
+} from "../../../Components/db/Redux/api/PdfSlice";
 import { useDispatch } from "react-redux";
 import { toast, Toaster } from "react-hot-toast";
+import { getUserMonthWorkTime } from "../../../Components/db/Redux/api/ComeTimeSlice";
+import moment from "moment";
 
-const UpdateUserDocs = ({ id }) => {
+const UpdateUserDocs = ({ id, handleCloseDocsModal, params }) => {
   const [files, setFiles] = useState(null);
   const [docName, setDocName] = useState("");
   const dispatch = useDispatch();
+
   const updateFiles = (e) => {
     const file = e.target.files[0];
     file && toast.success("Faýl saýlandy");
     setFiles(file);
   };
+
   const handleUpload = () => {
     if (!docName) {
       toast.warn("Faýl ady giriz!");
@@ -27,10 +35,17 @@ const UpdateUserDocs = ({ id }) => {
     body.append("userId", id);
     body.append("title", docName);
     body.append("file", files);
-    dispatch(createPdf(body));
+    const data = {
+      body: body,
+      userId: id,
+      date: moment(params).format("YYYY-MM-DD"),
+    };
+    dispatch(createPdfByAdmin(data));
     setFiles(null);
+    handleCloseDocsModal();
     setDocName("");
   };
+
   return (
     <>
       <Toaster />

@@ -1,6 +1,7 @@
 import {
   Avatar,
   Box,
+  Button,
   CircularProgress,
   Divider,
   FormControlLabel,
@@ -24,6 +25,7 @@ import mail2 from "../../../../public/images/mail.png";
 import portfel from "../../../../public/images/portfel.png";
 import DescriptionIcon from "@mui/icons-material/Description";
 import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
+import deleteIcon from "../../../../public/images/Delete.png";
 import addIcon from "../../../../public/images/addDoc.png";
 import moment from "moment";
 import EmployeesProjects from "./EmployeesProjects";
@@ -31,10 +33,15 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getUserMonthWorkTime,
   postUserStatus,
+  updateUserRole,
 } from "../../../Components/db/Redux/api/ComeTimeSlice";
 import { useParams, useSearchParams } from "react-router-dom";
 import UpdateUserInfo from "./UpdateUserInfo";
 import UpdateUserDocs from "./UpdateUserDocs";
+import {
+  deletePdf,
+  deletePdfForUser,
+} from "../../../Components/db/Redux/api/PdfSlice";
 
 const UserInfo = () => {
   const [open, setOpen] = useState(false);
@@ -47,9 +54,12 @@ const UserInfo = () => {
   const [searchParams] = useSearchParams();
   const status = useSelector((state) => state.getWorkDate.statusMonth);
   const data = useSelector((state) => state.getWorkDate.employeerTime);
+  const user = JSON.parse(localStorage.getItem("CRM_USER"));
 
   const params = searchParams.get("date");
-  const [isChecked, setIsChecked] = useState(data.user && data.user.status);
+  const [isChecked, setIsChecked] = useState(
+    (data.user && data.user.status) || false
+  );
   const dispatch = useDispatch();
   const userButtonsData = [
     {
@@ -84,14 +94,12 @@ const UserInfo = () => {
       userId: id,
       status: isChecked === true ? false : true,
     };
-    console.log(body);
 
     dispatch(postUserStatus({ body: body, data: data2 }));
   };
   const handleSwitchChange = (event) => {
     if (event) {
       setIsChecked(event.target.checked);
-      console.log("Switch value:", event.target.checked);
       handleSetStatus();
     }
   };
@@ -111,8 +119,32 @@ const UserInfo = () => {
     alignItems: "center",
     flexDirection: "column",
   };
-  console.log(data);
-
+  const handleDeletePdf = (id, docId) => {
+    const body = {
+      userId: id,
+      documentId: docId,
+      date: moment(params).format("YYYY-MM-DD"),
+    };
+    dispatch(deletePdfForUser(body));
+  };
+  const handleDoModerator = (id) => {
+    const body = {
+      editorId: user.id,
+      userId: id,
+      newRole: "MODERATOR",
+      date: moment(params).format("YYYY-MM-DD"),
+    };
+    dispatch(updateUserRole(body));
+  };
+  const handleDoUser = (id) => {
+    const body = {
+      editorId: user.id,
+      userId: id,
+      newRole: "USER",
+      date: moment(params).format("YYYY-MM-DD"),
+    };
+    dispatch(updateUserRole(body));
+  };
   return (
     <Stack
       backgroundColor="#fff"
@@ -433,6 +465,50 @@ const UserInfo = () => {
           )
         ) : null}
       </Stack>
+
+      {user.role === "ADMIN" && (
+        <Stack>
+          {data.user && data.user.role == "MODERATOR" ? (
+            <Stack direction="row" width="100%">
+              <Button
+                variant="contained"
+                onClick={() => handleDoModerator(data.user && data.user.id)}
+                disabled={data.user && data.user.role == "MODERATOR"}
+                style={{
+                  marginTop: "10px",
+                  marginBottom: "10px",
+                  width: "40%",
+                  background: "#9FC2A6",
+                }}
+              >
+                Moderator
+              </Button>
+              <IconButton
+                onClick={() => handleDoUser(data.user && data.user.id)}
+              >
+                <img
+                  style={{ width: 24, height: 24 }}
+                  src={deleteIcon}
+                  alt="Delete"
+                />
+              </IconButton>
+            </Stack>
+          ) : (
+            <Button
+              variant="contained"
+              onClick={() => handleDoModerator(data.user && data.user.id)}
+              style={{
+                marginTop: "10px",
+                marginBottom: "10px",
+                width: "40%",
+                background: "#9FC2A6",
+              }}
+            >
+              Moderator
+            </Button>
+          )}
+        </Stack>
+      )}
       <Divider />
       <Stack>
         <Stack
@@ -472,41 +548,61 @@ const UserInfo = () => {
                 </IconButton>
               </Stack>
 
-              <UpdateUserDocs id={data.user && data.user.id} />
+              <UpdateUserDocs
+                id={data.user && data.user.id}
+                params={params}
+                handleCloseDocsModal={handleCloseDocsModal}
+              />
             </Box>
           </Modal>
         </Stack>
-        {console.log(data.user && data.user.id)}
         {data.documents && data.documents.length == 0 ? (
           <Typography
             color="#727272"
             textAlign="center"
             mt={5}
+            height={205}
             fontSize={18}
             fontFamily="DM Sans"
           >
             Resminama ýok
           </Typography>
         ) : (
-          data.documents &&
-          data.documents.map((item, index) => (
-            <Stack
-              spacing="18px"
-              key={item.id}
-              direction="row"
-              alignItems="center"
-              mt="25px"
-            >
-              <Typography color="#727272" fontFamily="DM Sans">
-                {index + 1}.
-              </Typography>
+          <Stack height="205px" className="times2" overflow="auto">
+            {data.documents &&
+              data.documents.map((item, index) => (
+                <Stack
+                  spacing="18px"
+                  key={item.id}
+                  direction="row"
+                  alignItems="center"
+                  justifyContent="space-between"
+                  mt="25px"
+                >
+                  <Stack direction="row" alignItems="center">
+                    <Typography color="#727272" mr={2} fontFamily="DM Sans">
+                      {index + 1}.
+                    </Typography>
 
-              <DescriptionIcon sx={{ color: "#727272" }} />
-              <Typography color="#727272" fontFamily="DM Sans">
-                {item.title}
-              </Typography>
-            </Stack>
-          ))
+                    <DescriptionIcon sx={{ color: "#727272", mr: 2 }} />
+                    <Typography color="#727272" fontFamily="DM Sans">
+                      {item.title}
+                    </Typography>
+                  </Stack>
+                  <IconButton
+                    onClick={() =>
+                      handleDeletePdf(data.user && data.user.id, item.id)
+                    }
+                  >
+                    <img
+                      style={{ width: 24, height: 24 }}
+                      src={deleteIcon}
+                      alt="Delete"
+                    />
+                  </IconButton>
+                </Stack>
+              ))}
+          </Stack>
         )}
       </Stack>
     </Stack>

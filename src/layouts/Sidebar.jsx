@@ -15,6 +15,7 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import ForumIcon from '@mui/icons-material/Forum';
 import SettingsIcon from "@mui/icons-material/Settings";
+import GavelIcon from "@mui/icons-material/Gavel";
 import {
   KeyboardArrowDown as KeyboardArrowDownIcon,
   KeyboardArrowUp as KeyboardArrowUpIcon,
@@ -149,12 +150,20 @@ export default function SidebarNav(data, sendingData) {
                 component={
                   <NavLink
                     className="sideNav"
-                    to={user.role === "USER" ? "/" : "/calendar"}
+                    to={
+                      user.role === "USER"
+                        ? "/"
+                        : user.role === "MODERATOR"
+                        ? "/"
+                        : "/calendar"
+                    }
                   />
                 }
                 icon={<CheckCircleOutlineIcon />}
               >
-                {user.role === "USER" ? "Bellikler" : "Kalendar"}
+                {user.role === "USER" || user.role === "MODERATOR"
+                  ? "Bellikler"
+                  : "Kalendar"}
               </MenuItem>
               <MenuItem
                 component={<NavLink className="sideNav" to="/projects" />}
@@ -202,7 +211,7 @@ export default function SidebarNav(data, sendingData) {
                 </Stack>
               </SubMenu> */}
               <MenuItem
-                component={<NavLink className="sideNav" to="/" />}
+                component={<NavLink className="sideNav" to="/employees" />}
                 icon={<Diversity3Icon />}
                 style={{
                   ...(user.role === "USER"
@@ -214,11 +223,26 @@ export default function SidebarNav(data, sendingData) {
               </MenuItem>
               <MenuItem
                 icon={<SettingsIcon />}
-                component={
-                  <NavLink className="sideNav" to="/employees/working" />
-                }
+                component={<NavLink className="sideNav" to="/settings" />}
+                style={{
+                  ...(user.role === "USER"
+                    ? { display: "none" }
+                    : { display: "flex" }),
+                }}
               >
                 Sazlamalar
+              </MenuItem>
+              <MenuItem
+                icon={<GavelIcon />}
+                component={<NavLink className="sideNav" to="/standarts" />}
+                style={{
+                  ...(user.role === "USER"
+                    ? { display: "none" }
+                    : { display: "flex" }),
+                  fontSize: 19,
+                }}
+              >
+                Tertip - düzgünnama
               </MenuItem>
               <MenuItem
                 component={<NavLink className="sideNav" to="/chat" />}

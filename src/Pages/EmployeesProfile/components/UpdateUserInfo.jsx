@@ -8,7 +8,6 @@ import {
   MenuItem,
   Select,
   Stack,
-  Switch,
   TextField,
   Typography,
 } from "@mui/material";
@@ -32,7 +31,6 @@ import { getPDF } from "../../../Components/db/Redux/api/PdfSlice";
 const UpdateUserInfo = ({ userData, userId, params, handleClose }) => {
   const admin = JSON.parse(localStorage.getItem("CRM_USER"));
   const userInfo = userData && userData.user;
-  console.log(userInfo);
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState(userInfo.mail);
   const [phoneNumber, setPhoneNumber] = useState(userInfo.phoneNumber);
@@ -69,13 +67,7 @@ const UpdateUserInfo = ({ userData, userId, params, handleClose }) => {
   };
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  useEffect(() => {
-    const body = {
-      userId: userId,
-      date: moment(params).format("YYYY-MM-DD"),
-    };
-    dispatch(getUserMonthWorkTime(body));
-  }, [dispatch]);
+
   useEffect(() => {
     const position = async () => {
       await AxiosInstance.get("/position/get").then((res) => {

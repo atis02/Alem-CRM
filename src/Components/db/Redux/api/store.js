@@ -7,6 +7,8 @@ import PdfSlice from "./PdfSlice";
 import GetComeTimeUsers from "./GetComeTimeUsers";
 import ProjectSlice from "./ProjectSlice";
 import ProjectDetailSlice from "./ProjectDetailSlice";
+import SetWorkTimeSlice from './SetWorkTimeSlice'
+import StandartSlice from './StandartSlice'
 
 export const store = configureStore({
   reducer: {
@@ -18,5 +20,7 @@ export const store = configureStore({
     getWorkTime: GetComeTimeUsers,
     project: ProjectSlice,
     projectDetail: ProjectDetailSlice,
+    workTime:SetWorkTimeSlice,
+    standarts:StandartSlice,
   },
 });

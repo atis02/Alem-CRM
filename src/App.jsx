@@ -8,8 +8,9 @@ import Account from "./Pages/Account";
 import Projects from "./Pages/Projects";
 import Employees from "./Pages/Employees";
 import EmployeesProfile from "./Pages/EmployeesProfile";
+import Standarts from "./Pages/Standarts";
 import Main from "./Pages/Main";
-import Chat from './Pages/Chat'
+import Chat from "./Pages/Chat";
 import ProjectDetail from "./Pages/ProjectDetail";
 import Document from "./Pages/Document";
 import Login from "./layouts/LogIn";
@@ -57,7 +58,10 @@ function App() {
           path: "/account",
           element: <Account />,
         },
-
+        {
+          path: "/standarts",
+          element: <Standarts />,
+        },
         {
           path: "/employees",
           element: <Employees />,
@@ -67,7 +71,7 @@ function App() {
           element: <EmployeesProfile />,
         },
         {
-          path: "/employees/working",
+          path: "/settings",
           element: <WorkTime />,
         },
         {

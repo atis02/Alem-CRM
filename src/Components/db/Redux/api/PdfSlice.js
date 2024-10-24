@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import AxiosInstance from "./AxiosHelper";
 import { toast } from "react-toastify";
 import { user } from "../../../utils";
+import { getUserMonthWorkTime } from "./ComeTimeSlice";
 
 const initialState = {
   data: [],
@@ -58,6 +59,33 @@ export const createPdf = createAsyncThunk(
     }
   }
 );
+export const createPdfByAdmin = createAsyncThunk(
+  "createPdfByAdmin",
+  async (body, { rejectWithValue, dispatch }) => {
+    try {
+      const resp = await AxiosInstance.post(
+        "/pdf/upload/file",
+        body.body
+      );
+
+      if (resp.status === 200) {
+        toast.success("Üstünlikli!");
+
+
+       const response= await dispatch(getUserMonthWorkTime({ userId: body.userId, date: body.date }));
+
+        return response.data; 
+      }
+
+      if (resp.data.status === 404) {
+        toast.error(resp.data.message);
+      }
+    } catch (error) {
+      toast.error("Ýalňyşlyk!");
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
 
 export const deletePdf = createAsyncThunk("deletePdf", async (body) => {
   const resp = await AxiosInstance.post(`/pdf/delete`, body);
@@ -75,7 +103,30 @@ export const deletePdf = createAsyncThunk("deletePdf", async (body) => {
   }
   return response.data;
 });
+export const deletePdfForUser = createAsyncThunk("deletePdfForUser", async (body, { dispatch }) => {
+  const resp = await AxiosInstance.post(`/pdf/delete`, body);
+  
+  if (resp.status === 200) {
+    toast.success("Üstünlikli!");
 
+    // Dispatch getUserMonthWorkTime after successful PDF deletion
+    await dispatch(getUserMonthWorkTime({ userId: body.userId, date: body.date }));
+  }
+
+  if (resp.data.status === 404) {
+    toast.error(resp.data.message);
+  }
+
+  const response = await AxiosInstance.get(
+    `/time/work/user?userId=${body.userId}&date=${body.date}`
+  );
+
+  if (response.data.status === 404) {
+    toast.error(response.data.message);
+  }
+
+  return response.data;
+});
 // Create the slice
 const postPdf = createSlice({
   name: "postPdf",
@@ -103,6 +154,18 @@ const postPdf = createSlice({
         state.status = "failed";
         state.error = action.error.message;
       })
+      .addCase(createPdfByAdmin.pending, (state) => {
+        state.status = "loading...";
+      })
+      .addCase(createPdfByAdmin.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.data = action.payload;
+        state.uploadProgress = 0; // Reset progress on success
+      })
+      .addCase(createPdfByAdmin.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
       // get
       .addCase(getPDF.pending, (state) => {
         state.status = "loading...";
@@ -124,6 +187,17 @@ const postPdf = createSlice({
         state.data = action.payload;
       })
       .addCase(deletePdf.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(deletePdfForUser.pending, (state) => {
+        state.status = "loading...";
+      })
+      .addCase(deletePdfForUser.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.data = action.payload;
+      })
+      .addCase(deletePdfForUser.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });

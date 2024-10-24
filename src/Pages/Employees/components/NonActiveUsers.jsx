@@ -69,23 +69,22 @@ const NonActiveUsers = () => {
 
   const filteredUsers = statusUsersData.filter((item) => item.status === false);
   const style2 = { p: 1, textAlign: "center", fontFamily: "DM Sans" };
-  console.log(statusUsersData);
 
   return (
     <Stack
       backgroundColor="#fff"
-      width="97.5%"
-      height="62vh"
+      width="80%"
+      height="100%"
       borderRadius="20px"
       pb="10px"
       boxShadow="0px 0px 8px -5px rgba(0,0,0,0.75)"
       p="10px 24px 17px"
       m="15px 0 10px 15px"
     >
-      <Typography textAlign="center" mb={2} fontSize={20}>
+      <Typography textAlign="center" fontFamily="DM Sans" mb={2} fontSize={20}>
         Ulanyjylar
       </Typography>
-      <Stack>
+      <Stack height="100%">
         {statusData === true ? (
           <Stack
             direction="column"
@@ -105,7 +104,7 @@ const NonActiveUsers = () => {
             ) : (
               <TableContainer
                 sx={{
-                  height: "380px",
+                  height: "78vh",
                   overflowY: "auto",
                   borderRadius: "20px",
                 }}
@@ -126,6 +125,7 @@ const NonActiveUsers = () => {
                           sx={{
                             color: "#222222",
                             fontWeight: 500,
+                            fontFamilyL: "DM Sans",
                             fontSize: 18,
                             textAlign: "center",
                           }}
@@ -141,9 +141,7 @@ const NonActiveUsers = () => {
                       <TableRow key={user.id}>
                         <TableCell sx={style2}>{index + 1}</TableCell>
                         <TableCell sx={style2}>{user.name}</TableCell>
-                        <TableCell sx={style2}>
-                          {user.surname || "Yok"}
-                        </TableCell>
+                        <TableCell sx={style2}>{user.surname || "-"}</TableCell>
                         {/* <TableCell sx={style2}>
                           {user.position || "Yok"}
                         </TableCell> */}

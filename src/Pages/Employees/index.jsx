@@ -100,12 +100,15 @@ const index = () => {
 
   const filteredUsers =
     status === "succeeded"
-      ? data.users.filter(
+      ? data.users &&
+        data.users.filter(
           (item) =>
             item.id !== 9 &&
             item.name.toLowerCase().includes(searchTerm.toLowerCase())
         )
       : [];
+  console.log(filteredUsers);
+
   const style = {
     position: "absolute",
     top: "50%",
@@ -255,7 +258,7 @@ const index = () => {
             toast.error(error)
           ) : status === "succeeded" ? (
             <Stack>
-              {filteredUsers.length == 0 ? (
+              {filteredUsers === undefined ? (
                 <Typography textAlign="center" fontSize={20}>
                   Ulanyjy tapylmady!
                 </Typography>

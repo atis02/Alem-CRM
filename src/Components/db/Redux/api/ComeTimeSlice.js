@@ -31,6 +31,32 @@ export const getUserMonthWorkTime = createAsyncThunk(
     return response.data;
   }
 );
+export const updateUserRole = createAsyncThunk(
+  "updateUserRole",
+  async (body) => {
+    const data = {
+      editorId: body.editorId,
+      userId: body.userId,
+      newRole: body.newRole,
+    };
+    const resp = await AxiosInstance.patch(`/user/updata/role`, data);
+    console.log(resp.data);
+    
+    resp.data == "User ID 18 role updated successfully."
+      ? toast.success("Üstünlikli!")
+      : toast.error("Şowsuz!");
+
+      const response = await AxiosInstance.get(
+        `/time/work/user?userId=${body.userId}&date=${body.date}`
+      );
+
+    // if (response.data.status === 404) {
+    //   toast.error(response.data.message);
+    // }
+
+    return response.data;
+  }
+);
 export const getUserDayWorkTime = createAsyncThunk(
   "getUserDayWorkTime",
   async (body) => {
@@ -364,6 +390,18 @@ const WorkTimes = createSlice({
         state.employeerTime = action.payload;
       })
       .addCase(getUserMonthWorkTime.rejected, (state, action) => {
+        state.loading = false;
+        state.statusMonth = "failed";
+        state.errorMonth = action.error.message;
+      })
+      .addCase(updateUserRole.pending, (state) => {
+        state.statusMonth = "loading...";
+      })
+      .addCase(updateUserRole.fulfilled, (state, action) => {
+        state.statusMonth = "succeeded";
+        state.employeerTime = action.payload;
+      })
+      .addCase(updateUserRole.rejected, (state, action) => {
         state.loading = false;
         state.statusMonth = "failed";
         state.errorMonth = action.error.message;
