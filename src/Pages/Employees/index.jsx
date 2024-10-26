@@ -107,7 +107,6 @@ const index = () => {
             item.name.toLowerCase().includes(searchTerm.toLowerCase())
         )
       : [];
-  console.log(filteredUsers);
 
   const style = {
     position: "absolute",
@@ -161,10 +160,10 @@ const index = () => {
         p="0 30px 8px 0"
       >
         <Typography
-          p="0px 20px 0px 10px"
-          fontSize={{ lg: "30px", md: "30px", sm: "25px", xs: "20px" }}
-          fontFamily="Montserrat"
+          p="0px 5px"
+          fontSize="30px"
           fontWeight="500"
+          fontFamily="Montserrat"
         >
           Işgärler
         </Typography>

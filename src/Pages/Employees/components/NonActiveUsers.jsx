@@ -11,32 +11,32 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { NonActiveUserItems, StyledTableRow } from "../../../Components/utils";
-import {
-  // getStatusUsers,
-  postStatusUser,
-} from "../../../Components/db/Redux/api/UserSlice";
-import moment from "moment";
-import { toast } from "react-toastify";
+import { NonActiveUserItems } from "../../../Components/utils";
+import { postStatusUser } from "../../../Components/db/Redux/api/UserSlice";
 import AxiosInstance from "../../../Components/db/Redux/api/AxiosHelper";
+import { updateUserRole } from "../../../Components/db/Redux/api/ComeTimeSlice";
 
 const NonActiveUsers = () => {
   const [statusData, setStatusData] = useState(false);
   const [statusUsersData, setStatusUsersData] = useState([]);
-  const dispatch = useDispatch();
-
-  // Manage checked status for each user
   const [checkedStates, setCheckedStates] = useState({});
+  const [checkedStatesModer, setCheckedStatesModer] = useState({});
+  const dispatch = useDispatch();
+  const user = JSON.parse(localStorage.getItem("CRM_USER"));
 
   useEffect(() => {
     const getStatusUsers = async () => {
-      setStatusData(true);
-      const response = await AxiosInstance.get("/user/status").then((resp) => {
-        setStatusUsersData(resp.data.messagge);
+      try {
+        setStatusData(true);
+        const response = await AxiosInstance.get("/user/status");
+        setStatusUsersData(response.data.messagge);
+      } catch (error) {
+        console.error("Error fetching user status:", error);
+      } finally {
         setStatusData(false);
-      });
+      }
     };
     getStatusUsers();
   }, []);
@@ -46,28 +46,38 @@ const NonActiveUsers = () => {
       acc[user.id] = user.status;
       return acc;
     }, {});
+    const initialCheckedStatesRole = statusUsersData.reduce((acc, user) => {
+      acc[user.id] = user.role === "MODERATOR";
+      return acc;
+    }, {});
     setCheckedStates(initialCheckedStates);
+    setCheckedStatesModer(initialCheckedStatesRole);
   }, [statusUsersData]);
 
-  const handleSetStatus = (id) => {
-    const updatedStatus = checkedStates[id] === true ? false : true;
-    const data2 = {
-      userId: id,
-      status: updatedStatus,
-    };
-    dispatch(postStatusUser(data2));
-  };
+  const handleSetStatus = useCallback(
+    (id) => {
+      const updatedStatus = !checkedStates[id];
+      const data2 = { userId: id, status: updatedStatus };
+      dispatch(postStatusUser(data2));
+      setCheckedStates((prevState) => ({ ...prevState, [id]: updatedStatus }));
+    },
+    [checkedStates, dispatch]
+  );
 
-  const handleSwitchChange = (id) => (event) => {
-    const newCheckedState = event.target.checked;
-    setCheckedStates((prevState) => ({
-      ...prevState,
-      [id]: newCheckedState, // Update the switch state for the specific user
-    }));
-    handleSetStatus(id); // Call API to update user status
-  };
+  const handleRoleChange = useCallback(
+    (id, role) => {
+      const body = { editorId: user.id, userId: id, newRole: role };
+      dispatch(updateUserRole(body));
+      setCheckedStatesModer((prevState) => ({
+        ...prevState,
+        [id]: role === "MODERATOR",
+      }));
+    },
+    [user.id, dispatch]
+  );
 
-  const filteredUsers = statusUsersData.filter((item) => item.status === false);
+  const filteredUsers = statusUsersData.filter((item) => item.role !== "ADMIN");
+
   const style2 = { p: 1, textAlign: "center", fontFamily: "DM Sans" };
 
   return (
@@ -85,7 +95,7 @@ const NonActiveUsers = () => {
         Ulanyjylar
       </Typography>
       <Stack height="100%">
-        {statusData === true ? (
+        {statusData ? (
           <Stack
             direction="column"
             height="100%"
@@ -125,7 +135,7 @@ const NonActiveUsers = () => {
                           sx={{
                             color: "#222222",
                             fontWeight: 500,
-                            fontFamilyL: "DM Sans",
+                            fontFamily: "DM Sans",
                             fontSize: 18,
                             textAlign: "center",
                           }}
@@ -137,24 +147,40 @@ const NonActiveUsers = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {statusUsersData.map((user, index) => (
+                    {filteredUsers.map((user, index) => (
                       <TableRow key={user.id}>
                         <TableCell sx={style2}>{index + 1}</TableCell>
                         <TableCell sx={style2}>{user.name}</TableCell>
                         <TableCell sx={style2}>{user.surname || "-"}</TableCell>
-                        {/* <TableCell sx={style2}>
-                          {user.position || "Yok"}
-                        </TableCell> */}
                         <TableCell sx={style2}>
                           <FormControlLabel
                             control={
                               <Switch
-                                checked={checkedStates[user.id] || false} // Bind switch to state per user
-                                onChange={handleSwitchChange(user.id)} // Handle switch change
+                                checked={checkedStates[user.id] || false}
+                                onChange={() => handleSetStatus(user.id)}
                                 color="primary"
                               />
                             }
-                            label={` ${checkedStates[user.id] ? "" : ""}`}
+                            label=""
+                          />
+                        </TableCell>
+                        <TableCell sx={style2}>
+                          <FormControlLabel
+                            control={
+                              <Switch
+                                checked={checkedStatesModer[user.id] || false}
+                                onChange={() =>
+                                  handleRoleChange(
+                                    user.id,
+                                    checkedStatesModer[user.id]
+                                      ? "USER"
+                                      : "MODERATOR"
+                                  )
+                                }
+                                color="primary"
+                              />
+                            }
+                            label=""
                           />
                         </TableCell>
                       </TableRow>

@@ -34,27 +34,18 @@ export const getUserMonthWorkTime = createAsyncThunk(
 export const updateUserRole = createAsyncThunk(
   "updateUserRole",
   async (body) => {
-    const data = {
-      editorId: body.editorId,
-      userId: body.userId,
-      newRole: body.newRole,
-    };
-    const resp = await AxiosInstance.patch(`/user/updata/role`, data);
+   
+    const resp = await AxiosInstance.patch(`/user/updata/role`, body);
     console.log(resp.data);
     
-    resp.data == "User ID 18 role updated successfully."
-      ? toast.success("Üstünlikli!")
-      : toast.error("Şowsuz!");
+   if( resp.data == `User ID ${body.userId} role updated successfully.`){
+    const response = await AxiosInstance.get("/user/status");
+    toast.success("Üstünlikli üýtgedildi!")
+    return response.data
+   }else{
 
-      const response = await AxiosInstance.get(
-        `/time/work/user?userId=${body.userId}&date=${body.date}`
-      );
-
-    // if (response.data.status === 404) {
-    //   toast.error(response.data.message);
-    // }
-
-    return response.data;
+      toast.error("Şowsuz!");
+    }
   }
 );
 export const getUserDayWorkTime = createAsyncThunk(

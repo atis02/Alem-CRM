@@ -473,9 +473,8 @@ const index = () => {
                         </AccordionSummary>
                         <AccordionDetails sx={{ p: 0 }}>
                           {groupedByDate[item].map((dateKey) => (
-                            <>
+                            <Stack key={dateKey.id}>
                               <Stack
-                                key={dateKey.id}
                                 sx={{
                                   padding: "10px",
                                   borderRadius: "5px",
@@ -545,7 +544,7 @@ const index = () => {
                                 </Stack>
                               </Stack>
                               <Divider sx={{ width: "100%" }} />
-                            </>
+                            </Stack>
                           ))}
                         </AccordionDetails>
                       </Accordion>

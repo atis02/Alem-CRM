@@ -35,9 +35,15 @@ import {
   postUserStatus,
   updateUserRole,
 } from "../../../Components/db/Redux/api/ComeTimeSlice";
-import { useParams, useSearchParams } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import UpdateUserInfo from "./UpdateUserInfo";
 import UpdateUserDocs from "./UpdateUserDocs";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import {
   deletePdf,
   deletePdfForUser,
@@ -57,6 +63,7 @@ const UserInfo = () => {
   const user = JSON.parse(localStorage.getItem("CRM_USER"));
 
   const params = searchParams.get("date");
+  const navigate = useNavigate();
   const [isChecked, setIsChecked] = useState(
     (data.user && data.user.status) || false
   );
@@ -66,12 +73,14 @@ const UserInfo = () => {
       img: call,
       title: "Jaň ",
       link: `tel:${data.user && data.user.phoneNumber}`,
+      target: "_blank",
     },
 
-    { img: send, title: "Sms", link: "" },
+    { img: send, title: "Sms", link: "/chat", target: "" },
     {
       img: mail,
       title: "Poçta",
+      target: "_blank",
       link: `mailto:${data.user && data.user.mail}`,
     },
   ];
@@ -127,24 +136,7 @@ const UserInfo = () => {
     };
     dispatch(deletePdfForUser(body));
   };
-  const handleDoModerator = (id) => {
-    const body = {
-      editorId: user.id,
-      userId: id,
-      newRole: "MODERATOR",
-      date: moment(params).format("YYYY-MM-DD"),
-    };
-    dispatch(updateUserRole(body));
-  };
-  const handleDoUser = (id) => {
-    const body = {
-      editorId: user.id,
-      userId: id,
-      newRole: "USER",
-      date: moment(params).format("YYYY-MM-DD"),
-    };
-    dispatch(updateUserRole(body));
-  };
+
   return (
     <Stack
       backgroundColor="#fff"
@@ -159,7 +151,7 @@ const UserInfo = () => {
         direction="row"
         justifyContent="space-between"
         spacing="30px"
-        height="65%"
+        height="55%"
       >
         {status === "loading..." ? (
           <Stack
@@ -257,7 +249,7 @@ const UserInfo = () => {
                         <a
                           href={elem.link}
                           style={{ width: 25, height: 25 }}
-                          target="_blank"
+                          target={elem.target}
                           rel="noopener noreferrer"
                         >
                           <img
@@ -466,51 +458,8 @@ const UserInfo = () => {
         ) : null}
       </Stack>
 
-      {user.role === "ADMIN" && (
-        <Stack>
-          {data.user && data.user.role == "MODERATOR" ? (
-            <Stack direction="row" width="100%">
-              <Button
-                variant="contained"
-                onClick={() => handleDoModerator(data.user && data.user.id)}
-                disabled={data.user && data.user.role == "MODERATOR"}
-                style={{
-                  marginTop: "10px",
-                  marginBottom: "10px",
-                  width: "40%",
-                  background: "#9FC2A6",
-                }}
-              >
-                Moderator
-              </Button>
-              <IconButton
-                onClick={() => handleDoUser(data.user && data.user.id)}
-              >
-                <img
-                  style={{ width: 24, height: 24 }}
-                  src={deleteIcon}
-                  alt="Delete"
-                />
-              </IconButton>
-            </Stack>
-          ) : (
-            <Button
-              variant="contained"
-              onClick={() => handleDoModerator(data.user && data.user.id)}
-              style={{
-                marginTop: "10px",
-                marginBottom: "10px",
-                width: "40%",
-                background: "#9FC2A6",
-              }}
-            >
-              Moderator
-            </Button>
-          )}
-        </Stack>
-      )}
       <Divider />
-      <Stack>
+      <Stack height="45%">
         <Stack
           direction="row"
           alignItems="center"
@@ -560,7 +509,6 @@ const UserInfo = () => {
           <Typography
             color="#727272"
             textAlign="center"
-            mt={5}
             height={205}
             fontSize={18}
             fontFamily="DM Sans"
@@ -568,7 +516,7 @@ const UserInfo = () => {
             Resminama ýok
           </Typography>
         ) : (
-          <Stack height="205px" className="times2" overflow="auto">
+          <Stack height="100%" className="times2" overflow="auto">
             {data.documents &&
               data.documents.map((item, index) => (
                 <Stack
@@ -577,7 +525,7 @@ const UserInfo = () => {
                   direction="row"
                   alignItems="center"
                   justifyContent="space-between"
-                  mt="25px"
+                  mt="10px"
                 >
                   <Stack direction="row" alignItems="center">
                     <Typography color="#727272" mr={2} fontFamily="DM Sans">
@@ -585,21 +533,53 @@ const UserInfo = () => {
                     </Typography>
 
                     <DescriptionIcon sx={{ color: "#727272", mr: 2 }} />
-                    <Typography color="#727272" fontFamily="DM Sans">
-                      {item.title}
-                    </Typography>
+                    <Link
+                      to={`http://192.168.1.46/files/${item.pathPdf}`}
+                      // onClick={() =>
+                      //   (window.location.href = `http://192.168.1.46/files/${item.pathPdf}`)
+                      // }
+                      target="_blank"
+                      style={{
+                        textDecoration: "none",
+                        color: "#474747",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        width: "100%",
+                      }}
+                    >
+                      <Typography color="#727272" fontFamily="DM Sans">
+                        {item.title}
+                      </Typography>
+                    </Link>
                   </Stack>
-                  <IconButton
-                    onClick={() =>
-                      handleDeletePdf(data.user && data.user.id, item.id)
-                    }
-                  >
-                    <img
-                      style={{ width: 24, height: 24 }}
-                      src={deleteIcon}
-                      alt="Delete"
-                    />
-                  </IconButton>
+                  <Stack direction="row" alignItems="center">
+                    <IconButton>
+                      <Link
+                        style={{
+                          textDecoration: "none",
+                          color: "#474747",
+                          display: "flex",
+                          justifyContent: "space-between",
+                          width: "100%",
+                        }}
+                        target="_blank"
+                        to={`http://192.168.1.46/files/${item.pathPdf}`}
+                      >
+                        <RemoveRedEyeIcon sx={{ color: "#9FC2A6" }} />
+                      </Link>
+                    </IconButton>
+                    <IconButton
+                      onClick={() =>
+                        handleDeletePdf(data.user && data.user.id, item.id)
+                      }
+                    >
+                      <img
+                        style={{ width: 24, height: 24 }}
+                        src={deleteIcon}
+                        alt="Delete"
+                      />
+                    </IconButton>
+                  </Stack>
                 </Stack>
               ))}
           </Stack>

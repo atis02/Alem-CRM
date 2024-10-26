@@ -109,19 +109,21 @@ const CustomCalendar = ({ openModal, events, setStartDate, setEndDate }) => {
 
   const isMarked = (day) => {
     // console.log(day.format("DD.MM.YYYY"));
-    return events.some((item) =>
-      user.role === "USER"
-        ? moment(item.comeTime).isSame(day, "day")
-        : // console.log(moment(item.comeTime).format("DD/MM/YYYY"))
-          moment(item.date, "DD/MM/YYYY").isSame(day, "day")
+    return events.some(
+      (item) =>
+        // user.role === "USER"
+        moment(item.comeTime).isSame(day, "day")
+      // :moment(item.date, "DD/MM/YYYY").isSame(day, "day")
     );
   };
+  console.log(events);
 
   const filteredEvents = (day) =>
-    events.filter((item) =>
-      user.role === "USER"
-        ? moment(item.comeTime).isSame(day, "day")
-        : moment(item.date, "DD/MM/YYYY").isSame(day, "day")
+    events.filter(
+      (item) =>
+        // user.role === "USER" || user.role === "MODERATOR"
+        moment(item.comeTime).isSame(day, "day")
+      // : moment(item.date, "DD/MM/YYYY").isSame(day, "day")
     );
 
   //   });
@@ -214,7 +216,7 @@ const CustomCalendar = ({ openModal, events, setStartDate, setEndDate }) => {
                       {day.format("D")}
                     </Stack>
 
-                    {isMarked(day) && user.role === "USER"
+                    {isMarked(day)
                       ? events
                           .filter((item) =>
                             moment(item.comeTime).isSame(day, "day")
@@ -253,9 +255,7 @@ const CustomCalendar = ({ openModal, events, setStartDate, setEndDate }) => {
                                 textOverflow="ellipsis"
                                 textAlign="center"
                               >
-                                {user.role === "USER"
-                                  ? Capitalize(item.note)
-                                  : Capitalize(item.title)}
+                                {Capitalize(item.note)}
                               </Typography>
                               {filteredEvents(day).length !== (1 || 0) && (
                                 <Stack
@@ -312,9 +312,7 @@ const CustomCalendar = ({ openModal, events, setStartDate, setEndDate }) => {
                                 textOverflow="ellipsis"
                                 textAlign="center"
                               >
-                                {user.role === "USER"
-                                  ? Capitalize(item.note)
-                                  : Capitalize(item.title)}
+                                {Capitalize(item.note)}
                               </Typography>
                               {filteredEvents(day).length !== (1 || 0) && (
                                 <Stack

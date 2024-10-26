@@ -14,8 +14,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { Capitalize } from "../../../Components/utils";
 import { getUsers } from "../../../Components/db/Redux/api/UserSlice";
 import CloseIcon from "@mui/icons-material/Close";
-import { postStandart } from "../../../Components/db/Redux/api/StandartSlice";
-import { toast, ToastContainer } from "react-toastify";
+import {
+  postStandart,
+  updateStandart,
+} from "../../../Components/db/Redux/api/StandartSlice";
+import { toast } from "react-toastify";
 
 // Custom Paper component for Autocomplete
 const CustomPaper = (props) => (
@@ -28,13 +31,19 @@ const CustomPaper = (props) => (
   />
 );
 
-const CreateStandarts = ({ open, handleClose, userId }) => {
+const UpdateStandarts = ({ openUpdate, handleClose, data, userId }) => {
   const UsersData = useSelector((state) => state.users.data);
+  const [userData, setUserData] = useState([data && data]);
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState([]);
-  const [description, setDescription] = useState("");
-  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState(data && data.description);
+  const [title, setTitle] = useState(data && data.title);
 
+  useEffect(() => {
+    data && setUserData(data);
+    data && setTitle(data.title);
+    data && setDescription(data.description);
+  }, [data]);
   const style = {
     position: "absolute",
     top: "50%",
@@ -45,6 +54,7 @@ const CreateStandarts = ({ open, handleClose, userId }) => {
     border: "0px solid lightgray",
     gap: "10px",
     maxHeight: 550,
+
     height: 460,
     borderRadius: "10px",
     display: "flex",
@@ -75,13 +85,14 @@ const CreateStandarts = ({ open, handleClose, userId }) => {
   ];
   const handleSubmit = () => {
     const body = {
+      id: userData.id,
       title: title,
       description: description,
       usersId: selectedUser,
       userId: userId,
     };
     if (title && description && selectedUser) {
-      dispatch(postStandart(body));
+      dispatch(updateStandart(body));
       handleClose();
       setTitle("");
       setDescription("");
@@ -91,8 +102,9 @@ const CreateStandarts = ({ open, handleClose, userId }) => {
       toast.error("Maglumatlary giriziň!");
     }
   };
+
   return (
-    <Modal open={open} onClose={handleClose}>
+    <Modal open={openUpdate} onClose={handleClose}>
       <Box sx={style}>
         <Stack
           width="100%"
@@ -110,13 +122,12 @@ const CreateStandarts = ({ open, handleClose, userId }) => {
             fontWeight={400}
             fontFamily="DM Sans"
           >
-            Täze tertip - düzgünnama
+            {userData.title}
           </Typography>
           <IconButton onClick={handleClose}>
             <CloseIcon sx={{ color: "#fff" }} />
           </IconButton>
         </Stack>
-        <ToastContainer />
         <Stack
           width="95%"
           p={1}
@@ -136,10 +147,8 @@ const CreateStandarts = ({ open, handleClose, userId }) => {
           <Autocomplete
             id="combo-box-demo"
             multiple
-            multiline
-            rows={4} // Set the number of visible rows
-            value={users}
             fullWidth
+            defaultValue={data && data.users}
             isOptionEqualToValue={(option, value) => option.id === value.id}
             options={optionsWithSelectAll}
             getOptionLabel={(option) =>
@@ -169,8 +178,6 @@ const CreateStandarts = ({ open, handleClose, userId }) => {
           />
           <TextField
             label="Beýan"
-            multiline
-            rows={4} // Set the number of visible rows
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             variant="outlined"
@@ -201,4 +208,4 @@ const CreateStandarts = ({ open, handleClose, userId }) => {
   );
 };
 
-export default CreateStandarts;
+export default UpdateStandarts;

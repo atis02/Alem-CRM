@@ -26,8 +26,6 @@ const WorkTime = () => {
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
   const dispatch = useDispatch();
-  console.log(startTime);
-  console.log(endTime);
   const user = JSON.parse(localStorage.getItem("CRM_USER"));
 
   useEffect(() => {

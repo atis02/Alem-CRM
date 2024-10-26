@@ -190,6 +190,7 @@ const index = () => {
     setUserId("");
     setDate();
     setDateNote(null);
+    setSelectedDay(null);
     setDateHour();
     setUserId("");
   };
@@ -209,7 +210,10 @@ const index = () => {
 
     const body = {
       title: notify,
-      date: moment(dateNote).format("YYYY-MM-DD"),
+      date: moment(dateNote === null ? selectedDay : dateNote).format(
+        "YYYY-MM-DD"
+      ),
+      //  moment(selectedDay).format("YYYY-MM-DD"),
       // date: dateNote,
       dateHour: dateHour,
       color: selectedColor,
@@ -218,7 +222,11 @@ const index = () => {
       users: users,
     };
 
-    if (notify !== "" && dateNote !== null && dateHour !== undefined) {
+    if (
+      notify !== "" &&
+      (dateNote !== null || selectedDay) &&
+      dateHour !== undefined
+    ) {
       dispatch(postAdminNote(body));
 
       handleClose();
@@ -1159,7 +1167,6 @@ const index = () => {
                           />
                         </IconButton>
                       </Stack>
-
                       <Stack direction="column" justifyContent="space-beteen">
                         <Typography
                           fontSize={15}
@@ -1276,20 +1283,26 @@ const index = () => {
                                 </Typography>
 
                                 <DatePicker
-                                  defaultValue={
-                                    dayjs(selectedDay, "DD/MM/YYYY").isValid()
-                                      ? dayjs(selectedDay, "DD/MM/YYYY")
+                                  disabled={dayjs(
+                                    selectedDay,
+                                    "YYYY-MM-DD"
+                                  ).isValid()}
+                                  value={
+                                    dayjs(selectedDay, "YYYY-MM-DD").isValid()
+                                      ? dayjs(selectedDay, "YYYY-MM-DD")
                                       : null
                                   }
-                                  fullWidth
                                   onChange={(newValue) => {
                                     if (newValue) {
-                                      setDateNote(newValue);
+                                      setDateNote(
+                                        dayjs(newValue).format("YYYY-MM-DD")
+                                      );
                                     } else {
                                       setDateNote(null);
                                     }
                                   }}
                                   format="DD.MM.YYYY"
+                                  fullWidth
                                   slotProps={{
                                     textField: {
                                       size: "small",
@@ -1299,7 +1312,7 @@ const index = () => {
                                           backgroundColor: "#F5F6FA",
                                           width: "100%",
                                           height: 55,
-                                          border: "1px solid #ccc", // Ensure border is set
+                                          border: "1px solid #ccc",
                                         },
                                       },
                                     },

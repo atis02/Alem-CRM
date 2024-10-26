@@ -26,6 +26,7 @@ import AxiosInstance from "../../../Components/db/Redux/api/AxiosHelper";
 import moment from "moment";
 import { getUserMonthWorkTime } from "../../../Components/db/Redux/api/ComeTimeSlice";
 import { getPDF } from "../../../Components/db/Redux/api/PdfSlice";
+import LanguageCheckboxes from "./LanguageCheck";
 // import { jwtDecode } from "jwt-decode";
 
 const UpdateUserInfo = ({ userData, userId, params, handleClose }) => {
@@ -41,8 +42,9 @@ const UpdateUserInfo = ({ userData, userId, params, handleClose }) => {
   const [selectedValue, setSelectedValue] = useState(
     userInfo.position ? userInfo.position.id : "ADMIN"
   );
-  const [selectedValueLang, setSelectedValueLang] = useState(
-    userInfo.languages
+
+  const [selectedLanguages, setSelectedLanguages] = useState(
+    userInfo.languages ? userInfo.languages.split(",") : []
   );
 
   const [education, setEducation] = useState(userInfo.whereStudy);
@@ -53,18 +55,7 @@ const UpdateUserInfo = ({ userData, userId, params, handleClose }) => {
   const handleChange = (event) => {
     setSelectedValue(event.target.value);
   };
-  const handleChangeLng = (event) => {
-    setSelectedValueLang(event.target.value);
-  };
-  const handleUpdateImg = () => {
-    const body = new FormData();
-    body.append("file", img);
-    body.append("userId", userInfo.id);
-    if (img !== null) {
-      dispatch(updateImg(body));
-    }
-    setFile(null);
-  };
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -104,7 +95,7 @@ const UpdateUserInfo = ({ userData, userId, params, handleClose }) => {
           birthday: value.add(1, "day"),
           whereStudy: education,
           whereLive: live,
-          languages: selectedValueLang,
+          languages: selectedLanguages.join(","),
           positionId: selectedValue,
         }).then((res) => {
           res.data
@@ -124,6 +115,17 @@ const UpdateUserInfo = ({ userData, userId, params, handleClose }) => {
 
       setLoading(false);
     }
+  };
+
+  const handleChangeLang = (event) => {
+    const { name, checked } = event.target;
+    console.log(event.target);
+
+    setSelectedLanguages((prevLanguages) =>
+      checked
+        ? [...prevLanguages, name]
+        : prevLanguages.filter((lang) => lang !== name)
+    );
   };
 
   return (
@@ -327,7 +329,7 @@ const UpdateUserInfo = ({ userData, userId, params, handleClose }) => {
                 color="#474747"
                 mb="5px"
               >
-                Okan ýeri
+                Okan ýeri (doly ady)
               </Typography>
 
               <TextField
@@ -357,7 +359,7 @@ const UpdateUserInfo = ({ userData, userId, params, handleClose }) => {
                 color="#474747"
                 mb="5px"
               >
-                Ýaşaýan ýeri
+                Ýaşaýan ýeri (doly ady)
               </Typography>
 
               <TextField
@@ -423,8 +425,11 @@ const UpdateUserInfo = ({ userData, userId, params, handleClose }) => {
               >
                 Dili
               </Typography>
-
-              <FormControl fullWidth>
+              <LanguageCheckboxes
+                handleChange={handleChangeLang}
+                selectedLanguages={selectedLanguages}
+              />
+              {/* <FormControl fullWidth>
                 <Select
                   id="simple-select"
                   value={selectedValueLang}
@@ -435,11 +440,14 @@ const UpdateUserInfo = ({ userData, userId, params, handleClose }) => {
                     width: { lg: "100%", md: "70%", sm: "90%", xs: "90%" },
                   }}
                 >
-                  <MenuItem value="ENG">ENG</MenuItem>
-                  <MenuItem value="RUS">RUS</MenuItem>
-                  <MenuItem value="TKM">TKM</MenuItem>
+                  <MenuItem value="Turkmen"> Turkmen (TKM)</MenuItem>
+                  <MenuItem value="Russian"> Russian (RUS)</MenuItem>
+                  <MenuItem value="English"> English (ENG)</MenuItem>
+                  <MenuItem value="Chinese">Chinese (Hytaý)</MenuItem>
+                  <MenuItem value="Turkish"> Turkish (Türk)</MenuItem>
+                  <MenuItem value="German">German (Nemes)</MenuItem>
                 </Select>
-              </FormControl>
+              </FormControl> */}
             </Stack>
           </Stack>
         </form>

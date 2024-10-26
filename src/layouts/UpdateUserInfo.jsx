@@ -15,22 +15,16 @@ import {
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  login,
-  loginFailure,
-  loginSuccess,
-  registerFailure,
-} from "../Components/db/Redux/reducers/AuthSlice";
+
 import AxiosInstance from "../Components/db/Redux/api/AxiosHelper";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { Capitalize } from "../Components/utils";
 import { updateImg } from "../Components/db/Redux/api/ImageUpdateSlice";
-// import { jwtDecode } from "jwt-decode";
+import LanguageCheckboxes from "../Pages/EmployeesProfile/components/LanguageCheck";
 
 const UpdateUserInfo = ({ img, setFile }) => {
   const admin = JSON.parse(localStorage.getItem("CRM_USER"));
@@ -38,24 +32,21 @@ const UpdateUserInfo = ({ img, setFile }) => {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState(admin.mail);
   const [phoneNumber, setPhoneNumber] = useState(admin.phoneNumber);
-  const [logined, setLogined] = useState("");
   const [surname, setSurname] = useState(admin.surname);
   const [name, setName] = useState(admin.name);
   const [password, setPassword] = useState("");
   const [selectedValue, setSelectedValue] = useState(
     admin.position ? admin.position.id : "ADMIN"
   );
-  const [selectedValueLang, setSelectedValueLang] = useState(admin.languages);
+  const [selectedLanguages, setSelectedLanguages] = useState(
+    admin.languages ? admin.languages.split(",") : []
+  );
   const [education, setEducation] = useState(admin.whereStudy);
   const [live, setLive] = useState(admin.whereLive);
   const [value, setValue] = useState(dayjs(admin.birthday)); //user birthday
   const [position, setPosition] = useState([]);
-
   const handleChange = (event) => {
     setSelectedValue(event.target.value);
-  };
-  const handleChangeLng = (event) => {
-    setSelectedValueLang(event.target.value);
   };
   const handleUpdateImg = () => {
     const body = new FormData();
@@ -100,7 +91,7 @@ const UpdateUserInfo = ({ img, setFile }) => {
           birthday: value.add(1, "day"),
           whereStudy: education,
           whereLive: live,
-          languages: selectedValueLang,
+          languages: selectedLanguages.join(","),
           positionId: selectedValue,
         }).then((res) => {
           res.data
@@ -121,7 +112,16 @@ const UpdateUserInfo = ({ img, setFile }) => {
       setLoading(false);
     }
   };
+  const handleChangeLang = (event) => {
+    const { name, checked } = event.target;
+    console.log(event.target);
 
+    setSelectedLanguages((prevLanguages) =>
+      checked
+        ? [...prevLanguages, name]
+        : prevLanguages.filter((lang) => lang !== name)
+    );
+  };
   return (
     <Stack direction="column" width="80%">
       <Stack justifyContent="space-between" width="100%">
@@ -419,22 +419,10 @@ const UpdateUserInfo = ({ img, setFile }) => {
               >
                 Dili
               </Typography>
-              <FormControl fullWidth>
-                <Select
-                  id="simple-select"
-                  value={selectedValueLang}
-                  onChange={handleChangeLng}
-                  sx={{
-                    height: "45px",
-                    borderRadius: "100px",
-                    width: { lg: "100%", md: "70%", sm: "90%", xs: "90%" },
-                  }}
-                >
-                  <MenuItem value="ENG">ENG</MenuItem>
-                  <MenuItem value="RUS">RUS</MenuItem>
-                  <MenuItem value="TKM">TKM</MenuItem>
-                </Select>
-              </FormControl>
+              <LanguageCheckboxes
+                handleChange={handleChangeLang}
+                selectedLanguages={selectedLanguages}
+              />
             </Stack>
           </Stack>
         </form>

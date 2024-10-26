@@ -236,9 +236,6 @@ export default function SidebarNav(data, sendingData) {
                 icon={<GavelIcon />}
                 component={<NavLink className="sideNav" to="/standarts" />}
                 style={{
-                  ...(user.role === "USER"
-                    ? { display: "none" }
-                    : { display: "flex" }),
                   fontSize: 19,
                 }}
               >

@@ -109,8 +109,8 @@ export const NonActiveUserItems = [
   { id: 1, title: "№" },
   { id: 2, title: "Ady" },
   { id: 3, title: "Familiýasy" },
-  // { id: 4, title: "Wezipesi" },
-  { id: 5, title: "Statusy" },
+  { id: 4, title: "Statusy" },
+  { id: 5, title: "Moderator" },
 ];
 export const personalItems = [
   { id: 1, title: "Sene" },
@@ -165,3 +165,16 @@ export  const lng = [
   { title: 'ENG' },
   { title: 'TKM' },
 ];
+const colors = ["#00CCFF", "#E951BF"];
+const backgroundColors = ["#E951BF", "#E951BF"];
+
+// Function to get random color and matching background color
+export const  getRandomColorAndBackground =()=> {
+  const randomIndex = Math.floor(Math.random() * colors.length);
+  return {
+    color: colors[randomIndex],
+    backgroundColor: backgroundColors[randomIndex],
+  };
+}
+export const { color, backgroundColor } = getRandomColorAndBackground();
+

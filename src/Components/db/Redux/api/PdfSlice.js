@@ -6,6 +6,7 @@ import { getUserMonthWorkTime } from "./ComeTimeSlice";
 
 const initialState = {
   data: [],
+  docType:[],
   status: "idle",
   error: null,
   loading: false,
@@ -13,6 +14,14 @@ const initialState = {
 };
 
 // Create an async thunk for the GET request
+export const getDocType = createAsyncThunk("getDocType", async (userId) => {
+  const response = await AxiosInstance.get(`/document/type/get?userId=${userId}`);
+  if (response.data.status === 404) {
+    
+    toast.error(response.data.message);
+  }
+  return response.data.data;
+});
 export const getPDF = createAsyncThunk("getPDF", async (userId) => {
   const response = await AxiosInstance.get(`/pdf/get/files?userId=${userId}`);
   if (response.data.status === 404) {
@@ -88,7 +97,7 @@ export const createPdfByAdmin = createAsyncThunk(
 );
 
 export const deletePdf = createAsyncThunk("deletePdf", async (body) => {
-  const resp = await AxiosInstance.post(`/pdf/delete`, body);
+  const resp = await AxiosInstance.delete(`/pdf/delete?userId=${body.userId}&documentId=${body.documentId}`);
   if (resp.status === 200) {
     toast.success("Üstünlikli!");
   }
@@ -175,6 +184,17 @@ const postPdf = createSlice({
         state.data = action.payload;
       })
       .addCase(getPDF.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(getDocType.pending, (state) => {
+        state.status = "loading...";
+      })
+      .addCase(getDocType.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.docType = action.payload;
+      })
+      .addCase(getDocType.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       })

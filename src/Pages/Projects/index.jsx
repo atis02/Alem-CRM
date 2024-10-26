@@ -14,13 +14,13 @@ const index = () => {
       backgroundColor="#f4f5f9"
       overflow="auto"
     >
-      {user.role === "USER" ? (
-        <UserProjects />
-      ) : (
+      {user.role === "ADMIN" ? (
         <>
           <ProjectHead />
           <Projects />
         </>
+      ) : (
+        <UserProjects />
       )}
     </Box>
   );
