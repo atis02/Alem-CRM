@@ -20,15 +20,20 @@ import {
   useParams,
   useSearchParams,
 } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { getUserMonthWorkTime } from "../../Components/db/Redux/api/ComeTimeSlice";
 import moment from "moment";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 import UserInfo from "./components/UserInfo";
 import { personalItems } from "../../Components/utils";
 import EmployeesProjects from "./components/EmployeesProjects";
+import Projects from "../Projects/components/Projects";
+import UserProjects from "./UserProjects";
+import Project from "../UserProjects/components/Project";
+import ProjectDetail from "../ProjectDetail";
 
 const Index = () => {
+  const [projectName, setProjectName] = useState("");
   const { id } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -126,6 +131,12 @@ const Index = () => {
       note,
     };
   });
+  // console.log(data);
+  // console.log(data.user && data.user.id);
+  const handleChange = (name) => {
+    setProjectName(name);
+  };
+  console.log(data);
 
   return (
     <Box height="100%" width="100%" backgroundColor="#f2f9fc" overflow="auto">
@@ -172,8 +183,6 @@ const Index = () => {
           pb="20px"
           boxShadow=" 0px 0px 8px -5px rgba(0,0,0,0.75)"
         >
-          <ToastContainer />
-
           <Stack>
             {status === "loading..." ? (
               <Stack
@@ -246,9 +255,7 @@ const Index = () => {
                             </TableCell>
                             <TableCell sx={style2}>
                               {user.lastLeaveTime == null ? (
-                                <Typography color="tomato">
-                                 -
-                                </Typography>
+                                <Typography color="tomato">-</Typography>
                               ) : (
                                 moment(user.lastLeaveTime).format("HH:mm")
                               )}
@@ -261,22 +268,40 @@ const Index = () => {
                               }
                             </TableCell>
                             <TableCell sx={{ ...style2, color: "tomato" }}>
-  {new Date(user.firstComeTime).getHours() >= 9 ? (
-    (new Date(user.firstComeTime).getHours() - 9 > 0 || new Date(user.firstComeTime).getMinutes() > 0) ? (
-      <>
-        {new Date(user.firstComeTime).getHours() - 9 > 0 && (new Date(user.firstComeTime).getHours() - 9) + "(sag)"}
-        {new Date(user.firstComeTime).getMinutes() > 0 && (
-          <>
-            {new Date(user.firstComeTime).getHours() - 9 > 0 && ":"}
-            {new Date(user.firstComeTime).getMinutes()}(min)
-          </>
-        )}
-      </>
-    ) : ""
-  ) : (
-    ""
-  )}
-</TableCell>
+                              {new Date(user.firstComeTime).getHours() >= 9 ? (
+                                new Date(user.firstComeTime).getHours() - 9 >
+                                  0 ||
+                                new Date(user.firstComeTime).getMinutes() >
+                                  0 ? (
+                                  <>
+                                    {new Date(user.firstComeTime).getHours() -
+                                      9 >
+                                      0 &&
+                                      new Date(user.firstComeTime).getHours() -
+                                        9 +
+                                        "(sag)"}
+                                    {new Date(user.firstComeTime).getMinutes() >
+                                      0 && (
+                                      <>
+                                        {new Date(
+                                          user.firstComeTime
+                                        ).getHours() -
+                                          9 >
+                                          0 && ":"}
+                                        {new Date(
+                                          user.firstComeTime
+                                        ).getMinutes()}
+                                        (min)
+                                      </>
+                                    )}
+                                  </>
+                                ) : (
+                                  ""
+                                )
+                              ) : (
+                                ""
+                              )}
+                            </TableCell>
 
                             <TableCell sx={style2}>{user.note}</TableCell>
                           </TableRow>
@@ -352,7 +377,7 @@ const Index = () => {
           </Stack>
         </Stack>
       </Stack>
-      <EmployeesProjects data={data.projects} />
+      <UserProjects data={data.user} />
     </Box>
   );
 };

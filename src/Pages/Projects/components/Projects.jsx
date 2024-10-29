@@ -97,9 +97,8 @@ const Projects = () => {
   return (
     <Box mt={2} width="100%" backgroundColor="#f4f5f9">
       <Stack
-        backgroundColor="#fff"
         width="100%"
-        height="62vh"
+        height="'100%"
         borderRadius="12px"
         p="20px"
         boxShadow=" 0px 0px 8px -5px rgba(0,0,0,0.75)"
@@ -214,7 +213,8 @@ const Projects = () => {
               <Stack
                 sx={{
                   overflow: "auto",
-                  height: "375px",
+                  height: "435px",
+                  maxHeight: "100%",
                   // minHeight: "340px",
                 }}
               >

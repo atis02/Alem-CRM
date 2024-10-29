@@ -36,6 +36,7 @@ export const postNewProject = createAsyncThunk(
     return response.data.data;
   }
 );
+
 export const updateProject = createAsyncThunk("updateProject", async (body) => {
   const resp = await AxiosInstance.put(`/project/updata/project`, body);
 
@@ -103,6 +104,7 @@ const project = createSlice({
         state.status = "failed";
         state.error = action.error.message;
       })
+     
       //put
       .addCase(updateProject.pending, (state) => {
         state.status = "loading...";

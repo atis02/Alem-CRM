@@ -37,7 +37,7 @@ export const createPdf = createAsyncThunk(
     try {
       const resp = await AxiosInstance.post(
         "/pdf/upload/file",
-        body,
+        body.body,
         {
           headers: {
             'Content-Type': 'multipart/form-data',
@@ -54,7 +54,43 @@ export const createPdf = createAsyncThunk(
       if (resp.status === 200) {
         toast.success("Üstünlikli!");
         const response = await AxiosInstance.get(
-          `/pdf/get/files?userId=${user.id}`
+          `/pdf/get/files?userId=${body.userId}`
+        );
+        return response.data;
+      }
+
+      if (resp.data.status === 404) {
+        toast.error(resp.data.message);
+      }
+    } catch (error) {
+      toast.error("Ýalňyşlyk!");
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+export const updatePdf = createAsyncThunk(
+  "updatePdf",
+  async (body, { rejectWithValue, dispatch }) => {
+    
+    try {
+      const resp = await AxiosInstance.put(
+        body.files==null?"/pdf/edit":'/pdf/edit/file',
+        body.body,
+        {
+          maxContentLength: Infinity,
+          maxBodyLength: Infinity,
+          onUploadProgress: (progressEvent) => {
+            const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+            dispatch(updateUploadProgress(progress)); // Dispatch upload progress
+          }
+        }
+      );
+      console.log(body);
+
+      if (resp.status === 200) {
+        toast.success("Üstünlikli!");
+        const response = await AxiosInstance.get(
+          `/pdf/get/files?userId=${body.userId}`
         );
         return response.data;
       }
@@ -160,6 +196,18 @@ const postPdf = createSlice({
         state.uploadProgress = 0; // Reset progress on success
       })
       .addCase(createPdf.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(updatePdf.pending, (state) => {
+        state.status = "loading...";
+      })
+      .addCase(updatePdf.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.data = action.payload;
+        state.uploadProgress = 0; // Reset progress on success
+      })
+      .addCase(updatePdf.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       })

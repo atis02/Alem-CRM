@@ -30,6 +30,20 @@ export const getProjectForUser = createAsyncThunk(
     return [resp.data.data];
   }
 );
+export const updateProjectForUser = createAsyncThunk("updateProjectForUser", async (body) => {
+  const resp = await AxiosInstance.put(`/project/updata/project`, body);
+
+  if (resp.data.message == "Project updated successfully") {
+    toast.success("Üstünlikli!");
+    const response = await AxiosInstance.get(
+      `/project/get/user/projects?userId=${body.userId}`
+    );
+
+    return response.data.data;
+  } else {
+    toast.error("Ýalňyşlyk!");
+  }
+});
 export const updateTask = createAsyncThunk(
   "updateTask",
   async ({ body, projectID }) => {
@@ -61,6 +75,28 @@ export const deleteProjectTask = createAsyncThunk(
     }
   }
 );
+export const deleteProjectForUser = createAsyncThunk(
+  "deleteProjectForUser",
+  async (body) => {
+    const resp = await AxiosInstance.delete(
+      `/project/delete/project?projectId=${body.projectId}&responsibleUserId=${body.responsibleUserId}`
+    );
+    if (resp.data.message == "Project remove successfully") {
+      toast.success("Üstünlikli!");
+      const response = await AxiosInstance.get(
+        `/project/get/user/projects?userId=${body.userId}`
+      );
+  
+      return response.data.data;
+    } else {
+      toast.error("Ýalňyşlyk!");
+    }
+    // const resp = await AxiosInstance.delete(
+    //   `/project/delete/task?projectId=${body.projectId}&taskId=${body.taskId}&responsibleUserId=${body.responsibleUserId}`
+    // );
+   
+  }
+);
 export const addNewTask = createAsyncThunk(
   "addNewTask",
   async ({ body, projectID }) => {
@@ -79,6 +115,19 @@ export const addNewTask = createAsyncThunk(
     return [response.data.data];
   }
 );
+export const postNewProjectForUser = createAsyncThunk(
+  "postNewProjectForUser",
+  async (body) => {
+    const resp = await AxiosInstance.post(`/project/create`, body.body);
+
+    resp.data ? toast.success("Üstünlikli!") : toast.error("Şowsuz!");
+    const response = await AxiosInstance.get(
+      `/project/get/user/projects?userId=${body.userId}`
+    );
+
+    return response.data.data;
+  }
+);
 const project = createSlice({
   name: "project",
   initialState,
@@ -86,7 +135,42 @@ const project = createSlice({
   extraReducers: (builder) => {
     builder
       // get
-
+      .addCase(postNewProjectForUser.pending, (state) => {
+        state.status = "loading...";
+      })
+      .addCase(postNewProjectForUser.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.data = action.payload;
+      })
+      .addCase(postNewProjectForUser.rejected, (state, action) => {
+        state.loading = false;
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(updateProjectForUser.pending, (state) => {
+        state.status = "loading...";
+      })
+      .addCase(updateProjectForUser.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.data = action.payload;
+      })
+      .addCase(updateProjectForUser.rejected, (state, action) => {
+        state.loading = false;
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(deleteProjectForUser.pending, (state) => {
+        state.status = "loading...";
+      })
+      .addCase(deleteProjectForUser.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.data = action.payload;
+      })
+      .addCase(deleteProjectForUser.rejected, (state, action) => {
+        state.loading = false;
+        state.status = "failed";
+        state.error = action.error.message;
+      })
       .addCase(getProjectDetail.pending, (state) => {
         state.status = "loading...";
       })

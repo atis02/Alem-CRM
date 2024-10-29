@@ -127,6 +127,7 @@ export const projectTitles = [
   { id: 4, title: "Derejesi" },
   { id: 5, title: "Wajyplygy" },
   { id: 6, title: "Statusy" },
+  { id: 7, title: "" },
 ];
 export const projectTitlesForUser = [
   { id: 1, title: "Proýekt" },
@@ -143,6 +144,7 @@ export const projectTitlesFor = [
   { id: 4, title: "Derejesi" },
   { id: 5, title: "Wajyplygy" },
   { id: 6, title: "Statusy" },
+  { id: 6, title: "" },
 ];
 export const StyledTableRow = styled(TableRow)(({ theme }) => ({
   fontFamily: "DM Sans, sans-serif",
