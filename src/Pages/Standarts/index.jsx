@@ -19,7 +19,7 @@ import {
 } from "../../Components/db/Redux/api/StandartSlice";
 import deleteIcon from "../../../public/images/Delete.png";
 import AddIcon from "@mui/icons-material/Add";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import UpdateStandarts from "./components/UpdateStandarts";
 import {
   backgroundColor,
@@ -46,15 +46,20 @@ const index = () => {
   const user = JSON.parse(localStorage.getItem("CRM_USER"));
   const UsersData = useSelector((state) => state.users.data);
 
-  if (user.role === "ADMIN") {
-    useEffect(() => {
+  const allData = data.filter(
+    (elem) => (elem.users && elem.users.length) === UsersData.length
+  );
+  const filteredData = data.filter(
+    (elem) => (elem.users && elem.users.length) !== UsersData.length
+  );
+
+  useEffect(() => {
+    if (user.role === "ADMIN") {
       dispatch(getStandarts(user.id));
-    }, [dispatch]);
-  } else {
-    useEffect(() => {
+    } else {
       dispatch(getStandartsForUser(user.id));
-    }, [dispatch]);
-  }
+    }
+  }, [dispatch]);
   const handleDeleteLabor = (id) => {
     const body = {
       laborId: id,
@@ -62,7 +67,6 @@ const index = () => {
     };
     dispatch(deleteStandart(body));
   };
-  console.log(data);
 
   return (
     <Box
@@ -71,7 +75,10 @@ const index = () => {
       backgroundColor="#f2f9fc"
       overflow="auto"
       p="10px"
+      borderRadius="20px"
     >
+      <ToastContainer />
+
       <Stack
         direction="row"
         alignItems="center"
@@ -145,142 +152,184 @@ const index = () => {
                 Düzgünnama ýok
               </Typography>
             ) : (
-              <Grid container spacing={2}>
-                {data.map((elem, index) => (
-                  <Grid item xs={12} key={index} lg={12} sm={12}>
-                    <Paper
-                      sx={{
-                        height: "100%",
-                        minHeight: "155px",
-                        borderRadius: "12px",
-                        display: "flex",
-                        // width: "400px",
-                        width: "100%",
-                        justifyContent: "space-around",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Stack
-                        width="90%"
+              <>
+                <Stack direction="row" spacing={1}>
+                  <Grid
+                    container
+                    item
+                    height="100%"
+                    xs={12}
+                    md={6}
+                    lg={12}
+                    spacing={2}
+                  >
+                    <Stack width="100%">
+                      <Typography
+                        fontSize={20}
+                        // height="10%"
+                        textAlign="center"
+                        width="100%"
                         sx={{
-                          ...(elem.id == 4
-                            ? {
-                                // flexDirection: "column",
-                                cursor: "pointer",
-                                justifyContent: "center",
-                                alignItems: "center",
-                              }
-                            : ""),
-                          gap: "16px",
+                          ...(allData.length >= 1 ? { mb: 1.7 } : { mb: 0 }),
                         }}
-                        direction="column"
-                        justifyContent="center"
                       >
-                        <Stack
-                          direction="row"
-                          width="100%"
-                          justifyContent="space-between"
+                        Ähli işgärler
+                      </Typography>
+                      {allData.map((elem, index) => (
+                        <Grid
+                          item
+                          xs={12}
+                          key={index}
+                          mt={index == 0 ? "" : 2}
+                          lg={12}
+                          sm={12}
                         >
-                          <Typography
-                            color="#222222"
-                            fontSize={24}
-                            fontFamily="DM Sans"
-                            fontWeight={600}
-                            width="90%"
+                          <Paper
+                            sx={{
+                              height: "100%",
+                              minHeight: "155px",
+                              // maxHeight: "90%",
+                              borderRadius: "12px",
+                              display: "flex",
+                              // width: "400px",
+                              width: "100%",
+                              justifyContent: "space-around",
+                              alignItems: "center",
+                              p: 2,
+                            }}
                           >
-                            {elem.title}
-                            {elem.users &&
-                            elem.users.length === UsersData.length ? (
-                              <Button
-                                sx={{
-                                  color: "#00CCFF",
-                                  textTransform: "revert",
-                                  background: "#d9e8ff",
-                                  "&:hover": { background: "#e7e7fb" },
-                                  gap: "10px",
-                                  width: 140,
-                                  height: 35,
-                                  fontWeight: 500,
-                                  borderRadius: "20px",
-                                  border: `1px solid #00CCFF`,
-                                  ...(index == 0 ? { ml: 3 } : { ml: 1 }),
-                                }}
-                                variant="outlined"
+                            <Stack
+                              width="90%"
+                              sx={{
+                                ...(elem.id == 4
+                                  ? {
+                                      // flexDirection: "column",
+                                      cursor: "pointer",
+                                      justifyContent: "center",
+                                      alignItems: "center",
+                                    }
+                                  : ""),
+                                gap: "16px",
+                              }}
+                              direction="column"
+                              justifyContent="center"
+                            >
+                              <Stack
+                                direction="row"
+                                width="100%"
+                                justifyContent="space-between"
                               >
-                                Ähli ulanyjylar
-                              </Button>
-                            ) : (
-                              elem.users.map((item, index) => (
-                                <Button
-                                  key={index}
-                                  sx={{
-                                    color: "#00CCFF",
-                                    textTransform: "revert",
-                                    background: "#d9e8ff",
-                                    "&:hover": { background: "#e7e7fb" },
-                                    gap: "10px",
-                                    width: 60,
-                                    height: 25,
-                                    fontWeight: 500,
-                                    borderRadius: "20px",
-                                    border: `1px solid #00CCFF`,
-                                    ...(index == 0 ? { ml: 3 } : { ml: 1 }),
-                                  }}
-                                  variant="outlined"
+                                <Typography
+                                  color="#222222"
+                                  fontSize={24}
+                                  fontFamily="DM Sans"
+                                  fontWeight={600}
+                                  width="90%"
                                 >
-                                  {item.name}
-                                </Button>
-                              ))
-                            )}
-                          </Typography>
-                          {user.role === "USER" ? (
-                            ""
-                          ) : (
-                            <Stack direction="row" alignItems="end" spacing={1}>
-                              <IconButton
-                                onClick={() => handleOpenLaborUpdate(elem)}
-                              >
-                                <BorderColorOutlinedIcon
-                                  sx={{
-                                    color: "#0099ED",
-                                    width: 20,
-                                    height: 20,
-                                  }}
-                                />
-                              </IconButton>
+                                  {elem.title}
+                                  {elem.users &&
+                                  elem.users.length === UsersData.length ? (
+                                    <Button
+                                      sx={{
+                                        color: "#00CCFF",
+                                        textTransform: "revert",
+                                        background: "#d9e8ff",
+                                        "&:hover": { background: "#e7e7fb" },
+                                        gap: "10px",
+                                        width: 140,
+                                        height: 35,
+                                        fontWeight: 500,
+                                        borderRadius: "20px",
+                                        border: `1px solid #00CCFF`,
+                                        ...(index == 0 ? { ml: 3 } : { ml: 1 }),
+                                      }}
+                                      variant="outlined"
+                                    >
+                                      Ähli ulanyjylar
+                                    </Button>
+                                  ) : (
+                                    elem.users.map((item, index) => (
+                                      <Button
+                                        key={index}
+                                        sx={{
+                                          color: "#00CCFF",
+                                          textTransform: "revert",
+                                          background: "#d9e8ff",
+                                          "&:hover": { background: "#e7e7fb" },
+                                          gap: "10px",
+                                          width: 60,
+                                          height: 25,
+                                          fontWeight: 500,
+                                          borderRadius: "20px",
+                                          border: `1px solid #00CCFF`,
+                                          ...(index == 0
+                                            ? { ml: 3 }
+                                            : { ml: 1 }),
+                                        }}
+                                        variant="outlined"
+                                      >
+                                        {item.name}
+                                      </Button>
+                                    ))
+                                  )}
+                                </Typography>
+                                {user.role === "USER" ? (
+                                  ""
+                                ) : (
+                                  <Stack
+                                    direction="row"
+                                    alignItems="end"
+                                    spacing={1}
+                                  >
+                                    <IconButton
+                                      onClick={() =>
+                                        handleOpenLaborUpdate(elem)
+                                      }
+                                    >
+                                      <BorderColorOutlinedIcon
+                                        sx={{
+                                          color: "#0099ED",
+                                          width: 20,
+                                          height: 20,
+                                        }}
+                                      />
+                                    </IconButton>
 
-                              <IconButton
-                                onClick={() => handleDeleteLabor(elem.id)}
-                              >
-                                <img
-                                  style={{ width: 20, height: 20 }}
-                                  src={deleteIcon}
-                                  alt=""
-                                />
-                              </IconButton>
+                                    <IconButton
+                                      onClick={() => handleDeleteLabor(elem.id)}
+                                    >
+                                      <img
+                                        style={{ width: 20, height: 20 }}
+                                        src={deleteIcon}
+                                        alt=""
+                                      />
+                                    </IconButton>
 
-                              <UpdateStandarts
-                                data={update}
-                                openUpdate={openUpdate}
-                                handleClose={handleCloseLaborUpdate}
-                                userId={user.id}
-                              />
+                                    <UpdateStandarts
+                                      data={update}
+                                      openUpdate={openUpdate}
+                                      handleClose={handleCloseLaborUpdate}
+                                      userId={user.id}
+                                    />
+                                  </Stack>
+                                )}
+                              </Stack>
+                              <Typography
+                                color="#666666"
+                                fontSize={16}
+                                fontFamily="DM Sans"
+                                fontWeight={400}
+                              >
+                                {elem.description}
+                              </Typography>
                             </Stack>
-                          )}
-                        </Stack>
-                        <Typography
-                          color="#666666"
-                          fontSize={16}
-                          fontFamily="DM Sans"
-                          fontWeight={400}
-                        >
-                          {elem.description}
-                        </Typography>
-                      </Stack>
-                    </Paper>
+                          </Paper>
+                        </Grid>
+                      ))}
+                    </Stack>
                   </Grid>
-                ))}
-              </Grid>
+                </Stack>
+              </>
             )}
           </Stack>
         ) : (

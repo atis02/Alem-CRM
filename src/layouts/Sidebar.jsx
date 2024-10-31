@@ -134,6 +134,10 @@ export default function SidebarNav(data, sendingData) {
               }}
             >
               <MenuItem
+                onClick={() => {
+                  setActiveMenu(null);
+                  setIsExpanded(false);
+                }}
                 component={<NavLink className="sideNav" to="/account" />}
                 icon={<AccountCircleIcon />}
               >
@@ -141,12 +145,20 @@ export default function SidebarNav(data, sendingData) {
               </MenuItem>
 
               <MenuItem
+                onClick={() => {
+                  setActiveMenu(null);
+                  setIsExpanded(false);
+                }}
                 component={<NavLink className="sideNav" to="/document" />}
                 icon={<FileCopyIcon />}
               >
                 Resminama
               </MenuItem>
               <MenuItem
+                onClick={() => {
+                  setActiveMenu(null);
+                  setIsExpanded(false);
+                }}
                 component={
                   <NavLink
                     className="sideNav"
@@ -166,16 +178,20 @@ export default function SidebarNav(data, sendingData) {
                   : "Kalendar"}
               </MenuItem>
               <MenuItem
+                onClick={() => {
+                  setActiveMenu(null);
+                  setIsExpanded(false);
+                }}
                 component={<NavLink className="sideNav" to="/projects" />}
                 icon={<InventoryOutlinedIcon />}
               >
                 Edilmeli işler
               </MenuItem>
-              {/* <SubMenu
-                label="Işgärler"
-                title="Işgärler"
-                component={<NavLink className="sideNav" to="/" />}
-                icon={<Diversity3Icon />}
+              <SubMenu
+                label="Tertip - düzgünnama"
+                title="Tertip - düzgünnama"
+                component={<NavLink className="sideNav" to="/standarts/all" />}
+                icon={<GavelIcon />}
                 suffix={
                   isExpanded ? (
                     <KeyboardArrowDownIcon sx={{ width: 30, height: 30 }} />
@@ -203,14 +219,25 @@ export default function SidebarNav(data, sendingData) {
                 >
                   <MenuItem
                     component={
-                      <NavLink className="sideNav2" to="/employees/working" />
+                      <NavLink className="sideNav2" to="/standarts/all" />
                     }
                   >
-                    Iş wagtlary
+                    Ähli Işgärler
+                  </MenuItem>
+                  <MenuItem
+                    component={
+                      <NavLink className="sideNav2" to="/standarts/specific" />
+                    }
+                  >
+                    Aýratynlykda
                   </MenuItem>
                 </Stack>
-              </SubMenu> */}
+              </SubMenu>
               <MenuItem
+                onClick={() => {
+                  setActiveMenu(null);
+                  setIsExpanded(false);
+                }}
                 component={<NavLink className="sideNav" to="/employees" />}
                 icon={<Diversity3Icon />}
                 style={{
@@ -222,6 +249,10 @@ export default function SidebarNav(data, sendingData) {
                 Işgärler
               </MenuItem>
               <MenuItem
+                onClick={() => {
+                  setActiveMenu(null);
+                  setIsExpanded(false);
+                }}
                 icon={<SettingsIcon />}
                 component={<NavLink className="sideNav" to="/settings" />}
                 style={{
@@ -232,16 +263,12 @@ export default function SidebarNav(data, sendingData) {
               >
                 Sazlamalar
               </MenuItem>
+
               <MenuItem
-                icon={<GavelIcon />}
-                component={<NavLink className="sideNav" to="/standarts" />}
-                style={{
-                  fontSize: 19,
+                onClick={() => {
+                  setActiveMenu(null);
+                  setIsExpanded(false);
                 }}
-              >
-                Tertip - düzgünnama
-              </MenuItem>
-              <MenuItem
                 component={<NavLink className="sideNav" to="/chat" />}
                 icon={<ForumIcon />}
               >

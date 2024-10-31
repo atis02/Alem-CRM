@@ -17,7 +17,6 @@ const index = ({ data }) => {
   useEffect(() => {
     setUserData([data]);
   }, [data]);
-  console.log(userData);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -36,7 +35,7 @@ const index = ({ data }) => {
     <Box
       height="90vh"
       p="0 15px"
-      width="100%"
+      // width="100%"
       backgroundColor="#f4f5f9"
       // overflow="auto"
       // height='50%'

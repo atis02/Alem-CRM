@@ -149,7 +149,7 @@ export const deletePdf = createAsyncThunk("deletePdf", async (body) => {
   return response.data;
 });
 export const deletePdfForUser = createAsyncThunk("deletePdfForUser", async (body, { dispatch }) => {
-  const resp = await AxiosInstance.post(`/pdf/delete`, body);
+  const resp = await AxiosInstance.delete(`/pdf/delete?userId=${body.userId}&documentId=${body.documentId}` );
   
   if (resp.status === 200) {
     toast.success("Üstünlikli!");

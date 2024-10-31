@@ -14,7 +14,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { Capitalize } from "../../../Components/utils";
 import { getUsers } from "../../../Components/db/Redux/api/UserSlice";
 import CloseIcon from "@mui/icons-material/Close";
-import { postStandart } from "../../../Components/db/Redux/api/StandartSlice";
+import {
+  postStandart,
+  postStandartForUser,
+} from "../../../Components/db/Redux/api/StandartSlice";
 import { toast, ToastContainer } from "react-toastify";
 
 // Custom Paper component for Autocomplete
@@ -28,7 +31,7 @@ const CustomPaper = (props) => (
   />
 );
 
-const CreateStandarts = ({ open, handleClose, userId }) => {
+const CreateStandarts = ({ open, handleClose, userId, defaultUser }) => {
   const UsersData = useSelector((state) => state.users.data);
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState([]);
@@ -51,8 +54,12 @@ const CreateStandarts = ({ open, handleClose, userId }) => {
     alignItems: "center",
     flexDirection: "column",
   };
+  console.log(defaultUser);
 
   const dispatch = useDispatch();
+  useEffect(() => {
+    setUsers([defaultUser]);
+  }, [defaultUser]);
 
   useEffect(() => {
     dispatch(getUsers());
@@ -77,16 +84,15 @@ const CreateStandarts = ({ open, handleClose, userId }) => {
     const body = {
       title: title,
       description: description,
-      usersId: selectedUser,
-      userId: userId,
+      usersId: users[0].id,
+      userId: users[0].id,
     };
+
     if (title && description && selectedUser) {
-      dispatch(postStandart(body));
+      dispatch(postStandartForUser(body));
       handleClose();
       setTitle("");
       setDescription("");
-      setUsers([]);
-      setSelectedUser([]);
     } else {
       toast.error("Maglumatlary giriziň!");
     }
@@ -137,7 +143,9 @@ const CreateStandarts = ({ open, handleClose, userId }) => {
             multiple
             multiline
             rows={4} // Set the number of visible rows
-            value={users}
+            defaultValue={[defaultUser]}
+            value={[defaultUser]}
+            disabled
             fullWidth
             isOptionEqualToValue={(option, value) => option.id === value.id}
             options={optionsWithSelectAll}

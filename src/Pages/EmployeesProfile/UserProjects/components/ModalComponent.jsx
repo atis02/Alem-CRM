@@ -42,7 +42,6 @@ const ModalComponent = ({ open, handleClose, userData }) => {
   const [startDateProject, setStartDateProject] = useState("");
   const statusUsers = useSelector((state) => state.users.status);
   const UsersData = useSelector((state) => state.users.data);
-  console.log(userData);
 
   const dispatch = useDispatch();
   const [workers, setWorkers] = useState([]);
@@ -127,8 +126,6 @@ const ModalComponent = ({ open, handleClose, userData }) => {
         },
       ],
     };
-    console.log(dayjs(startDateProject).format("YYYY-MM-DD"));
-    console.log(dayjs(endDateProject).format("YYYY-MM-DD"));
     const data = {
       body: body,
       userId: userData[0].id,

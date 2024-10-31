@@ -1,26 +1,48 @@
 import React, { useEffect, useState } from "react";
-import { Button, Stack, TextField, Typography } from "@mui/material";
+import {
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import {
   createPdf,
   createPdfByAdmin,
   deletePdf,
+  getDocType,
 } from "../../../Components/db/Redux/api/PdfSlice";
-import { useDispatch } from "react-redux";
-import { toast, Toaster } from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
 import { getUserMonthWorkTime } from "../../../Components/db/Redux/api/ComeTimeSlice";
 import moment from "moment";
+import { toast, ToastContainer } from "react-toastify";
 
 const UpdateUserDocs = ({ id, handleCloseDocsModal, params }) => {
   const [files, setFiles] = useState(null);
   const [docName, setDocName] = useState("");
+  const [selectedValue, setSelectedValue] = useState("");
   const dispatch = useDispatch();
 
+  const docType = useSelector((state) => state.uploadPDf.docType);
+  const status = useSelector((state) => state.uploadPDf.status);
+  console.log(docType);
+
+  useEffect(() => {
+    dispatch(getDocType(id));
+  }, [dispatch]);
   const updateFiles = (e) => {
     const file = e.target.files[0];
     file && toast.success("Faýl saýlandy");
     setFiles(file);
   };
 
+  const handleChange = (event) => {
+    setSelectedValue(event.target.value); // Get the selected value
+    console.log("Selected value:", event.target.value); // Display the selected value in the console
+  };
   const handleUpload = () => {
     if (!docName) {
       toast.warn("Faýl ady giriz!");
@@ -30,10 +52,14 @@ const UpdateUserDocs = ({ id, handleCloseDocsModal, params }) => {
       toast.warn("Faýl saýlaň");
       return;
     }
-
+    if (!selectedValue) {
+      toast.warn("Faýl görnüşini saýlaň");
+      return;
+    }
     const body = new FormData();
     body.append("userId", id);
     body.append("title", docName);
+    body.append("documentTypeId", selectedValue);
     body.append("file", files);
     const data = {
       body: body,
@@ -48,7 +74,7 @@ const UpdateUserDocs = ({ id, handleCloseDocsModal, params }) => {
 
   return (
     <>
-      <Toaster />
+      <ToastContainer />
       <Stack
         width="80%"
         spacing="20px"
@@ -60,7 +86,7 @@ const UpdateUserDocs = ({ id, handleCloseDocsModal, params }) => {
           width="100%"
           justifyContent="space-between"
           spacing={1}
-          height="65%"
+          height="100%"
         >
           <TextField
             id="input-with-icon-textfield"
@@ -94,6 +120,40 @@ const UpdateUserDocs = ({ id, handleCloseDocsModal, params }) => {
             }}
             variant="outlined"
           />
+          <FormControl fullWidth>
+            <InputLabel
+              id="demo-simple-select-label"
+              shrink
+              sx={{
+                transform: "translate(14px, 11px) scale(1)", // Adjust initial position
+                "&.Mui-focused, &.MuiFormLabel-filled": {
+                  transform: "translate(14px, -9px) scale(0.75)", // Adjust position when focused
+                },
+                height: "45px",
+              }}
+            >
+              Resminama görnüşi
+            </InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={selectedValue}
+              label="Resminama görnüşi"
+              onChange={handleChange}
+              sx={{
+                height: "45px",
+                borderRadius: "30px",
+              }}
+            >
+              {status === "succeeded" &&
+                docType.map((item) => (
+                  <MenuItem key={item.id} value={item.id}>
+                    {item.name}
+                  </MenuItem>
+                ))}
+            </Select>
+          </FormControl>
+
           <input
             type="file"
             onChange={updateFiles}

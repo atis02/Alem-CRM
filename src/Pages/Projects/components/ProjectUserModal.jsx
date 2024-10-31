@@ -37,7 +37,7 @@ const ProjectUserModal = ({
 }) => {
   const [users, setUsers] = useState([]);
   const [priority, setPriority] = useState([]);
-  const [selectedValue, setSelectedValue] = useState("");
+  const [selectedValue, setSelectedValue] = useState("Orta");
   const [selectedStatus, setStatus] = useState("Başlanmadyk");
   const [value, setValue] = useState("");
   const [userId, setUserId] = useState("");
@@ -87,9 +87,7 @@ const ProjectUserModal = ({
       endDate !== null
     ) {
       handleCloseUserModal(user);
-      setSelectedValue("");
       setValue("");
-      setStatus("");
       setWorkers((prevState) => [...prevState, body]);
     } else {
       toast.error("Dogry maglumatyňyzy giriziň!");

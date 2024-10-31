@@ -136,15 +136,14 @@ const Index = () => {
   const handleChange = (name) => {
     setProjectName(name);
   };
-  console.log(data);
 
   return (
-    <Box height="100%" width="100%" backgroundColor="#f2f9fc" overflow="auto">
+    <Box backgroundColor="#f2f9fc" overflow="auto">
       <Stack
         direction="row"
         alignItems="center"
         justifyContent="space-between"
-        p="0 10px 0 0"
+        // p="0 10px 0 0"
       >
         <Link
           to="#"
@@ -169,7 +168,7 @@ const Index = () => {
       </Stack>
 
       <Stack
-        p={1}
+        pb={1}
         direction="row"
         alignItems="center"
         justifyContent="space-around"

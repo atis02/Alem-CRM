@@ -111,7 +111,6 @@ const UpdateModalComponent = ({ open, handleClose, details, userData }) => {
       //   setUserId(newValues.id);
     }
   };
-  console.log(details);
 
   const handleSubmit = () => {
     const body = {
@@ -207,7 +206,6 @@ const UpdateModalComponent = ({ open, handleClose, details, userData }) => {
                 }}
               />
             </Stack>
-            {console.log(details)}
             <Autocomplete
               id="combo-box-demo"
               multiple

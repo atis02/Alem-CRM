@@ -6,6 +6,7 @@ import {
   Modal,
   Paper,
   Stack,
+  TextareaAutosize,
   TextField,
   Typography,
 } from "@mui/material";
@@ -176,13 +177,34 @@ const UpdateStandarts = ({ openUpdate, handleClose, data, userId }) => {
               />
             )}
           />
+          {/* <TextareaAutosize
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            minRows={3} // Sets the minimum number of visible rows
+            maxRows={16} // Optionally set a maximum height
+            placeholder="Resizable Text Area"
+            style={{
+              width: "100%", // Set to 100% of its container's width
+              resize: "vertical", // Enables vertical resizing
+              padding: "8px", // Optional padding for better styling
+              fontSize: "16px",
+            }}
+          /> */}
           <TextField
             label="Beýan"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             variant="outlined"
+            multiline
+            minRows={6}
+            maxRows={18}
             fullWidth
-            sx={{ mt: 2 }} // Margin top for spacing
+            sx={{
+              mt: 2,
+              "& .MuiOutlinedInput-root": {
+                resize: "vertical", // Only allows vertical resizing
+              },
+            }} // Margin top for spacing
           />
           <Stack alignItems="end" mt={2} mb={1}>
             <Button

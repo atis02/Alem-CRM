@@ -44,7 +44,6 @@ const Project = ({ setProjectName, userData }) => {
   const [allData, setAllData] = useState([data]);
   const dispatch = useDispatch();
   const admin = JSON.parse(localStorage.getItem("CRM_USER"));
-  console.log(data);
 
   const navigate = useNavigate();
 
@@ -68,8 +67,6 @@ const Project = ({ setProjectName, userData }) => {
     setSelectedUsers(elem);
   };
   const handleDeleteProjectTask = (elem) => {
-    console.log(elem);
-
     const body = {
       projectId: elem.id,
       userId: id,

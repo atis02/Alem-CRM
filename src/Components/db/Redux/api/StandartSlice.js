@@ -37,6 +37,38 @@ export const deleteStandart = createAsyncThunk("deleteStandart", async (body) =>
     toast.error('Ýalňyşlyk!');
   }
 });
+export const deleteStandartForUser = createAsyncThunk("deleteStandartForUser", async (body) => {
+  
+  const resp = await AxiosInstance.delete(`/labor/protection/delete?id=${body.laborId}&userId=${body.userId}`)
+  if(resp.data.message==='LaborProtection deleted successfully'){
+    toast.success('Üstünlikli!');
+  const response = await AxiosInstance.get(`/labor/protection/get/user?userId=${body.id}`);
+    return response.data;
+
+  }
+  else {
+    toast.error('Ýalňyşlyk!');
+  }
+});
+export const postStandartForUser = createAsyncThunk("postStandartForUser", async (body) => {
+  const data = {
+    title: body.title,
+    description: body.description,
+    usersId: body.usersId,
+  };
+  const resp = await AxiosInstance.post(`/labor/protection/add`,data)
+  if(resp.data=='OK'){
+    toast.success('Üstünlikli!');
+    const response = await AxiosInstance.get(`/labor/protection/get/user?userId=${body.userId}`);
+
+    
+    return response.data;
+
+  }
+  else {
+    toast.error('Ýalňyşlyk!');
+  }
+});
 export const postStandart = createAsyncThunk("postStandart", async (body) => {
   const data = {
     title: body.title,
@@ -47,6 +79,7 @@ export const postStandart = createAsyncThunk("postStandart", async (body) => {
   if(resp.data=='OK'){
     toast.success('Üstünlikli!');
     const response = await AxiosInstance.get(`/labor/protection/get?userId=${body.userId}`);
+
     return response.data;
 
   }
@@ -116,6 +149,19 @@ const standartSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message;
       })
+      .addCase(deleteStandartForUser.pending, (state) => {
+        state.status = "loading...";
+      })
+      .addCase(deleteStandartForUser.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.data = action.payload;
+        state.updated = true;
+      })
+      .addCase(deleteStandartForUser.rejected, (state, action) => {
+        state.loading = false;
+        state.status = "failed";
+        state.error = action.error.message;
+      })
       .addCase(postStandart.pending, (state) => {
         state.status = "loading...";
       })
@@ -125,6 +171,19 @@ const standartSlice = createSlice({
         state.updated = true;
       })
       .addCase(postStandart.rejected, (state, action) => {
+        state.loading = false;
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(postStandartForUser.pending, (state) => {
+        state.status = "loading...";
+      })
+      .addCase(postStandartForUser.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.data = action.payload;
+        state.updated = true;
+      })
+      .addCase(postStandartForUser.rejected, (state, action) => {
         state.loading = false;
         state.status = "failed";
         state.error = action.error.message;

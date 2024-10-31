@@ -26,28 +26,59 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { postNewProject } from "../../../Components/db/Redux/api/ProjectSlice";
 import { toast } from "react-toastify";
+import dayjs from "dayjs";
 
 const ModalComponent = ({ open, handleClose }) => {
   const [openUserModal, setOpenUserModal] = useState(false);
-  const [selectedValue, setSelectedValue] = useState("");
+  const [selectedValue, setSelectedValue] = useState("Orta");
   const [selectedStatus, setStatus] = useState("Başlanmadyk");
   const [users, setUsers] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [userId, setUserId] = useState("");
   const [value, setValue] = useState("");
-  const [endDateProject, setEndDateProject] = useState("");
-  const [startDateProject, setStartDateProject] = useState("");
+  const [workers, setWorkers] = useState([]);
+  const [endDateProject, setEndDateProject] = useState(
+    workers ? workers.endDate : ""
+  );
+  const [startDateProject, setStartDateProject] = useState(
+    workers ? workers.startDate : ""
+  );
   const statusUsers = useSelector((state) => state.users.status);
   const UsersData = useSelector((state) => state.users.data);
 
   const dispatch = useDispatch();
-  const [workers, setWorkers] = useState([]);
   const handleChangeSelect = (event) => {
     setSelectedValue(event.target.value);
   };
   const handleChangeStatus = (event) => {
     setStatus(event.target.value);
   };
+
+  useEffect(() => {
+    const projectTime = workers.reduce(
+      (acc, project) => {
+        const projectStart = new Date(project.startDate);
+        const projectEnd = new Date(project.endDate);
+
+        // Update earliest start date
+        if (!acc.earliestStart || projectStart < acc.earliestStart) {
+          acc.earliestStart = projectStart;
+        }
+
+        // Update latest end date
+        if (!acc.latestEnd || projectEnd > acc.latestEnd) {
+          acc.latestEnd = projectEnd;
+        }
+
+        return acc;
+      },
+      { earliestStart: null, latestEnd: null }
+    );
+
+    setStartDateProject(projectTime.earliestStart);
+    setEndDateProject(projectTime.latestEnd);
+  }, [workers]);
+
   const handleOpenUserModal = (newValues) => {
     if (newValues.length) {
       setOpenUserModal(true);
@@ -122,11 +153,9 @@ const ModalComponent = ({ open, handleClose }) => {
     ) {
       dispatch(postNewProject(body));
       handleClose();
-      setSelectedValue("");
       setUsers([]);
       setWorkers([]);
       setValue("");
-      setStatus("");
     } else {
       toast.error("Dogry maglumatyňyzy giriziň!");
     }
@@ -258,13 +287,29 @@ const ModalComponent = ({ open, handleClose }) => {
 
                       <DatePicker
                         fullWidth
+                        value={
+                          dayjs(startDateProject).isValid()
+                            ? dayjs(startDateProject)
+                            : null
+                        }
                         onChange={(newValue) => {
                           if (newValue) {
-                            setStartDateProject(newValue);
+                            setStartDateProject(
+                              newValue
+                                ? dayjs(newValue).format("YYYY-MM-DD")
+                                : dayjs(startDateProject)
+                            );
                           } else {
-                            setStartDateProject(null);
+                            setStartDateProject(dayjs(startDateProject));
                           }
                         }}
+                        // onChange={(newValue) => {
+                        //   if (newValue) {
+                        //     setStartDateProject(newValue);
+                        //   } else {
+                        //     setStartDateProject(null);
+                        //   }
+                        // }}
                         format="DD.MM.YYYY"
                       />
                     </Stack>
@@ -284,11 +329,20 @@ const ModalComponent = ({ open, handleClose }) => {
 
                       <DatePicker
                         fullWidth
+                        value={
+                          dayjs(endDateProject).isValid()
+                            ? dayjs(endDateProject)
+                            : null
+                        }
                         onChange={(newValue) => {
                           if (newValue) {
-                            setEndDateProject(newValue);
+                            setEndDateProject(
+                              newValue
+                                ? dayjs(newValue).format("YYYY-MM-DD")
+                                : dayjs(endDateProject)
+                            );
                           } else {
-                            setEndDateProject(null);
+                            setEndDateProject(dayjs(endDateProject));
                           }
                         }}
                         format="DD.MM.YYYY"

@@ -32,6 +32,7 @@ import deleteIcon from "../../../../public/images/Delete.png";
 import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import UpdateModalComponent from "./UpdateModalComponent";
 import { getUsers } from "../../../Components/db/Redux/api/UserSlice";
+import FadeTooltip from "../../../Components/Tooltip";
 
 const Projects = () => {
   const [age, setAge] = useState("");
@@ -261,18 +262,25 @@ const Projects = () => {
                       <TableBody sx={{ cursor: "pointer" }}>
                         {data.map((user, index) => (
                           <StyledTableRow key={index}>
-                            <TableCell
-                              sx={style2}
-                              onClick={() =>
-                                navigate(
-                                  `/projects/${
-                                    user.project_id ? user.project_id : user.id
-                                  }`
-                                )
+                            <FadeTooltip
+                              value={user.name}
+                              data={
+                                <TableCell
+                                  sx={style2}
+                                  onClick={() =>
+                                    navigate(
+                                      `/projects/${
+                                        user.project_id
+                                          ? user.project_id
+                                          : user.id
+                                      }`
+                                    )
+                                  }
+                                >
+                                  {user.name}
+                                </TableCell>
                               }
-                            >
-                              {user.name}
-                            </TableCell>
+                            />
                             <TableCell
                               onClick={() =>
                                 navigate(

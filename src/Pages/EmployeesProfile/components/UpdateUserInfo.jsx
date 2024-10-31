@@ -119,7 +119,6 @@ const UpdateUserInfo = ({ userData, userId, params, handleClose }) => {
 
   const handleChangeLang = (event) => {
     const { name, checked } = event.target;
-    console.log(event.target);
 
     setSelectedLanguages((prevLanguages) =>
       checked

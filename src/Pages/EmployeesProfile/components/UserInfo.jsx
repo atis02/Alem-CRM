@@ -27,6 +27,7 @@ import DescriptionIcon from "@mui/icons-material/Description";
 import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import deleteIcon from "../../../../public/images/Delete.png";
 import addIcon from "../../../../public/images/addDoc.png";
+import Standart from "../../Standarts";
 import moment from "moment";
 import EmployeesProjects from "./EmployeesProjects";
 import { useDispatch, useSelector } from "react-redux";
@@ -48,14 +49,21 @@ import {
   deletePdf,
   deletePdfForUser,
 } from "../../../Components/db/Redux/api/PdfSlice";
+import UserLabor from "./UserLabor";
+import CloseIcon from "@mui/icons-material/Close";
+import Tooltip from "../../../Components/Tooltip";
+import FadeTooltip from "../../../Components/Tooltip";
 
 const UserInfo = () => {
   const [open, setOpen] = useState(false);
   const [openDocs, setOpenDocs] = useState(false);
+  const [openStandart, setOpenStandart] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const handleOpenDocsModal = () => setOpenDocs(true);
   const handleCloseDocsModal = () => setOpenDocs(false);
+  const handleOpenUserStandart = () => setOpenStandart(true);
+  const handleCloseUserStandart = () => setOpenStandart(false);
   const { id } = useParams();
   const [searchParams] = useSearchParams();
   const status = useSelector((state) => state.getWorkDate.statusMonth);
@@ -128,6 +136,22 @@ const UserInfo = () => {
     alignItems: "center",
     flexDirection: "column",
   };
+  const styleStanart = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "85%",
+    bgcolor: "background.paper",
+    border: "1px solid lightgray",
+    gap: "10px",
+    height: 650,
+    justifyContent: "center",
+    borderRadius: "20px",
+    display: "flex",
+    alignItems: "center",
+    flexDirection: "column",
+  };
   const handleDeletePdf = (id, docId) => {
     const body = {
       userId: id,
@@ -146,6 +170,7 @@ const UserInfo = () => {
       pb="10px"
       boxShadow=" 0px 0px 8px -5px rgba(0,0,0,0.75)"
       p="30px 24px 17px"
+      position="relative"
     >
       <Stack
         direction="row"
@@ -272,7 +297,7 @@ const UserInfo = () => {
                 </Stack>
               </Stack>
               <Stack width="60%">
-                <Stack alignItems="end">
+                <Stack alignItems="end" position="absolute" top={1} right={10}>
                   <IconButton
                     // onClick={() => {
                     //   handleOpen();
@@ -319,7 +344,7 @@ const UserInfo = () => {
                       direction="row"
                       alignItems="center"
                       spacing={1}
-                      mt="16px"
+                      mt="10px"
                     >
                       <img
                         src={mail2}
@@ -392,14 +417,28 @@ const UserInfo = () => {
                         style={{ width: 25, height: 25 }}
                         alt="mail2"
                       />
-                      <Typography
-                        mt="7px"
-                        textAlign="center"
-                        fontSize={16}
-                        color="#727272"
-                      >
-                        {data.user && data.user.whereStudy}
-                      </Typography>
+                      <FadeTooltip
+                        value={data.user && data.user.whereStudy}
+                        data={
+                          <Typography
+                            mt="7px"
+                            textAlign="center"
+                            fontSize={16}
+                            color="#727272"
+                            sx={{
+                              textAlign: "center",
+                              fontFamily: "DM Sans",
+                              maxWidth: 700,
+                              whiteSpace: "nowrap",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              fontWeight: 500,
+                            }}
+                          >
+                            {data.user && data.user.whereStudy}
+                          </Typography>
+                        }
+                      />
                     </Stack>
                   )}
                 </Stack>
@@ -451,13 +490,58 @@ const UserInfo = () => {
                       </Typography>
                     </Stack>
                   )}
+                  <Button
+                    variant="contained"
+                    sx={{
+                      background: "#9FC2A6",
+                      mt: 2,
+                      textTransform: "revert",
+                      fontSize: 16,
+                      "&:hover": { background: "#9FC2A6" },
+                    }}
+                    onClick={handleOpenUserStandart}
+                  >
+                    Düzgünnama Goşmak
+                  </Button>
                 </Stack>
               </Stack>
             </>
           )
         ) : null}
       </Stack>
+      <Modal
+        open={openStandart}
+        onClose={handleCloseUserStandart}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={styleStanart}>
+          <Stack
+            width="100%"
+            bgcolor="#00B69B"
+            p="15px 20px"
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            textTransform="capitalize"
+            sx={{ borderTopLeftRadius: "10px", borderTopRightRadius: "10px" }}
+          >
+            <Typography
+              color="#fff"
+              fontSize={24}
+              fontWeight={400}
+              fontFamily="DM Sans"
+            >
+              Täze tertip - düzgünnama
+            </Typography>
+            <IconButton onClick={handleCloseUserStandart}>
+              <CloseIcon sx={{ color: "#fff" }} />
+            </IconButton>
+          </Stack>
 
+          <UserLabor userData={data.user} />
+        </Box>
+      </Modal>
       <Divider />
       <Stack height="45%">
         <Stack
@@ -488,7 +572,7 @@ const UserInfo = () => {
             aria-describedby="modal-modal-description"
           >
             <Box sx={style}>
-              <Stack alignItems="end" width="100%" p="0 20px" mt={2}>
+              <Stack alignItems="end" width="100%" p="0 20px">
                 <IconButton
                   sx={{ fontWeight: 600, fontSize: 20 }}
                   onClick={handleCloseDocsModal}

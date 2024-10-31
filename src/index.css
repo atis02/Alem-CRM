@@ -7,6 +7,7 @@
 body {
   font-family: 'Montserrat';
   font-display: swap;
+  box-sizing: border-box;
 
 }
 /* @font-face {
@@ -85,12 +86,12 @@ background-color: lightgray;
 }
 .sideNav2{
   height: 50px !important;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 450;
   color: #474747 !important;
   background-color: #fff;
 }
-.sideNav2 .active{ 
+.sideNav2.active {
   border-top-left-radius:30px ;
   color: #fff !important;
   background-color: #9FC2A6 !important;
