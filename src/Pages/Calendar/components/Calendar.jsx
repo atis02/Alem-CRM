@@ -11,6 +11,7 @@ import {
   Button,
   Stack,
   IconButton,
+  Grow,
 } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -20,6 +21,11 @@ import {
   turkmenWeekdays,
 } from "../../../Components/utils";
 import pattern from "../../../../public/images/pattern.png";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
+import "dayjs/locale/tk";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 
 const CustomCalendar = ({ openModal, events, setStartDate, setEndDate }) => {
   moment.locale("tk");
@@ -35,8 +41,9 @@ const CustomCalendar = ({ openModal, events, setStartDate, setEndDate }) => {
   const [selectedDay, setSelectedDay] = useState(null);
   const [eventText, setEventText] = useState("");
   const [open, setOpen] = useState(false);
+  const [selectedYear, setSelectedYear] = useState(null);
   const [viewMode, setViewMode] = useState("month"); // 'month', 'week', 'day'
-
+  dayjs.locale("tk");
   const generateCalendar = () => {
     let startDay, endDay;
     if (viewMode === "month") {
@@ -102,6 +109,22 @@ const CustomCalendar = ({ openModal, events, setStartDate, setEndDate }) => {
 
   const filteredEvents = (day) =>
     events.filter((item) => moment(item.date).isSame(day, "day"));
+
+  const handleSelectYear = () => {
+    setSelectedYear(null);
+    setOpen(!open);
+  };
+
+  const handleDateChange = (newDate) => {
+    setSelectedYear(dayjs(newDate)); //  date change
+    setCurrentDate(
+      currentDate
+        .clone()
+        .month(newDate.month()) // Keep the current month
+        .date(newDate.date()) // Keep the current day
+        .year(newDate.year()) // Update the year to the selected year
+    );
+  };
 
   const renderCalendar = () => {
     if (viewMode === "day") {
@@ -277,23 +300,95 @@ const CustomCalendar = ({ openModal, events, setStartDate, setEndDate }) => {
         alignItems="center"
         justifyContent="space-between"
       >
-        <Button
-          sx={{
-            color: "#565656",
-            fontSize: 14,
-            textTransform: "revert",
-            fontWeight: 600,
-            textAlign: "start",
-          }}
-          onClick={handleTodayClick}
+        <Stack
+          direction="row"
+          alignItems="center"
+          // justifyContent="space-between"
+          // width="450px"
+          spacing={1}
+          // mr={2}
         >
-          Şu gün
-        </Button>
+          <Button
+            sx={{
+              color: "#565656",
+              fontSize: 14,
+              textTransform: "revert",
+              fontWeight: 600,
+              textAlign: "start",
+              border: "0.6px solid #D5D5D5",
+              borderRadius: "15px",
+              width: "68px",
+              height: "40px",
+            }}
+            onClick={handleTodayClick}
+          >
+            Şu gün
+          </Button>
+          <Button
+            sx={{
+              color: "#565656",
+              fontSize: 14,
+              textTransform: "revert",
+              fontWeight: 600,
+              textAlign: "start",
+              border: "0.6px solid #D5D5D5",
+              borderRadius: "15px",
+              width: "68px",
+              minHeight: "40px",
+
+              ...(open
+                ? {
+                    backgroundColor: "tomato",
+                    color: "#fff",
+                    "&:hover": { backgroundColor: "tomato" },
+                  }
+                : { backgroundColor: "#fff" }),
+            }}
+            onClick={handleSelectYear}
+          >
+            {open ? "X" : "Sene"}
+          </Button>
+          <Grow in={open}>
+            <Stack width="50%">
+              <LocalizationProvider
+                dateAdapter={AdapterDayjs}
+                adapterLocale="tk"
+              >
+                <DatePicker
+                  // open={open}
+                  // onClose={() => setOpen(false)} // Close the DatePicker
+                  value={selectedYear}
+                  onChange={handleDateChange}
+                  format="DD/MM/YYYY"
+                  openTo="year"
+                  views={["year", "month", "day"]}
+                  slotProps={{
+                    textField: {
+                      size: "small",
+                      InputProps: {
+                        sx: {
+                          borderRadius: "35px",
+                          backgroundColor: "#F5F6FA",
+                          width: "75%",
+                          // height: 45,
+                          border: "1px solid #ccc",
+                        },
+                      },
+                    },
+                  }}
+                  renderInput={(props) => <input {...props} />}
+                />
+              </LocalizationProvider>
+            </Stack>
+          </Grow>
+        </Stack>
+
         <Stack
           direction="row"
           width="66%"
           alignItems="center"
           justifyContent="space-between"
+          ml={-13}
         >
           <Stack direction="row" alignItems="center">
             <IconButton

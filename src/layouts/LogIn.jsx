@@ -145,7 +145,7 @@ const Login = () => {
             }}
             alt=""
           />
-          <Typography
+          {/* <Typography
             textAlign="center"
             color="#fff"
             fontWeight="500"
@@ -156,14 +156,14 @@ const Login = () => {
             fontFamily="Montserrat"
           >
             ÄLEM TILSIMAT
-          </Typography>
+          </Typography> */}
           <Typography
             textAlign="center"
             color="#fff"
             fontWeight="600"
-            fontSize={35}
+            fontSize={65}
             position="absolute"
-            top="55%"
+            top="45%"
             left="3%"
             fontFamily="Montserrat"
           >
@@ -200,9 +200,9 @@ const Login = () => {
                 fontFamily="Montserrat"
                 fontWeight="600"
                 textAlign="start"
-                ml={5}
+                ml={7.4}
               >
-                Giriň
+                Giriş
               </Typography>
               <form
                 onSubmit={handleSubmit}
@@ -341,7 +341,7 @@ const Login = () => {
                         <CircularProgress sx={{ color: "#fff" }} />
                       </Stack>
                     ) : (
-                      "Giriň"
+                      "Dowam et"
                     )}
                   </Button>
                 </Stack>

@@ -71,13 +71,20 @@ const Projects = () => {
     p: 2,
     textAlign: "center",
     fontFamily: "DM Sans",
-    maxWidth: "150px",
-    whiteSpace: "nowrap",
+  };
+  const style3 = {
+    fontSize: "14px",
+    textAlign: "center",
+    fontFamily: "DM Sans",
+    maxWidth: "250px",
+    whiteSpace: "normal",
     overflow: "hidden",
     textOverflow: "ellipsis",
     fontWeight: 500,
+    display: "-webkit-box",
+    WebkitLineClamp: 2,
+    WebkitBoxOrient: "vertical",
   };
-
   const handleDeleteProject = (id) => {
     if (id) {
       const body = {
@@ -277,7 +284,9 @@ const Projects = () => {
                                     )
                                   }
                                 >
-                                  {user.name}
+                                  <Typography sx={style3}>
+                                    {user.name}
+                                  </Typography>
                                 </TableCell>
                               }
                             />

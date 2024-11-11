@@ -50,13 +50,13 @@ const UpdateStandarts = ({ openUpdate, handleClose, data, userId }) => {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: "35%",
+    width: "70%",
     bgcolor: "background.paper",
     border: "0px solid lightgray",
     gap: "10px",
-    maxHeight: 550,
+    maxHeight: 650,
 
-    height: 460,
+    minHeight: 500,
     borderRadius: "10px",
     display: "flex",
     alignItems: "center",
@@ -84,15 +84,19 @@ const UpdateStandarts = ({ openUpdate, handleClose, data, userId }) => {
     { id: "selectAll", name: "Ählisi", surname: "" },
     ...UsersData,
   ];
+
   const handleSubmit = () => {
     const body = {
       id: userData.id,
       title: title,
       description: description,
-      usersId: selectedUser,
+      usersId: selectedUser.length
+        ? selectedUser
+        : userData.users.map((user) => user.id),
       userId: userId,
     };
-    if (title && description && selectedUser) {
+
+    if (title && description) {
       dispatch(updateStandart(body));
       handleClose();
       setTitle("");

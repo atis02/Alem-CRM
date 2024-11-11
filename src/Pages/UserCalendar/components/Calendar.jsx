@@ -116,7 +116,6 @@ const CustomCalendar = ({ openModal, events, setStartDate, setEndDate }) => {
       // :moment(item.date, "DD/MM/YYYY").isSame(day, "day")
     );
   };
-  console.log(events);
 
   const filteredEvents = (day) =>
     events.filter(
@@ -368,6 +367,10 @@ const CustomCalendar = ({ openModal, events, setStartDate, setEndDate }) => {
             textTransform: "revert",
             fontWeight: 600,
             textAlign: "start",
+            border: "0.6px solid #D5D5D5",
+            borderRadius: "15px",
+            width: "68px",
+            minHeight: "40px",
           }}
           onClick={handleTodayClick}
         >
@@ -470,3 +473,5 @@ const CustomCalendar = ({ openModal, events, setStartDate, setEndDate }) => {
 };
 
 export default CustomCalendar;
+
+

@@ -9,7 +9,7 @@ export const getRandomColor = () => {
   return color;
 };
 export const turkmenWeekdays = [
-  "Düşenbe", // Sunday
+  "Duşenbe", // Sunday
   "Sişenbe", // Monday
   "Çarşenbe", // Tuesday
   "Penşenbe", // Wednesday

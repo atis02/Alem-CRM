@@ -126,8 +126,8 @@ const AddTask = ({
             bgcolor="#00B69B"
             p="15px 20px"
             direction="row"
-            justifyContent="space-between"
-            alignItems="center"
+            justifyContent="flex-end"
+            alignItems="end"
             textTransform="capitalize"
             sx={{ borderTopLeftRadius: "10px", borderTopRightRadius: "10px" }}
           >

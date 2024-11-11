@@ -28,7 +28,6 @@ const UpdateUserDocs = ({ id, handleCloseDocsModal, params }) => {
 
   const docType = useSelector((state) => state.uploadPDf.docType);
   const status = useSelector((state) => state.uploadPDf.status);
-  console.log(docType);
 
   useEffect(() => {
     dispatch(getDocType(id));
@@ -41,7 +40,6 @@ const UpdateUserDocs = ({ id, handleCloseDocsModal, params }) => {
 
   const handleChange = (event) => {
     setSelectedValue(event.target.value); // Get the selected value
-    console.log("Selected value:", event.target.value); // Display the selected value in the console
   };
   const handleUpload = () => {
     if (!docName) {

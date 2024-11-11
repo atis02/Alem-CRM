@@ -40,12 +40,14 @@ const CreateStandarts = ({ open, handleClose, userId }) => {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: "35%",
+    width: "70%",
+
     bgcolor: "background.paper",
     border: "0px solid lightgray",
     gap: "10px",
-    maxHeight: 550,
-    height: 460,
+    maxHeight: 650,
+
+    minHeight: 500,
     borderRadius: "10px",
     display: "flex",
     alignItems: "center",
@@ -80,7 +82,7 @@ const CreateStandarts = ({ open, handleClose, userId }) => {
       usersId: selectedUser,
       userId: userId,
     };
-    if (title && description && selectedUser) {
+    if (title && description && selectedUser.length) {
       dispatch(postStandart(body));
       handleClose();
       setTitle("");
@@ -169,7 +171,8 @@ const CreateStandarts = ({ open, handleClose, userId }) => {
           <TextField
             label="Beýan"
             multiline
-            rows={4} // Set the number of visible rows
+            minRows={6}
+            maxRows={18}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             variant="outlined"

@@ -164,6 +164,10 @@ const UpdateModalComponent = ({ open, handleClose, details }) => {
               fontSize={24}
               fontWeight={400}
               fontFamily="DM Sans"
+              maxWidth="100%"
+              whiteSpace="nowrap"
+              overflow="hidden"
+              textOverflow="ellipsis"
             >
               {details && details.name}
             </Typography>

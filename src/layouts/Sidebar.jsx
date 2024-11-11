@@ -187,10 +187,11 @@ export default function SidebarNav(data, sendingData) {
               >
                 Edilmeli işler
               </MenuItem>
+
               <SubMenu
                 label="Tertip - düzgünnama"
                 title="Tertip - düzgünnama"
-                component={<NavLink className="sideNav" to="/standarts/all" />}
+                component={<NavLink className="sideNav" to="/standarts" />}
                 icon={<GavelIcon />}
                 suffix={
                   isExpanded ? (
@@ -199,7 +200,7 @@ export default function SidebarNav(data, sendingData) {
                     <ArrowForwardIosIcon />
                   )
                 }
-                open={activeMenu == true}
+                open={activeMenu}
                 onClick={() => {
                   handleMenuClick();
                   setIsExpanded(!isExpanded);
@@ -217,22 +218,35 @@ export default function SidebarNav(data, sendingData) {
                     mb: 1,
                   }}
                 >
-                  <MenuItem
+                  {/* <MenuItem
                     component={
-                      <NavLink className="sideNav2" to="/standarts/all" />
+                      <NavLink className="sideNav2" to="/standarts/all" end />
                     }
                   >
                     Ähli Işgärler
-                  </MenuItem>
+                  </MenuItem> */}
                   <MenuItem
                     component={
                       <NavLink className="sideNav2" to="/standarts/specific" />
                     }
                   >
-                    Aýratynlykda
+                    Aýratyn
                   </MenuItem>
                 </Stack>
               </SubMenu>
+              <MenuItem
+                style={{
+                  ...(user.role !== "USER"
+                    ? { display: "none" }
+                    : { display: "flex" }),
+                }}
+                icon={<GavelIcon />}
+                component={
+                  <NavLink className="sideNav" to="/standarts/specific" />
+                }
+              >
+                Tertip - düzgünnama
+              </MenuItem>
               <MenuItem
                 onClick={() => {
                   setActiveMenu(null);

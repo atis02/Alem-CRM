@@ -54,7 +54,6 @@ const CreateStandarts = ({ open, handleClose, userId, defaultUser }) => {
     alignItems: "center",
     flexDirection: "column",
   };
-  console.log(defaultUser);
 
   const dispatch = useDispatch();
   useEffect(() => {

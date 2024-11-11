@@ -162,6 +162,7 @@ const SpecificStandart = () => {
                             width: "100%",
                             justifyContent: "space-around",
                             alignItems: "center",
+                            p: 2,
                           }}
                         >
                           <Stack
@@ -223,8 +224,8 @@ const SpecificStandart = () => {
                                         background: "#d9e8ff",
                                         "&:hover": { background: "#e7e7fb" },
                                         gap: "10px",
-                                        width: 60,
-                                        height: 25,
+                                        // width: 75,
+                                        height: 30,
                                         fontWeight: 500,
                                         borderRadius: "20px",
                                         border: `1px solid #00CCFF`,
@@ -232,7 +233,7 @@ const SpecificStandart = () => {
                                       }}
                                       variant="outlined"
                                     >
-                                      {item.name}
+                                      {item.name} {item.surname}
                                     </Button>
                                   ))
                                 )}

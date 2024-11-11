@@ -72,6 +72,9 @@ const Index = () => {
   const driverDoc = data.filter(
     (e) => e.documentType && e.documentType.name === "Sürüjilik şahadatnamasy"
   );
+  const ZagranDoc = data.filter(
+    (e) => e.documentType && e.documentType.name === "Zagran"
+  );
   const additionalDoc = data.filter(
     (e) => e.documentType && e.documentType.name === "Goşmaça"
   );
@@ -87,6 +90,7 @@ const Index = () => {
   const weddDocIds = getDocumentIds(docType, "Nika hakynda şahadatnama");
   const militaryDocIds = getDocumentIds(docType, "Harby bilet");
   const driverDocIds = getDocumentIds(docType, "Sürüjilik şahadatnamasy");
+  const ZagranIds = getDocumentIds(docType, "Zagran");
 
   const documents = [
     {
@@ -107,6 +111,11 @@ const Index = () => {
       id: driverDocIds[0],
       doc: driverDoc,
       defaultTitle: "Sürüjilik şahadatnamasy",
+    },
+    {
+      id: ZagranIds[0],
+      doc: ZagranDoc,
+      defaultTitle: "Zagran",
     },
   ];
 
@@ -227,10 +236,10 @@ const Index = () => {
                     }}
                     alignItems="center"
                     justifyContent="space-between"
-                    backgroundColor={elem.pathPdf ? "#efefef" : "#fff"}
+                    backgroundColor="#fff"
                   >
                     <Stack
-                      width="70%"
+                      width="80%"
                       height={45}
                       alignItems="center"
                       direction="row"
@@ -247,11 +256,11 @@ const Index = () => {
                       <Typography
                         fontFamily="DM Sans"
                         fontWeight="400"
-                        fontSize={20}
+                        fontSize={18}
                         key={idx}
                         pl={5}
                         color="#474747"
-                        width="80%"
+                        width="100%"
                       >
                         {elem.title}{" "}
                         {elem.originalName ? `(${elem.originalName})` : ""}
@@ -348,12 +357,20 @@ const Index = () => {
                   </Stack>
                 ))}
               </Stack>
-              <Stack direction="row">
+              <Stack direction="row" alignItems="center" pl={2.5}>
+                <FolderOpenIcon
+                  sx={{
+                    color: "brown",
+                    width: 36,
+                    height: 36,
+                  }}
+                />
                 <Typography
                   fontFamily="DM Sans"
                   fontWeight="400"
                   fontSize={20}
                   pt={1}
+                  pl={5}
                   width="100%"
                 >
                   Goşmaça
@@ -414,12 +431,12 @@ const Index = () => {
                       >
                         <Stack direction="row" alignItems="center" spacing={2}>
                           <FolderOpenIcon
-                            sx={{ color: "#9FC2A5", width: 36, height: 36 }}
+                            sx={{ color: "brown", width: 36, height: 36 }}
                           />
                           <Typography
                             fontFamily="DM Sans"
                             fontWeight="400"
-                            fontSize={20}
+                            fontSize={18}
                             pl={3}
                             width="100%"
                           >

@@ -60,7 +60,7 @@ function App() {
           element: <Account />,
         },
         {
-          path: "/standarts/all",
+          path: "/standarts",
           element: <Standarts />,
         },
         {

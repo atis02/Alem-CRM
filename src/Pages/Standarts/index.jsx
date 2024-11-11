@@ -258,7 +258,7 @@ const index = () => {
                                           "&:hover": { background: "#e7e7fb" },
                                           gap: "10px",
                                           width: 60,
-                                          height: 25,
+                                          height: 30,
                                           fontWeight: 500,
                                           borderRadius: "20px",
                                           border: `1px solid #00CCFF`,

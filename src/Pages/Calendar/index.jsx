@@ -6,6 +6,7 @@ import {
   Box,
   Button,
   CircularProgress,
+  createTheme,
   Divider,
   Fade,
   Grow,
@@ -13,6 +14,7 @@ import {
   Modal,
   Stack,
   TextField,
+  ThemeProvider,
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
@@ -69,9 +71,11 @@ import {
   TimePicker,
 } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
+import "dayjs/locale/tk";
 import check from "../../../public/images/check.png";
 import deleteIcon from "../../../public/images/Delete.png";
 import { formToJSON } from "axios";
+import { getProjects } from "../../Components/db/Redux/api/ProjectSlice";
 
 const index = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -93,9 +97,42 @@ const index = () => {
   const [dateHour, setDateHour] = useState();
   const [noteID, setNoteId] = useState();
   const [noteAdmin, setNoteAdmin] = useState();
-
-  const [projectId, setProjectId] = useState();
-
+  const [projectId, setProjectId] = useState("");
+  dayjs.locale("tk");
+  const turkmenLocaleText = {
+    // Customize any text that appears on the date or time pickers
+    cancelButtonLabel: "Yza",
+    clearButtonLabel: "Arassala",
+    okButtonLabel: "Bolýar",
+    todayButtonLabel: "Şu gün",
+    selectTimeLabel: "Wagty saýlaň",
+    // Add translations for any other labels if needed
+  };
+  const theme = createTheme({
+    components: {
+      MuiDialog: {
+        styleOverrides: {
+          paper: {
+            // Target the specific Typography element
+            "& .MuiTypography-overline": {
+              display: "none",
+            },
+          },
+        },
+      },
+    },
+  });
+  useEffect(() => {
+    const labelElement = document.querySelector(".MuiTypography-overline");
+    if (labelElement) {
+      labelElement.textContent = "Your custom text"; // Replace with your desired text
+    }
+  }, []);
+  const dispatch = useDispatch();
+  const projects = useSelector((state) => state.project.data);
+  useEffect(() => {
+    dispatch(getProjects());
+  }, [dispatch]);
   const adminNotes = useSelector((state) => state.getWorkDate.adminNotes);
   const adminNoteStatus = useSelector(
     (state) => state.getWorkDate.statusAdminNote
@@ -123,7 +160,6 @@ const index = () => {
   const [selectedUser, setSelectedUser] = useState(defaultSelectedUsers);
   const [users, setUsers] = useState([]);
 
-  const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem("CRM_USER"));
   const data = useSelector((state) => state.getWorkDate.data);
   const statusMonth = useSelector((state) => state.getWorkDate.statusMonth);
@@ -193,6 +229,7 @@ const index = () => {
     setSelectedDay(null);
     setDateHour();
     setUserId("");
+    setProjectId("");
   };
 
   const openModal = (day) => {
@@ -204,7 +241,10 @@ const index = () => {
     defaultSelectedUsers.map((user) => ({
       id: user.userId,
     }));
-
+  const optionsWithSelectAll = [
+    { id: "selectAll", name: "Ählisi", surname: "" },
+    ...UsersData,
+  ];
   const handleAddAdminNote = () => {
     const filteredUsers = users.map((item) => ({ id: item.id }));
 
@@ -242,10 +282,10 @@ const index = () => {
       project: projectId,
     };
 
-    if (notify !== "" && userId !== "") {
+    if (notify !== "" && userId !== "" && projectId !== "") {
       dispatch(postAdminNotes(body));
-      setNotify("");
-      setModalOpenNote(false);
+
+      handleClose();
     } else {
       toast.error("Maglumatlary giriziň!");
     }
@@ -281,18 +321,22 @@ const index = () => {
     }
   };
   const handleChangeStep = (e, newValues) => {
-    if (newValues) {
-      // setSelectedUser(() => [
-      //   ...newValues.map((user) => ({ id: user.id ? user.id : user.userId })),
-      // ]);
+    if (newValues.some((user) => user.id === "selectAll")) {
+      // If "selectAll" is selected, set all users
+      setUsers(UsersData);
+    } else {
+      // Otherwise, map over newValues and create the user objects with either 'id' or 'userId'
       setUsers(() => [
-        ...newValues.map((user) => ({ id: user.id ? user.id : user.userId })),
+        ...newValues.map((user) => ({
+          id: user.id ? user.id : user.userId,
+          name: user.name,
+          surname: user.surname,
+        })),
       ]);
 
-      setUserId(newValues.id);
-      // setFilteredUsers((prevUsers) =>
-      //   prevUsers.filter((u) => u.id !== newValues.id)
-      // );
+      // If you want to set a specific user ID, you can add it here
+      // Assuming newValues is an array, you'd have to update how you handle `newValues.id`
+      setUserId(newValues.length > 0 ? newValues[0].id : null); // Adjust to how you want to get the ID
     }
   };
 
@@ -370,16 +414,11 @@ const index = () => {
       authorId: user.id,
       noteId: noteID,
       content: notify,
-      projectId: projectId,
-      userId: userId,
-      // == undefined
-      // ? UsersData.find(
-      //     (user) => user.id === (noteAdmin ? noteAdmin.userId : "")
-      //   ) || null
-      // : userId,
+      projectId: projectId == "" ? noteAdmin.projectId : projectId,
+      userId: userId == "" ? noteAdmin.userId : userId,
     };
 
-    if (notify !== "" && projectId !== "") {
+    if (notify !== "") {
       dispatch(updateAdminNote(body));
       handleClose();
     } else {
@@ -394,7 +433,7 @@ const index = () => {
   };
 
   return (
-    <Box>
+    <Box height="100vh">
       <Stack direction="row" mt="10px" justifyContent="space-around">
         <Stack direction="column" width="28%">
           <Stack
@@ -808,7 +847,7 @@ const index = () => {
                         color="#474747"
                         mb="5px"
                       >
-                        Işgärler
+                        Işgärleri
                       </Typography>
 
                       <Autocomplete
@@ -879,22 +918,6 @@ const index = () => {
                       justifyContent="flex-end"
                       spacing="10px"
                     >
-                      <Button
-                        onClick={handleClose}
-                        sx={{
-                          "&:disabled": { background: "lightgray" },
-                          background: "#DC6262",
-                          color: "#fff",
-                          "&:hover": { background: "#DC6262" },
-                          height: "40px",
-                          width: "115px",
-                          borderRadius: "50px",
-                          textTransform: "revert",
-                          fontSize: 16,
-                        }}
-                      >
-                        Pozmak
-                      </Button>
                       <Button
                         onClick={handleAddAdminNoteSecond}
                         sx={{
@@ -969,12 +992,12 @@ const index = () => {
                         color="#474747"
                         mb="5px"
                       >
-                        Proýekti saýlaa
+                        Proýekti saýla
                       </Typography>
                       <Autocomplete
                         id="combo-box-demo"
                         options={projects}
-                        defaultValue={
+                        value={
                           projects.find(
                             (project) =>
                               project.name ===
@@ -1097,22 +1120,6 @@ const index = () => {
                       spacing="10px"
                     >
                       <Button
-                        onClick={handleClose}
-                        sx={{
-                          "&:disabled": { background: "lightgray" },
-                          background: "#DC6262",
-                          color: "#fff",
-                          "&:hover": { background: "#DC6262" },
-                          height: "40px",
-                          width: "115px",
-                          borderRadius: "50px",
-                          textTransform: "revert",
-                          fontSize: 16,
-                        }}
-                      >
-                        Pozmak
-                      </Button>
-                      <Button
                         onClick={adminProjectNoteUpdate}
                         sx={{
                           "&:disabled": { background: "lightgray" },
@@ -1221,7 +1228,11 @@ const index = () => {
                           <Autocomplete
                             id="combo-box-demo"
                             multiple
-                            options={UsersData}
+                            value={users}
+                            options={optionsWithSelectAll}
+                            isOptionEqualToValue={(option, value) =>
+                              option.id === value.id
+                            }
                             getOptionLabel={(option) =>
                               `${Capitalize(option.name)} ${Capitalize(
                                 option.surname == null ? "" : option.surname
@@ -1249,7 +1260,11 @@ const index = () => {
                         </Stack>
                       </Stack>
                       <Stack direction="row">
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <LocalizationProvider
+                          dateAdapter={AdapterDayjs}
+                          adapterLocale="tk"
+                          localeText={turkmenLocaleText}
+                        >
                           <DemoContainer
                             components={[
                               "DesktopDatePicker",
@@ -1333,31 +1348,41 @@ const index = () => {
                                 >
                                   Wagty
                                 </Typography>
-                                <MobileTimePicker
-                                  ampm={false}
-                                  onChange={(newValue) => {
-                                    if (newValue) {
-                                      setDateHour(newValue.format("HH:mm"));
-                                    } else {
-                                      setDateHour(null);
-                                    }
-                                  }}
-                                  format="HH:mm"
-                                  slotProps={{
-                                    textField: {
-                                      size: "small",
-                                      InputProps: {
-                                        sx: {
-                                          borderRadius: "35px",
-                                          backgroundColor: "#F5F6FA",
-                                          height: 55,
-                                          width: "100%",
-                                          border: "1px solid #ccc", // Ensure border is set
+                                <ThemeProvider theme={theme}>
+                                  <MobileTimePicker
+                                    ampm={false}
+                                    onChange={(newValue) => {
+                                      if (newValue) {
+                                        setDateHour(newValue.format("HH:mm"));
+                                      } else {
+                                        setDateHour(null);
+                                      }
+                                    }}
+                                    // <span class="MuiTypography-root MuiTypography-overline css-1hbyad5-MuiTypography-root" id=":rr:">Select time</span>
+                                    DialogProps={{
+                                      sx: {
+                                        ".MuiTypography-root": {
+                                          display: "none",
                                         },
                                       },
-                                    },
-                                  }}
-                                />
+                                    }}
+                                    format="HH:mm"
+                                    slotProps={{
+                                      textField: {
+                                        size: "small",
+                                        InputProps: {
+                                          sx: {
+                                            borderRadius: "35px",
+                                            backgroundColor: "#F5F6FA",
+                                            height: 55,
+                                            width: "100%",
+                                            border: "1px solid #ccc", // Ensure border is set
+                                          },
+                                        },
+                                      },
+                                    }}
+                                  />
+                                </ThemeProvider>
                               </Stack>
                             </Stack>
                           </DemoContainer>
@@ -1406,22 +1431,6 @@ const index = () => {
                         justifyContent="flex-end"
                         spacing="10px"
                       >
-                        <Button
-                          onClick={handleClose}
-                          sx={{
-                            "&:disabled": { background: "lightgray" },
-                            background: "#DC6262",
-                            color: "#fff",
-                            "&:hover": { background: "#DC6262" },
-                            height: "40px",
-                            width: "115px",
-                            borderRadius: "50px",
-                            textTransform: "revert",
-                            fontSize: 16,
-                          }}
-                        >
-                          Pozmak
-                        </Button>
                         <Button
                           onClick={handleAddAdminNote}
                           sx={{
@@ -1557,10 +1566,7 @@ const index = () => {
                       <Stack width="100%" direction="row">
                         <LocalizationProvider
                           dateAdapter={AdapterDayjs}
-                          localeText={{
-                            clearButtonLabel: "Pozmak",
-                            todayButtonLabel: "Şugün",
-                          }}
+                          localeText={turkmenLocaleText}
                           adapterLocale="tk"
                         >
                           <DemoContainer
@@ -1634,36 +1640,38 @@ const index = () => {
                                 >
                                   Wagty
                                 </Typography>
-                                <MobileTimePicker
-                                  ampm={false}
-                                  defaultValue={
-                                    dayjs(date).isValid() ? dayjs(date) : null
-                                  }
-                                  onChange={(newValue) => {
-                                    setDateHour(
-                                      newValue
-                                        ? dayjs(newValue).format("HH:mm")
-                                        : null
-                                    );
-                                  }}
-                                  views={["hours", "minutes"]}
-                                  format="HH:mm"
-                                  slotProps={{
-                                    textField: {
-                                      size: "small",
-                                      error: false,
-                                      InputProps: {
-                                        sx: {
-                                          borderRadius: "35px",
-                                          backgroundColor: "#F5F6FA",
-                                          height: 55,
-                                          width: "100%",
-                                          border: "1px solid #ccc",
+                                <ThemeProvider theme={theme}>
+                                  <MobileTimePicker
+                                    ampm={false}
+                                    defaultValue={
+                                      dayjs(date).isValid() ? dayjs(date) : null
+                                    }
+                                    onChange={(newValue) => {
+                                      setDateHour(
+                                        newValue
+                                          ? dayjs(newValue).format("HH:mm")
+                                          : null
+                                      );
+                                    }}
+                                    views={["hours", "minutes"]}
+                                    format="HH:mm"
+                                    slotProps={{
+                                      textField: {
+                                        size: "small",
+                                        error: false,
+                                        InputProps: {
+                                          sx: {
+                                            borderRadius: "35px",
+                                            backgroundColor: "#F5F6FA",
+                                            height: 55,
+                                            width: "100%",
+                                            border: "1px solid #ccc",
+                                          },
                                         },
                                       },
-                                    },
-                                  }}
-                                />
+                                    }}
+                                  />
+                                </ThemeProvider>
                               </Stack>
                             </Stack>
                           </DemoContainer>
@@ -1712,22 +1720,6 @@ const index = () => {
                         justifyContent="flex-end"
                         spacing="10px"
                       >
-                        <Button
-                          onClick={handleClose}
-                          sx={{
-                            "&:disabled": { background: "lightgray" },
-                            background: "#DC6262",
-                            color: "#fff",
-                            "&:hover": { background: "#DC6262" },
-                            height: "40px",
-                            width: "115px",
-                            borderRadius: "50px",
-                            textTransform: "revert",
-                            fontSize: 16,
-                          }}
-                        >
-                          Pozmak
-                        </Button>
                         <Button
                           onClick={() => handleUpdateAdminNotes()}
                           sx={{
