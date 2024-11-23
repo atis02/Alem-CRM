@@ -26,6 +26,7 @@ import deleteIcon from "../../../public/images/Delete.png";
 import DocumentModal from "./components/DocumentModal";
 import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import DocumentUpdateModal from "./components/DocumentUpdateModal";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
 const Index = () => {
   const [docTitle, setDocTitle] = useState("");
@@ -49,83 +50,8 @@ const Index = () => {
     dispatch(getDocType(user.id));
     dispatch(getPDF(user.id));
   }, [dispatch]);
-
-  const birthDoc = data.filter(
-    (e) =>
-      e.documentType && e.documentType.name === "Dogluş hakynda şahadatnama"
-  );
-  const pasport = data.filter(
-    (e) => e.documentType && e.documentType.name === "Pasport"
-  );
-  const certficate = data.filter(
-    (e) => e.documentType && e.documentType.name === "Sertifikat"
-  );
-  const diplom = data.filter(
-    (e) => e.documentType && e.documentType.name === "Diplom , Attestat"
-  );
-  const weddDoc = data.filter(
-    (e) => e.documentType && e.documentType.name === "Nika hakynda şahadatnama"
-  );
-  const militaryDoc = data.filter(
-    (e) => e.documentType && e.documentType.name === "Harby bilet"
-  );
-  const driverDoc = data.filter(
-    (e) => e.documentType && e.documentType.name === "Sürüjilik şahadatnamasy"
-  );
-  const ZagranDoc = data.filter(
-    (e) => e.documentType && e.documentType.name === "Zagran"
-  );
-  const additionalDoc = data.filter(
-    (e) => e.documentType && e.documentType.name === "Goşmaça"
-  );
-
-  const getDocumentIds = (data, documentName) => {
-    return data.filter((e) => e.name === documentName).map((e) => e.id); // Extract the documentType id
-  };
-
-  const birthDocIds = getDocumentIds(docType, "Dogluş hakynda şahadatnama");
-  const passportIds = getDocumentIds(docType, "Pasport");
-  const certificateIds = getDocumentIds(docType, "Sertifikat");
-  const diplomaIds = getDocumentIds(docType, "Diplom , Attestat");
-  const weddDocIds = getDocumentIds(docType, "Nika hakynda şahadatnama");
-  const militaryDocIds = getDocumentIds(docType, "Harby bilet");
-  const driverDocIds = getDocumentIds(docType, "Sürüjilik şahadatnamasy");
-  const ZagranIds = getDocumentIds(docType, "Zagran");
-
-  const documents = [
-    {
-      id: birthDocIds[0],
-      doc: birthDoc,
-      defaultTitle: "Dogluş hakynda şahadatnama",
-    },
-    { id: passportIds[0], doc: pasport, defaultTitle: "Pasport" },
-    {
-      id: weddDocIds[0],
-      doc: weddDoc,
-      defaultTitle: "Nika hakynda şahadatnama",
-    },
-    { id: diplomaIds[0], doc: diplom, defaultTitle: "Diplom , Attestat" },
-    { id: certificateIds[0], doc: certficate, defaultTitle: "Sertifikat" },
-    { id: militaryDocIds[0], doc: militaryDoc, defaultTitle: "Harby bilet" },
-    {
-      id: driverDocIds[0],
-      doc: driverDoc,
-      defaultTitle: "Sürüjilik şahadatnamasy",
-    },
-    {
-      id: ZagranIds[0],
-      doc: ZagranDoc,
-      defaultTitle: "Zagran",
-    },
-  ];
-
-  const docTypes = documents.map(({ doc, defaultTitle, id }) => ({
-    originalName: doc?.[0]?.title || "",
-    pathPdf: doc?.[0]?.pathPdf || "",
-    docTypeId: id,
-    id: doc?.[0]?.id,
-    title: doc?.[0]?.documentType?.name || defaultTitle,
-  }));
+  console.log(docType);
+  console.log(data);
 
   const handleUploadFile = (e, name, id) => {
     const body = new FormData();
@@ -154,13 +80,17 @@ const Index = () => {
     );
   };
   const handleDeletePdf = (id) => {
+    console.log(id);
+
     const body = {
       userId: user.id,
-      documentId: id,
+      documentId: id[0].id,
     };
     dispatch(deletePdf(body));
   };
   const handleOpen = (elem) => {
+    console.log(elem);
+
     setDocTitle(elem);
     setOpen(true);
   };
@@ -175,14 +105,14 @@ const Index = () => {
     setOpenUpdate(false);
   };
   return (
-    <Box height="100vh" width="100%" backgroundColor="#F5F6FA" overflow="auto">
+    <Box height="100vh" width="100%" backgroundColor="#fff" overflow="auto">
       <Typography
         p="5px 20px"
         fontSize="30px"
         fontWeight="500"
         fontFamily="Montserrat"
       >
-        Resminama saýla
+        Resminama
       </Typography>
       <ToastContainer />
 
@@ -191,7 +121,7 @@ const Index = () => {
         backgroundColor="#fff"
         spacing="60px"
         minHeight="80vh"
-        borderRadius="20px"
+        borderRadius="10px"
         m="0px 20px "
         pb="10px"
         boxShadow="0px 0px 8px -5px rgba(0,0,0,0.75)"
@@ -227,7 +157,8 @@ const Index = () => {
                   Esasy
                 </Typography>
                 <Divider />
-                {docTypes.map((elem, idx) => (
+
+                {data.map((elem, idx) => (
                   <Stack
                     key={idx}
                     direction="row"
@@ -248,7 +179,7 @@ const Index = () => {
                     >
                       <FolderOpenIcon
                         sx={{
-                          color: "#9FC2A5",
+                          color: "#2F6FD0",
                           width: 36,
                           height: 36,
                         }}
@@ -262,12 +193,17 @@ const Index = () => {
                         color="#474747"
                         width="100%"
                       >
-                        {elem.title}{" "}
-                        {elem.originalName ? `(${elem.originalName})` : ""}
+                        {elem.name}{" "}
+                        {elem.pdfDocuments.length
+                          ? `( ${
+                              elem.pdfDocuments &&
+                              elem.pdfDocuments.map((item) => item.title)
+                            })`
+                          : ""}
                       </Typography>
                     </Stack>
                     <Stack direction="row">
-                      {elem.pathPdf ? (
+                      {elem.pdfDocuments && elem.pdfDocuments.length ? (
                         <>
                           <IconButton onClick={() => handleOpenUpdate(elem)}>
                             <BorderColorOutlinedIcon
@@ -289,9 +225,9 @@ const Index = () => {
                                 width: "100%",
                               }}
                               target="_blank"
-                              to={`http://192.168.1.46/files/${elem.pathPdf}`}
+                              to={`http://192.168.1.46/files/${elem.pdfDocuments[0].pathPdf}`}
                             >
-                              <RemoveRedEyeIcon sx={{ color: "#9FC2A6" }} />
+                              <RemoveRedEyeIcon sx={{ color: "#9FA1C2" }} />
                             </Link>
                           </IconButton>
                         </>
@@ -299,7 +235,7 @@ const Index = () => {
                         ""
                       )}
 
-                      {!elem.pathPdf ? (
+                      {!elem.pdfDocuments.length ? (
                         <IconButton
                           sx={{
                             width: 38,
@@ -331,7 +267,7 @@ const Index = () => {
                           /> */}
                           <PostAddIcon
                             sx={{
-                              color: "#9FC2A6",
+                              color: "#2F6FD0",
                               cursor: "pointer",
                               width: 28,
                               height: 28,
@@ -344,7 +280,7 @@ const Index = () => {
                             width: 38,
                             height: 38,
                           }}
-                          onClick={() => handleDeletePdf(elem.id)}
+                          onClick={() => handleDeletePdf(elem.pdfDocuments)}
                         >
                           <img
                             style={{ width: 24, height: 24 }}
@@ -357,133 +293,18 @@ const Index = () => {
                   </Stack>
                 ))}
               </Stack>
-              <Stack direction="row" alignItems="center" pl={2.5}>
-                <FolderOpenIcon
-                  sx={{
-                    color: "brown",
-                    width: 36,
-                    height: 36,
-                  }}
-                />
-                <Typography
-                  fontFamily="DM Sans"
-                  fontWeight="400"
-                  fontSize={20}
-                  pt={1}
-                  pl={5}
-                  width="100%"
-                >
-                  Goşmaça
-                </Typography>
-                <Stack direction="row" pt={1}>
-                  <IconButton
-                    sx={{
-                      width: 38,
-                      height: 38,
-                      position: "relative",
-                      overflow: "hidden",
-                    }}
-                    onClick={() => handleOpen("Goşmaça")}
-                  >
-                    <PostAddIcon
-                      sx={{
-                        color: "brown",
-                        cursor: "pointer",
-                        width: 28,
-                        height: 28,
-                      }}
-                    />
-                  </IconButton>
-                  <DocumentModal
-                    open={open}
-                    data={docTitle}
-                    handleClose={handleClose}
-                  />
-                </Stack>
-              </Stack>
+
+              <DocumentModal
+                open={open}
+                data={docTitle}
+                handleClose={handleClose}
+              />
               <DocumentUpdateModal
                 open={openUpdate}
                 handleClose={handleCloseUpdate}
                 data={docTitle}
                 docId={docId}
               />
-              {additionalDoc.map((elem) => (
-                <React.Fragment key={elem.id}>
-                  <Stack
-                    direction="column"
-                    // alignItems="center"
-                    justifyContent="space-between"
-                    width="100%"
-                    minHeight="40px"
-                    p="5px 0 0 20px"
-                  >
-                    <Stack direction="row">
-                      <NavLink
-                        to={`http://192.168.1.46/files/${elem.pathPdf}`}
-                        style={{
-                          textDecoration: "none",
-                          color: "#474747",
-                          display: "flex",
-                          justifyContent: "space-between",
-                          width: "100%",
-                        }}
-                        target="_blank"
-                      >
-                        <Stack direction="row" alignItems="center" spacing={2}>
-                          <FolderOpenIcon
-                            sx={{ color: "brown", width: 36, height: 36 }}
-                          />
-                          <Typography
-                            fontFamily="DM Sans"
-                            fontWeight="400"
-                            fontSize={18}
-                            pl={3}
-                            width="100%"
-                          >
-                            {Capitalize(elem.title)}
-                          </Typography>
-                        </Stack>
-                      </NavLink>
-                      {elem.pathPdf && (
-                        <>
-                          <IconButton onClick={() => handleOpenUpdate(elem)}>
-                            <BorderColorOutlinedIcon
-                              sx={{
-                                color: "#0099ED",
-                                width: 20,
-                                height: 20,
-                              }}
-                            />
-                          </IconButton>
-                          <IconButton>
-                            <Link
-                              style={{
-                                textDecoration: "none",
-                                color: "#474747",
-                                display: "flex",
-                                justifyContent: "space-between",
-                                width: "100%",
-                              }}
-                              target="_blank"
-                              to={`http://192.168.1.46/files/${elem.pathPdf}`}
-                            >
-                              <RemoveRedEyeIcon sx={{ color: "#9FC2A6" }} />
-                            </Link>
-                          </IconButton>
-                        </>
-                      )}
-                      <IconButton onClick={() => handleDeletePdf(elem.id)}>
-                        <img
-                          style={{ width: 24, height: 24 }}
-                          src={deleteIcon}
-                          alt="Delete"
-                        />
-                      </IconButton>
-                    </Stack>
-                  </Stack>
-                  <Divider />
-                </React.Fragment>
-              ))}
             </Stack>
           ) : null}
         </Stack>

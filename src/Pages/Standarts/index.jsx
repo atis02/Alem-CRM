@@ -46,9 +46,7 @@ const index = () => {
   const user = JSON.parse(localStorage.getItem("CRM_USER"));
   const UsersData = useSelector((state) => state.users.data);
 
-  const allData = data.filter(
-    (elem) => (elem.users && elem.users.length) === UsersData.length
-  );
+  const allData = data.filter((elem) => elem.users.length == UsersData.length);
   const filteredData = data.filter(
     (elem) => (elem.users && elem.users.length) !== UsersData.length
   );
@@ -72,7 +70,7 @@ const index = () => {
     <Box
       height="100vh"
       width="100%"
-      backgroundColor="#f2f9fc"
+      backgroundColor="#fff"
       overflow="auto"
       p="10px"
       borderRadius="20px"
@@ -98,7 +96,7 @@ const index = () => {
         ) : (
           <Button
             sx={{
-              color: "#9A93FF",
+              color: "#2F6FD0",
               textTransform: "revert",
               background: "#e7e7fb",
               "&:hover": { background: "#e7e7fb" },
@@ -112,7 +110,7 @@ const index = () => {
           >
             <AddIcon
               sx={{
-                color: "#90BAEB",
+                color: "#2F6FD0",
                 width: 25,
                 height: 25,
               }}
@@ -147,7 +145,7 @@ const index = () => {
               // minHeight: "340px",
             }}
           >
-            {data.length == 0 ? (
+            {allData.length == 0 ? (
               <Typography textAlign="center" mt={5} fontSize={18} width="100%">
                 Düzgünnama ýok
               </Typography>
@@ -164,7 +162,7 @@ const index = () => {
                     spacing={2}
                   >
                     <Stack width="100%">
-                      <Typography
+                      {/* <Typography
                         fontSize={20}
                         // height="10%"
                         textAlign="center"
@@ -174,7 +172,7 @@ const index = () => {
                         }}
                       >
                         Ähli işgärler
-                      </Typography>
+                      </Typography> */}
                       {allData.map((elem, index) => (
                         <Grid
                           item
@@ -199,7 +197,7 @@ const index = () => {
                             }}
                           >
                             <Stack
-                              width="90%"
+                              width="98%"
                               sx={{
                                 ...(elem.id == 4
                                   ? {
@@ -231,7 +229,7 @@ const index = () => {
                                   elem.users.length === UsersData.length ? (
                                     <Button
                                       sx={{
-                                        color: "#00CCFF",
+                                        color: "#2F6FD0",
                                         textTransform: "revert",
                                         background: "#d9e8ff",
                                         "&:hover": { background: "#e7e7fb" },
@@ -240,7 +238,7 @@ const index = () => {
                                         height: 35,
                                         fontWeight: 500,
                                         borderRadius: "20px",
-                                        border: `1px solid #00CCFF`,
+                                        border: `1px solid #2F6FD0`,
                                         ...(index == 0 ? { ml: 3 } : { ml: 1 }),
                                       }}
                                       variant="outlined"
@@ -252,16 +250,16 @@ const index = () => {
                                       <Button
                                         key={index}
                                         sx={{
-                                          color: "#00CCFF",
+                                          color: "#2F6FD0",
                                           textTransform: "revert",
-                                          background: "#d9e8ff",
-                                          "&:hover": { background: "#e7e7fb" },
+                                          background: "#2F6FD0",
+                                          "&:hover": { background: "#2F6FD0" },
                                           gap: "10px",
                                           width: 60,
                                           height: 30,
                                           fontWeight: 500,
                                           borderRadius: "20px",
-                                          border: `1px solid #00CCFF`,
+                                          border: `1px solid #2F6FD0`,
                                           ...(index == 0
                                             ? { ml: 3 }
                                             : { ml: 1 }),
@@ -319,6 +317,8 @@ const index = () => {
                                 fontSize={16}
                                 fontFamily="DM Sans"
                                 fontWeight={400}
+                                whiteSpace="pre-wrap"
+                                textAlign="justify"
                               >
                                 {elem.description}
                               </Typography>

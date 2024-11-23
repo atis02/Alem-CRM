@@ -20,6 +20,7 @@ import {
   KeyboardArrowDown as KeyboardArrowDownIcon,
   KeyboardArrowUp as KeyboardArrowUpIcon,
 } from "@mui/icons-material";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 import {
   MenuItem,
@@ -33,9 +34,9 @@ import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { logout } from "../Components/db/Redux/reducers/AuthSlice";
 import signOut from "../../public/images/Sign Out.png";
-import logo from "../../public/images/Logo.png";
-import projectIcon from "../../public/images/project.png";
-import projectWhiteIcon from "../../public/images/projectWhite.png";
+import logo from "../../public/images/alemtilsimat.png";
+// import projectIcon from "../../public/images/project.png";
+// import projectWhiteIcon from "../../public/images/projectWhite.png";
 
 export default function SidebarNav(data, sendingData) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -63,13 +64,15 @@ export default function SidebarNav(data, sendingData) {
       <Sidebar
         rootStyles={{
           [`.${sidebarClasses.container}`]: {
-            backgroundColor: "#9FC2A6",
-            color: "#F3F3F4",
-            maxHeight: "100vh",
+            backgroundColor: "#F8F9FA",
+            color: "#606C8F",
+            maxHeight: "100%",
             display: "flex",
             width: "100%",
             flexDirection: "column",
             justifyContent: "space-between",
+            padding: "10px !important",
+            borderRight: "1px solid lightgray",
           },
         }}
         className="sidebar"
@@ -103,21 +106,21 @@ export default function SidebarNav(data, sendingData) {
                 <img
                   src={logo}
                   style={{
-                    width: "55px",
-                    height: "65px",
+                    width: "auto",
+                    height: "75px",
                   }}
                   alt=""
                 />
-                <Typography
+                {/* <Typography
                   textAlign="center"
-                  color="#fff"
+                  color="#606C8F"
                   fontWeight="500"
                   fontSize={16}
                   ml={-2}
                   fontFamily="Montserrat"
                 >
                   ÄLEM TILSIMAT
-                </Typography>
+                </Typography> */}
               </Stack>
             </Link>
           </Stack>
@@ -126,9 +129,9 @@ export default function SidebarNav(data, sendingData) {
               menuItemStyles={{
                 button: {
                   "&:hover": {
-                    backgroundColor: "#76917c",
-                    borderTopLeftRadius: "30px",
-                    color: "#fff !important",
+                    borderRadius: "7px",
+                    backgroundColor: "#E9ECEF",
+                    color: "#606C8F !important",
                   },
                 },
               }}
@@ -185,10 +188,10 @@ export default function SidebarNav(data, sendingData) {
                 component={<NavLink className="sideNav" to="/projects" />}
                 icon={<InventoryOutlinedIcon />}
               >
-                Edilmeli işler
+                Proýektler
               </MenuItem>
 
-              <SubMenu
+              {/* <SubMenu
                 label="Tertip - düzgünnama"
                 title="Tertip - düzgünnama"
                 component={<NavLink className="sideNav" to="/standarts" />}
@@ -218,13 +221,13 @@ export default function SidebarNav(data, sendingData) {
                     mb: 1,
                   }}
                 >
-                  {/* <MenuItem
+                  <MenuItem
                     component={
                       <NavLink className="sideNav2" to="/standarts/all" end />
                     }
                   >
                     Ähli Işgärler
-                  </MenuItem> */}
+                  </MenuItem>
                   <MenuItem
                     component={
                       <NavLink className="sideNav2" to="/standarts/specific" />
@@ -233,7 +236,7 @@ export default function SidebarNav(data, sendingData) {
                     Aýratyn
                   </MenuItem>
                 </Stack>
-              </SubMenu>
+              </SubMenu> */}
               <MenuItem
                 style={{
                   ...(user.role !== "USER"
@@ -262,6 +265,41 @@ export default function SidebarNav(data, sendingData) {
               >
                 Işgärler
               </MenuItem>
+
+              <MenuItem
+                onClick={() => {
+                  setActiveMenu(null);
+                  setIsExpanded(false);
+                }}
+                component={<NavLink className="sideNav" to="/chat" />}
+                icon={<ForumIcon />}
+              >
+                Söhbetdeşlik
+              </MenuItem>
+              <MenuItem
+                style={{
+                  ...(user.role == "USER"
+                    ? { display: "none" }
+                    : { display: "flex" }),
+                }}
+                component={
+                  <NavLink className="sideNav" to="/standarts/specific" />
+                }
+                icon={<GavelIcon />}
+              >
+                Aýratyn (Tertip-düzgünnama)
+              </MenuItem>
+              <MenuItem
+                style={{
+                  ...(user.role == "USER"
+                    ? { display: "none" }
+                    : { display: "flex" }),
+                }}
+                component={<NavLink className="sideNav" to="/standarts/all" />}
+                icon={<GavelIcon />}
+              >
+                Ähli işgärler (Tertip-düzgünnama)
+              </MenuItem>
               <MenuItem
                 onClick={() => {
                   setActiveMenu(null);
@@ -277,31 +315,22 @@ export default function SidebarNav(data, sendingData) {
               >
                 Sazlamalar
               </MenuItem>
-
-              <MenuItem
-                onClick={() => {
-                  setActiveMenu(null);
-                  setIsExpanded(false);
-                }}
-                component={<NavLink className="sideNav" to="/chat" />}
-                icon={<ForumIcon />}
-              >
-                Söhbetdeşlik
-              </MenuItem>
             </Menu>
           </Stack>
         </Stack>
-        <Stack direction="row" alignItems="center" p="0 0 50px 20px">
+        <Stack direction="row" alignItems="center" p="0 0 50px 18px">
           {/* <PowerSettingsNewIcon sx={{ width: 30, height: 30 }} /> */}
-          <img src={signOut} style={{ width: 30, height: 30 }} alt="Sign Out" />
+          {/* <img src={signOut} style={{ width: 30, height: 30 }} alt="Sign Out" /> */}
+          <LogoutIcon sx={{ color: "#606C8F" }} />
+
           <Button
             onClick={handleLogout}
             sx={{
-              color: "#fff",
+              color: "#606C8F",
               display: "flex",
               flexDirection: "column",
               fontFamily: "Montserrat",
-              fontWeight: 400,
+              fontWeight: 500,
               fontSize: "20px",
               textTransform: "revert",
             }}

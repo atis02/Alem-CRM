@@ -123,7 +123,7 @@ const AddTask = ({
           }}
         >
           <Stack
-            bgcolor="#00B69B"
+            bgcolor="#2F6FD0"
             p="15px 20px"
             direction="row"
             justifyContent="flex-end"
@@ -296,12 +296,12 @@ const AddTask = ({
             <Stack alignItems="end" pt="10px">
               <Button
                 sx={{
-                  border: "1px solid #00b69b",
+                  border: "1px solid #2F6FD0",
                   width: 115,
                   height: 40,
                   textTransform: "revert",
                   borderRadius: "20px",
-                  color: "#00B69B",
+                  color: "#2F6FD0",
                   backgroundColor: "#f0f7ff",
                 }}
                 onClick={handleSubmit}

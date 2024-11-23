@@ -21,6 +21,7 @@ export default function LandingPageLayout() {
 
   return (
     <Box>
+      {/* <Navbar /> */}
       <Stack direction="row" maxHeight="100vh">
         <ToastContainer
           position="top-right"

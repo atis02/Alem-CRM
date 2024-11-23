@@ -198,7 +198,7 @@ const Regulating = () => {
     <Box
       height="100vh"
       width="100%"
-      backgroundColor="#F5F6FA"
+      backgroundColor="#fff"
       overflow="auto"
       p="10px"
     >
@@ -242,7 +242,7 @@ const Regulating = () => {
           <Stack
             width="30%"
             height="100%"
-            borderRadius="7px"
+            borderRadius="10px"
             backgroundColor="#f0f0f0"
           >
             <Stack spacing={1} justifyContent="center">
@@ -309,8 +309,8 @@ const Regulating = () => {
                     height: "45px",
                     border: "0.5px solid #cdcdcd",
                     color: "#fff",
-                    background: "#9FC2A6",
-                    "&:hover": { background: "#9FC2A6" },
+                    background: "#2F6FD0",
+                    "&:hover": { background: "#2F6FD0" },
                   }}
                 >
                   +
@@ -361,7 +361,7 @@ const Regulating = () => {
                           sx={{
                             width: 45,
                             height: 45,
-                            background: "#9FC2A6",
+                            background: "#2F6FD0",
                           }}
                         />
                       )}
@@ -426,7 +426,7 @@ const Regulating = () => {
                       sx={{
                         width: 45,
                         height: 45,
-                        background: "#9FC2A6",
+                        background: "#2F6FD0",
                       }}
                     />
                   )}

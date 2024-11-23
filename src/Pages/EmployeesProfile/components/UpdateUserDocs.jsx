@@ -184,7 +184,7 @@ const UpdateUserDocs = ({ id, handleCloseDocsModal, params }) => {
           }}
           onClick={handleUpload}
         >
-          + Goş
+          Ýatda sakla
         </Button>
       </Stack>
     </>

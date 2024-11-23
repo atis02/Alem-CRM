@@ -50,13 +50,12 @@ const UpdateStandarts = ({ openUpdate, handleClose, data, userId }) => {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: "70%",
     bgcolor: "background.paper",
     border: "0px solid lightgray",
     gap: "10px",
-    maxHeight: 650,
-
-    minHeight: 500,
+    width: "95%",
+    maxHeight: "95%",
+    minHeight: 700,
     borderRadius: "10px",
     display: "flex",
     alignItems: "center",
@@ -113,7 +112,7 @@ const UpdateStandarts = ({ openUpdate, handleClose, data, userId }) => {
       <Box sx={style}>
         <Stack
           width="100%"
-          bgcolor="#00B69B"
+          bgcolor="#2F6FD0"
           p="15px 20px"
           direction="row"
           justifyContent="space-between"
@@ -134,9 +133,9 @@ const UpdateStandarts = ({ openUpdate, handleClose, data, userId }) => {
           </IconButton>
         </Stack>
         <Stack
-          width="95%"
+          width="98%"
           p={1}
-          height="100%"
+          minHeight="100%"
           overflow="auto"
           className="times"
           justifyContent="space-between"
@@ -166,6 +165,7 @@ const UpdateStandarts = ({ openUpdate, handleClose, data, userId }) => {
                 sx={{
                   "& .MuiOutlinedInput-root": {
                     width: "100%",
+                    height: "95px",
                   },
                 }}
                 {...params}
@@ -200,7 +200,7 @@ const UpdateStandarts = ({ openUpdate, handleClose, data, userId }) => {
             onChange={(e) => setDescription(e.target.value)}
             variant="outlined"
             multiline
-            minRows={6}
+            minRows={13.7}
             maxRows={18}
             fullWidth
             sx={{
@@ -210,22 +210,22 @@ const UpdateStandarts = ({ openUpdate, handleClose, data, userId }) => {
               },
             }} // Margin top for spacing
           />
-          <Stack alignItems="end" mt={2} mb={1}>
+          <Stack alignItems="end" pt={2} mb={1}>
             <Button
               onClick={handleSubmit}
               // variant="contained"
-              // sx={{ mt: 2, bgcolor: "#00B69B" }}
+              // sx={{ mt: 2, bgcolor: "#2F6FD0" }}
               sx={{
-                border: "1px solid #00b69b",
+                border: "1px solid #2F6FD0",
                 width: 115,
                 height: 40,
                 textTransform: "revert",
                 borderRadius: "20px",
-                color: "#00B69B",
+                color: "#2F6FD0",
                 backgroundColor: "#f0f7ff",
               }}
             >
-              Goşmak
+              Ýatda sakla
             </Button>
           </Stack>
         </Stack>

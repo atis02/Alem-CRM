@@ -26,7 +26,7 @@ import portfel from "../../../../public/images/portfel.png";
 import DescriptionIcon from "@mui/icons-material/Description";
 import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import deleteIcon from "../../../../public/images/Delete.png";
-import addIcon from "../../../../public/images/addDoc.png";
+import addIcon from "../../../../public/images/addDocument.png";
 import Standart from "../../Standarts";
 import moment from "moment";
 import EmployeesProjects from "./EmployeesProjects";
@@ -53,15 +53,24 @@ import UserLabor from "./UserLabor";
 import CloseIcon from "@mui/icons-material/Close";
 import Tooltip from "../../../Components/Tooltip";
 import FadeTooltip from "../../../Components/Tooltip";
+import DocumentUpdateModal from "./UpdateDocsUser";
 
 const UserInfo = () => {
   const [open, setOpen] = useState(false);
   const [openDocs, setOpenDocs] = useState(false);
+  const [updateDocs, setUpdateDocs] = useState(false);
   const [openStandart, setOpenStandart] = useState(false);
+  const [docTitle, setDocTitle] = useState("");
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const handleOpenDocsModal = () => setOpenDocs(true);
   const handleCloseDocsModal = () => setOpenDocs(false);
+  const handleOpenUpdateDocs = (data) => {
+    setUpdateDocs(true);
+    setDocTitle(data);
+  };
+  const handleCloseUpdateDocs = () => setUpdateDocs(false);
   const handleOpenUserStandart = () => setOpenStandart(true);
   const handleCloseUserStandart = () => setOpenStandart(false);
   const { id } = useParams();
@@ -69,8 +78,8 @@ const UserInfo = () => {
   const status = useSelector((state) => state.getWorkDate.statusMonth);
   const data = useSelector((state) => state.getWorkDate.employeerTime);
   const user = JSON.parse(localStorage.getItem("CRM_USER"));
-
   const params = searchParams.get("date");
+
   const navigate = useNavigate();
   const [isChecked, setIsChecked] = useState(
     (data.user && data.user.status) || false
@@ -206,7 +215,7 @@ const UserInfo = () => {
                       <Avatar
                         alt={data.user && data.user.name}
                         src={data.user && data.user.img}
-                        sx={{ background: "#9FC2A6", height: 96, width: 96 }}
+                        sx={{ background: "#2F6FD0", height: 96, width: 96 }}
                       />
                     ) : (
                       <img
@@ -493,11 +502,11 @@ const UserInfo = () => {
                   <Button
                     variant="contained"
                     sx={{
-                      background: "#9FC2A6",
+                      background: "#2F6FD0",
                       mt: 2,
                       textTransform: "revert",
                       fontSize: 16,
-                      "&:hover": { background: "#9FC2A6" },
+                      "&:hover": { background: "#2F6FD0" },
                     }}
                     onClick={handleOpenUserStandart}
                   >
@@ -518,7 +527,7 @@ const UserInfo = () => {
         <Box sx={styleStanart}>
           <Stack
             width="100%"
-            bgcolor="#00B69B"
+            bgcolor="#2F6FD0"
             p="15px 20px"
             direction="row"
             justifyContent="space-between"
@@ -543,6 +552,8 @@ const UserInfo = () => {
         </Box>
       </Modal>
       <Divider />
+      <Stack>{console.log(data)}</Stack>
+      <Divider />
       <Stack height="45%">
         <Stack
           direction="row"
@@ -558,12 +569,12 @@ const UserInfo = () => {
             sx={{
               width: 44,
               height: 36,
-              bgcolor: "#eff5fc",
-              border: "0.5px solid #90BAEB",
+              // bgcolor: "#eff5fc",
+              // border: "0.5px solid #90BAEB",
               borderRadius: "10px",
             }}
           >
-            <img style={{ width: 24, height: 24 }} src={addIcon} alt="Delete" />
+            <img style={{ width: 44, height: 36 }} src={addIcon} alt="add" />
           </IconButton>
           <Modal
             open={openDocs}
@@ -601,6 +612,8 @@ const UserInfo = () => {
           </Typography>
         ) : (
           <Stack height="100%" className="times2" overflow="auto">
+            {console.log(data.documents)}
+
             {data.documents &&
               data.documents.map((item, index) => (
                 <Stack
@@ -637,6 +650,26 @@ const UserInfo = () => {
                     </Link>
                   </Stack>
                   <Stack direction="row" alignItems="center">
+                    <IconButton
+                      // onClick={() => {
+                      //   handleOpen();
+                      //   setDetails(user);
+                      // }}
+                      onClick={() => handleOpenUpdateDocs(item)}
+                    >
+                      <BorderColorOutlinedIcon
+                        sx={{
+                          color: "#2F6FD0",
+                          width: 20,
+                          height: 20,
+                        }}
+                      />
+                    </IconButton>
+                    <DocumentUpdateModal
+                      open={updateDocs}
+                      handleClose={handleCloseUpdateDocs}
+                      data={docTitle}
+                    />
                     <IconButton>
                       <Link
                         style={{
@@ -649,7 +682,7 @@ const UserInfo = () => {
                         target="_blank"
                         to={`http://192.168.1.46/files/${item.pathPdf}`}
                       >
-                        <RemoveRedEyeIcon sx={{ color: "#9FC2A6" }} />
+                        <RemoveRedEyeIcon sx={{ color: "#2F6FD0" }} />
                       </Link>
                     </IconButton>
                     <IconButton

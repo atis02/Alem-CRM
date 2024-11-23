@@ -77,7 +77,8 @@ const UpdateUserInfo = ({ img, setFile }) => {
         email.trim().length <= 0 ||
         name.trim().length <= 0 ||
         email.trim().length <= 0 ||
-        phoneNumber.trim().length <= 0
+        phoneNumber.trim().length <= 0 ||
+        education.length < 10
       ) {
         toast.error("Dogry maglumatyňyzy giriziň!");
       } else {
@@ -330,6 +331,7 @@ const UpdateUserInfo = ({ img, setFile }) => {
                 id="outlined-basic"
                 type="text"
                 value={education}
+                error={education.length < 10}
                 name="password"
                 onChange={(e) => setEducation(e.target.value)}
                 variant="outlined"
@@ -432,9 +434,9 @@ const UpdateUserInfo = ({ img, setFile }) => {
             disabled={admin.name === email && admin.surname === lastName}
             sx={{
               "&:disabled": { background: "lightgray" },
-              background: "#9FC2A6",
+              background: "#2F6FD0",
               color: "#fff",
-              "&:hover": { background: "#9FC2A6" },
+              "&:hover": { background: "#2F6FD0" },
               height: "50px",
               width: "250px",
               borderRadius: "50px",

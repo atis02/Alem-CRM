@@ -67,7 +67,7 @@ const SpecificStandart = () => {
     <Box
       height="100vh"
       width="100%"
-      backgroundColor="#f2f9fc"
+      backgroundColor="#fff"
       overflow="auto"
       p="10px"
       borderRadius="20px"
@@ -93,10 +93,10 @@ const SpecificStandart = () => {
         ) : (
           <Button
             sx={{
-              color: "#9A93FF",
+              color: "#2F6FD0",
               textTransform: "revert",
-              background: "#e7e7fb",
-              "&:hover": { background: "#e7e7fb" },
+              background: "#E7E7FB",
+              "&:hover": { background: "#E7E7FB" },
               gap: "10px",
               width: 250,
               height: 45,
@@ -107,7 +107,7 @@ const SpecificStandart = () => {
           >
             <AddIcon
               sx={{
-                color: "#90BAEB",
+                color: "#2F6FD0",
                 width: 25,
                 height: 25,
               }}
@@ -166,7 +166,7 @@ const SpecificStandart = () => {
                           }}
                         >
                           <Stack
-                            width="90%"
+                            width="98%"
                             sx={{
                               ...(elem.id == 4
                                 ? {
@@ -198,10 +198,10 @@ const SpecificStandart = () => {
                                 elem.users.length === UsersData.length ? (
                                   <Button
                                     sx={{
-                                      color: "#00CCFF",
+                                      color: "#F8F9FA",
                                       textTransform: "revert",
-                                      background: "#d9e8ff",
-                                      "&:hover": { background: "#e7e7fb" },
+                                      background: "#2F6FD0",
+                                      "&:hover": { background: "#2F6FD0" },
                                       gap: "10px",
                                       width: 140,
                                       height: 35,
@@ -219,16 +219,16 @@ const SpecificStandart = () => {
                                     <Button
                                       key={index}
                                       sx={{
-                                        color: "#00CCFF",
+                                        color: "#2F6FD0",
                                         textTransform: "revert",
-                                        background: "#d9e8ff",
-                                        "&:hover": { background: "#e7e7fb" },
+                                        background: "#D9E8FF",
+                                        "&:hover": { background: "#D9E8FF" },
                                         gap: "10px",
                                         // width: 75,
                                         height: 30,
                                         fontWeight: 500,
                                         borderRadius: "20px",
-                                        border: `1px solid #00CCFF`,
+                                        border: `1px solid #2F6FD0`,
                                         ...(index == 0 ? { ml: 3 } : { ml: 1 }),
                                       }}
                                       variant="outlined"
@@ -282,6 +282,8 @@ const SpecificStandart = () => {
                               fontSize={16}
                               fontFamily="DM Sans"
                               fontWeight={400}
+                              whiteSpace="pre-wrap"
+                              textAlign="justify"
                             >
                               {elem.description}
                             </Typography>

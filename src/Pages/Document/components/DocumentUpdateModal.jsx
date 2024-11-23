@@ -16,17 +16,21 @@ import {
   updatePdf,
 } from "../../../Components/db/Redux/api/PdfSlice";
 
-const DocumentUpdateModal = ({ open, handleClose, data, docId }) => {
+const DocumentUpdateModal = ({ open, handleClose, data }) => {
   const [files, setFiles] = useState(null);
-  const [docName, setDocName] = useState((data && data.title) || "Goşmaça");
+  const [docName, setDocName] = useState(
+    open && data.pdfDocuments && data.pdfDocuments[0].title
+  );
+  console.log(data);
+
   const loggedUser = JSON.parse(localStorage.getItem("CRM_USER"));
   const [user, setUser] = useState(loggedUser);
 
   useEffect(() => {
-    setDocName(data && data.title);
+    open && data.pdfDocuments && setDocName(data.pdfDocuments[0].title);
 
     setUser(loggedUser);
-  }, [data]);
+  }, [open, data]);
 
   const dispatch = useDispatch();
   const updateFiles = (e) => {
@@ -102,7 +106,7 @@ const DocumentUpdateModal = ({ open, handleClose, data, docId }) => {
       <Box sx={style}>
         <Stack
           width="100%"
-          bgcolor="#00B69B"
+          bgcolor="#2F6FD0"
           p="15px 20px"
           direction="row"
           justifyContent="space-between"
@@ -213,12 +217,12 @@ const DocumentUpdateModal = ({ open, handleClose, data, docId }) => {
             <Stack width="100%" alignItems="end">
               <Button
                 sx={{
-                  color: "#9A93FF",
+                  color: "#2F6FD0",
                   textTransform: "revert",
                   background: "#e7e7fb",
+                  border: "1px solid #2F6FD0 ",
                   "&:hover": {
                     background: "#e7e7fb",
-                    border: "1px solid #9A93FF ",
                   },
                   gap: "10px",
                   width: "30%",

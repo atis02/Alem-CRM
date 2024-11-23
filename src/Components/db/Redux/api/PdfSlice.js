@@ -85,9 +85,10 @@ export const updatePdf = createAsyncThunk(
           }
         }
       );
-      console.log(body);
+      console.log(resp.data);
 
-      if (resp.status === 200) {
+      if (resp.data.message
+        === "Successfully") {
         toast.success("Üstünlikli!");
         const response = await AxiosInstance.get(
           `/pdf/get/files?userId=${body.userId}`
@@ -131,7 +132,41 @@ export const createPdfByAdmin = createAsyncThunk(
     }
   }
 );
+export const updatePdfByAdmin = createAsyncThunk(
+  "createPdfByAdmin",
+  async (body, { rejectWithValue, dispatch }) => {
+    try {
+      const resp = await AxiosInstance.put(
+        body.files==null?"/pdf/edit":'/pdf/edit/file',
+        body.body,
+        {
+          maxContentLength: Infinity,
+          maxBodyLength: Infinity,
+          onUploadProgress: (progressEvent) => {
+            const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+            dispatch(updateUploadProgress(progress)); // Dispatch upload progress
+          }
+        }
+      );
+      console.log(resp.data);
 
+      if (resp.data.message
+        === "Successfully") {
+        toast.success("Üstünlikli!");
+        const response= await dispatch(getUserMonthWorkTime({ userId: body.userId, date: body.date }));
+
+        return response.data;
+      }
+
+      if (resp.data.status === 404) {
+        toast.error(resp.data.message);
+      }
+    } catch (error) {
+      toast.error("Ýalňyşlyk!");
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
 export const deletePdf = createAsyncThunk("deletePdf", async (body) => {
   const resp = await AxiosInstance.delete(`/pdf/delete?userId=${body.userId}&documentId=${body.documentId}`);
   if (resp.status === 200) {

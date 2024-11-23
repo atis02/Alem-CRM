@@ -28,7 +28,7 @@ const index = () => {
       height="90vh"
       p="0 15px"
       width="100%"
-      backgroundColor="#f4f5f9"
+      backgroundColor="#F8F9FA"
       overflow="auto"
     >
       <Stack

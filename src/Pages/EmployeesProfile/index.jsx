@@ -20,17 +20,18 @@ import {
   useParams,
   useSearchParams,
 } from "react-router-dom";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { getUserMonthWorkTime } from "../../Components/db/Redux/api/ComeTimeSlice";
 import moment from "moment";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 import UserInfo from "./components/UserInfo";
-import { personalItems } from "../../Components/utils";
+import { personalItems, personalItems2 } from "../../Components/utils";
 import EmployeesProjects from "./components/EmployeesProjects";
 import Projects from "../Projects/components/Projects";
 import UserProjects from "./UserProjects";
 import Project from "../UserProjects/components/Project";
 import ProjectDetail from "../ProjectDetail";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const Index = () => {
   const [projectName, setProjectName] = useState("");
@@ -136,9 +137,11 @@ const Index = () => {
   const handleChange = (name) => {
     setProjectName(name);
   };
+  const totalData = personalItems2(data);
+  console.log(totalData);
 
   return (
-    <Box backgroundColor="#f2f9fc" overflow="auto">
+    <Box backgroundColor="#fff" overflow="auto" height="100vh">
       <Stack
         direction="row"
         alignItems="center"
@@ -151,8 +154,12 @@ const Index = () => {
           style={{
             textDecoration: "none",
             color: "#474747",
+            display: "flex",
+            alignItems: "center",
+            marginLeft: 10,
           }}
         >
+          <ArrowBackIcon />
           <Typography
             p="5px 10px"
             fontSize="20px"
@@ -179,7 +186,7 @@ const Index = () => {
           width="57%"
           height="82vh"
           borderRadius="20px"
-          pb="20px"
+          // pb="20px"
           boxShadow=" 0px 0px 8px -5px rgba(0,0,0,0.75)"
         >
           <Stack>
@@ -196,180 +203,210 @@ const Index = () => {
             ) : status === "failed" ? (
               toast.error(error)
             ) : status === "succeeded" ? (
-              <Stack>
-                <TableContainer
-                  sx={{
-                    height: "79vh",
-                    overflowY: "scroll",
-                    borderRadius: "20px",
-                  }}
-                  className="times2"
-                >
-                  <Table>
-                    <TableHead>
-                      <TableRow
-                        sx={{
-                          backgroundColor: "#F6FDFD",
-                          fontFamily: "DM Sans",
-                          position: "sticky",
-                          top: 0,
-                          zIndex: 100,
-                          boxShadow: " 0px 12px 7px -14px rgba(71,71,71,1)",
-                        }}
-                      >
-                        {personalItems.map((elem) => (
+              <TableContainer
+                sx={{
+                  height: "82.5vh",
+                  overflowY: "scroll",
+                  borderRadius: "20px",
+                }}
+                className="times2"
+              >
+                <Table sx={{ justifyContent: "space-between", height: "100%" }}>
+                  <TableHead>
+                    <TableRow
+                      sx={{
+                        backgroundColor: "#F6FDFD",
+                        fontFamily: "DM Sans",
+                        position: "sticky",
+                        top: 0,
+                        zIndex: 100,
+                        boxShadow: " 0px 12px 7px -14px rgba(71,71,71,1)",
+                      }}
+                    >
+                      {personalItems.map((elem) => (
+                        <TableCell
+                          sx={{
+                            color: "#222222",
+                            fontWeight: 500,
+                            fontSize: 14,
+                            textAlign: "center",
+                            p: 1.6,
+                          }}
+                          key={elem.id}
+                        >
+                          {elem.title}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  </TableHead>
+
+                  <TableBody>
+                    {result.map((user, index) => (
+                      <>
+                        <TableRow key={user.date}>
                           <TableCell
                             sx={{
-                              color: "#222222",
-                              fontWeight: 500,
-                              fontSize: 14,
-                              textAlign: "center",
+                              ...style2,
+                              direction: "row",
+                              justifyContent: "space-between",
                             }}
-                            key={elem.id}
                           >
-                            {elem.title}
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    </TableHead>
-
-                    <TableBody>
-                      {result.map((user, index) => (
-                        <>
-                          <TableRow key={user.date}>
-                            <TableCell sx={style2}>
-                              <IconButton
-                                onClick={() => handleExpandClick(user.date)}
-                              >
-                                {expandedDay === user.date ? (
-                                  <KeyboardArrowUp />
-                                ) : (
-                                  <KeyboardArrowDown />
-                                )}
-                              </IconButton>
-                              {moment(user.date).format("DD.MM.YYYY")}
-                            </TableCell>
-                            <TableCell sx={style2}>
-                              {moment(user.firstComeTime).format("HH:mm")}
-                            </TableCell>
-                            <TableCell sx={style2}>
-                              {user.lastLeaveTime == null ? (
-                                <Typography color="tomato">-</Typography>
+                            <IconButton
+                              onClick={() => handleExpandClick(user.date)}
+                            >
+                              {expandedDay === user.date ? (
+                                <KeyboardArrowUp />
                               ) : (
-                                moment(user.lastLeaveTime).format("HH:mm")
+                                <KeyboardArrowDown />
                               )}
-                            </TableCell>
-                            <TableCell sx={style2}>
-                              {
-                                // user.leaveTime != null?
-                                `${user.totalHours}:${user.totalMinutes}`
-                                // : ""
-                              }
-                            </TableCell>
-                            <TableCell sx={{ ...style2, color: "tomato" }}>
-                              {new Date(user.firstComeTime).getHours() >= 9 ? (
-                                new Date(user.firstComeTime).getHours() - 9 >
-                                  0 ||
-                                new Date(user.firstComeTime).getMinutes() >
-                                  0 ? (
-                                  <>
-                                    {new Date(user.firstComeTime).getHours() -
-                                      9 >
-                                      0 &&
-                                      new Date(user.firstComeTime).getHours() -
-                                        9 +
-                                        "(sag)"}
-                                    {new Date(user.firstComeTime).getMinutes() >
-                                      0 && (
-                                      <>
-                                        {new Date(
-                                          user.firstComeTime
-                                        ).getHours() -
-                                          9 >
-                                          0 && ":"}
-                                        {new Date(
-                                          user.firstComeTime
-                                        ).getMinutes()}
-                                        (min)
-                                      </>
-                                    )}
-                                  </>
-                                ) : (
-                                  ""
-                                )
+                            </IconButton>
+                            {moment(user.date).format("DD.MM.YYYY")}
+                          </TableCell>
+                          <TableCell sx={style2}>
+                            {moment(user.firstComeTime).format("HH:mm")}
+                          </TableCell>
+                          <TableCell sx={style2}>
+                            {user.lastLeaveTime == null ? (
+                              <Typography color="tomato">-</Typography>
+                            ) : (
+                              moment(user.lastLeaveTime).format("HH:mm")
+                            )}
+                          </TableCell>
+                          <TableCell sx={style2}>
+                            {
+                              // user.leaveTime != null?
+                              `${user.totalHours}:${user.totalMinutes}`
+                              // : ""
+                            }
+                          </TableCell>
+                          <TableCell sx={{ ...style2, color: "tomato" }}>
+                            {new Date(user.firstComeTime).getHours() >= 9 ? (
+                              new Date(user.firstComeTime).getHours() - 9 > 0 ||
+                              new Date(user.firstComeTime).getMinutes() > 0 ? (
+                                <>
+                                  {new Date(user.firstComeTime).getHours() - 9 >
+                                    0 &&
+                                    new Date(user.firstComeTime).getHours() -
+                                      9 +
+                                      "(sag)"}
+                                  {new Date(user.firstComeTime).getMinutes() >
+                                    0 && (
+                                    <>
+                                      {new Date(user.firstComeTime).getHours() -
+                                        9 >
+                                        0 && ":"}
+                                      {new Date(
+                                        user.firstComeTime
+                                      ).getMinutes()}
+                                      (min)
+                                    </>
+                                  )}
+                                </>
                               ) : (
                                 ""
-                              )}
-                            </TableCell>
+                              )
+                            ) : (
+                              ""
+                            )}
+                          </TableCell>
 
-                            <TableCell sx={style2}>{user.note}</TableCell>
-                          </TableRow>
-                          <TableRow>
-                            <TableCell
-                              colSpan={7}
-                              sx={{ paddingBottom: 0, paddingTop: 0 }}
+                          <TableCell sx={style2}>{user.note}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell
+                            colSpan={7}
+                            sx={{ paddingBottom: 0, paddingTop: 0 }}
+                          >
+                            <Collapse
+                              in={expandedDay === user.date}
+                              timeout="auto"
+                              unmountOnExit
                             >
-                              <Collapse
-                                in={expandedDay === user.date}
-                                timeout="auto"
-                                unmountOnExit
-                              >
-                                <Box margin={1}>
-                                  <Typography variant="h6">
-                                    Işlän wagtlary:
-                                  </Typography>
-                                  <Table size="small">
-                                    <TableHead>
-                                      <TableRow>
-                                        <TableCell>Gelen wagty</TableCell>
-                                        <TableCell>Giden wagty</TableCell>
-                                        <TableCell>Işlän sagady</TableCell>
-                                        <TableCell>Belligi</TableCell>
+                              <Box margin={1}>
+                                <Typography variant="h6">
+                                  Işlän wagtlary:
+                                </Typography>
+                                <Table size="small">
+                                  <TableHead>
+                                    <TableRow>
+                                      <TableCell>Gelen wagty</TableCell>
+                                      <TableCell>Giden wagty</TableCell>
+                                      <TableCell>Işlän sagady</TableCell>
+                                      <TableCell>Belligi</TableCell>
+                                    </TableRow>
+                                  </TableHead>
+                                  <TableBody>
+                                    {user.workSessions.map((session, idx) => (
+                                      <TableRow key={idx}>
+                                        <TableCell>
+                                          {session.comeTime
+                                            ? moment(session.comeTime).format(
+                                                "HH:mm"
+                                              )
+                                            : "-"}
+                                        </TableCell>
+                                        <TableCell>
+                                          {session.leaveTime
+                                            ? moment(session.leaveTime).format(
+                                                "HH:mm"
+                                              )
+                                            : "-"}
+                                        </TableCell>
+                                        <TableCell>
+                                          {session.leaveTime
+                                            ? `${Math.floor(
+                                                session.duration / 60
+                                              )}(sag):${Math.ceil(
+                                                session.duration % 60
+                                              )}(min)`
+                                            : "-"}
+                                        </TableCell>
+                                        <TableCell>
+                                          {session.note ? session.note : ""}
+                                        </TableCell>
                                       </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                      {user.workSessions.map((session, idx) => (
-                                        <TableRow key={idx}>
-                                          <TableCell>
-                                            {session.comeTime
-                                              ? moment(session.comeTime).format(
-                                                  "HH:mm"
-                                                )
-                                              : "-"}
-                                          </TableCell>
-                                          <TableCell>
-                                            {session.leaveTime
-                                              ? moment(
-                                                  session.leaveTime
-                                                ).format("HH:mm")
-                                              : "-"}
-                                          </TableCell>
-                                          <TableCell>
-                                            {session.leaveTime
-                                              ? `${Math.floor(
-                                                  session.duration / 60
-                                                )}(sag):${Math.ceil(
-                                                  session.duration % 60
-                                                )}(min)`
-                                              : "-"}
-                                          </TableCell>
-                                          <TableCell>
-                                            {session.note ? session.note : ""}
-                                          </TableCell>
-                                        </TableRow>
-                                      ))}
-                                    </TableBody>
-                                  </Table>
-                                </Box>
-                              </Collapse>
-                            </TableCell>
-                          </TableRow>
-                        </>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </Stack>
+                                    ))}
+                                  </TableBody>
+                                </Table>
+                              </Box>
+                            </Collapse>
+                          </TableCell>
+                        </TableRow>
+                      </>
+                    ))}
+                  </TableBody>
+
+                  <TableRow
+                    sx={{
+                      backgroundColor: "#F6FDFD",
+                      fontFamily: "DM Sans",
+                      position: "sticky",
+                      bottom: 0,
+                      zIndex: 100,
+                      boxShadow: "0px -2px 10px 0px rgba(199,199,199,1)",
+
+                      height: 35,
+                      p: 0,
+                    }}
+                  >
+                    {totalData.map((elem) => (
+                      <TableCell
+                        sx={{
+                          color: "#222222",
+                          fontWeight: 500,
+                          fontSize: 14,
+                          textAlign: "center",
+                          boxShadow: "0px -6px 9px 0px rgba(199,199,199,1)",
+
+                          p: 1,
+                        }}
+                      >
+                        {elem.title}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </Table>
+              </TableContainer>
             ) : (
               ""
             )}

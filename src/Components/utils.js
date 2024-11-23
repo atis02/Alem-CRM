@@ -120,6 +120,22 @@ export const personalItems = [
   { id: 5, title: "Gijä galan sagady" },
   { id: 6, title: "Bellik" },
 ];
+export function personalItems2  (data) {
+
+  return [
+    { id: 1, title: "Jemi:" },
+    { id: 2, title: "" },
+    { id: 3, title: "" },
+    { id: 4, title: data.workingHours },
+    { id: 5, title: "" },
+    { id: 6, title: "" },
+  ];
+}
+
+  
+  
+  
+
 export const projectTitles = [
   { id: 1, title: "Proýekt" },
   { id: 2, title: "Ýerine ýetirýän" },
@@ -178,5 +194,12 @@ export const  getRandomColorAndBackground =()=> {
     backgroundColor: backgroundColors[randomIndex],
   };
 }
+export const turkmenLocaleText = {
+  cancelButtonLabel: "Yza",
+  clearButtonLabel: "Arassala",
+  okButtonLabel: "Bolýar",
+  todayButtonLabel: "Şu gün",
+  selectTimeLabel: "Wagty saýlaň",
+};
 export const { color, backgroundColor } = getRandomColorAndBackground();
 

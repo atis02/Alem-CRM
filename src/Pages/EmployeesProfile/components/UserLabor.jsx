@@ -183,7 +183,8 @@ const UserLabor = ({ userData }) => {
                         }}
                       >
                         <Stack
-                          width="90%"
+                          width="95%"
+                          p="15px 0"
                           sx={{
                             ...(elem.id == 4
                               ? {
@@ -290,6 +291,7 @@ const UserLabor = ({ userData }) => {
                             fontSize={16}
                             fontFamily="DM Sans"
                             fontWeight={400}
+                            whiteSpace="pre-wrap"
                           >
                             {elem.description}
                           </Typography>

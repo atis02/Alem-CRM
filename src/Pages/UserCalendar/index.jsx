@@ -151,6 +151,7 @@ const index = () => {
   };
 
   const openModal = (day) => {
+    console.log(day);
     setSelectedDay(day);
     setModalOpen(true);
     handleDayWorkTime(day);
@@ -253,7 +254,7 @@ const index = () => {
     }
   };
   return (
-    <Box>
+    <Box backgroundColor="#fff">
       <Stack direction="row" mt="10px" justifyContent="space-around">
         <Stack direction="column" width="28%" height="88vh">
           <Stack
@@ -691,7 +692,18 @@ const index = () => {
                       </Typography>
                     ) : status === "succeeded" ? (
                       data.length === 0 ? (
-                        <Typography>Maglumat ýok</Typography>
+                        <Typography
+                          mt={4}
+                          textAlign="center"
+                          sx={{
+                            ...(moment().isSame(selectedDay, "day")
+                              ? { height: "35%" }
+                              : { height: "36%" }),
+                          }}
+                          fontSize={35}
+                        >
+                          Maglumat ýok
+                        </Typography>
                       ) : (
                         <Stack
                           // p="6px"
@@ -778,7 +790,7 @@ const index = () => {
                                   border="1px solid #d5d5d5"
                                   p="0 40px"
                                   borderRadius="50px"
-                                  backgroundColor="#F5F6FA"
+                                  backgroundColor="#F8F9FA"
                                 >
                                   <Stack
                                     height={25}

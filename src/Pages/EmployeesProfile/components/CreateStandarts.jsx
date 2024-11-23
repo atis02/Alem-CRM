@@ -101,7 +101,7 @@ const CreateStandarts = ({ open, handleClose, userId, defaultUser }) => {
       <Box sx={style}>
         <Stack
           width="100%"
-          bgcolor="#00B69B"
+          bgcolor="#2F6FD0"
           p="15px 20px"
           direction="row"
           justifyContent="space-between"
@@ -187,14 +187,14 @@ const CreateStandarts = ({ open, handleClose, userId, defaultUser }) => {
             <Button
               onClick={handleSubmit}
               // variant="contained"
-              // sx={{ mt: 2, bgcolor: "#00B69B" }}
+              // sx={{ mt: 2, bgcolor: "#2F6FD0" }}
               sx={{
-                border: "1px solid #00b69b",
+                border: "1px solid #2F6FD0",
                 width: 115,
                 height: 40,
                 textTransform: "revert",
                 borderRadius: "20px",
-                color: "#00B69B",
+                color: "#2F6FD0",
                 backgroundColor: "#f0f7ff",
               }}
             >

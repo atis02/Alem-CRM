@@ -149,7 +149,7 @@ const index = () => {
     <Box
       height="100vh"
       width="100%"
-      backgroundColor="#f2f9fc"
+      backgroundColor="#fff"
       overflow="auto"
       p="10px"
     >

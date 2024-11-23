@@ -59,7 +59,7 @@ const index = () => {
           borderRadius="12px"
           direction="row"
         >
-          <Stack direction='row'alignItems='center'spacing={2}>
+          <Stack direction="row" alignItems="center" spacing={2}>
             <Link
               to="#"
               onClick={() => navigate(-1)}
@@ -74,18 +74,18 @@ const index = () => {
               }}
             >
               <ArrowBackIcon />
-              </Link>
-              <Typography
-            width="90%"
-            textAlign="center"
-            fontSize="24px"
-            fontFamily="DM Sans"
-            fontWeight="600"
-          >
-            {projectName !== "" &&projectName&& projectName[0].name}
-          </Typography>
+            </Link>
+            <Typography
+              width="90%"
+              textAlign="center"
+              fontSize="24px"
+              fontFamily="DM Sans"
+              fontWeight="600"
+            >
+              {projectName !== "" && projectName && projectName[0].name}
+            </Typography>
           </Stack>
-          
+
           <Stack
             // width="20%"
             height="100%"
@@ -100,25 +100,23 @@ const index = () => {
                 : { display: "block" }),
             }}
           >
-           
             <Button
-            sx={{
-              color: "#9A93FF",
-              textTransform: "revert",
-              background: "#e7e7fb",
-              "&:hover": { background: "#e7e7fb" },
-              gap: "10px",
-              width: 190,
-              height: 45,
-              borderRadius: "20px",
-            }}
-            variant="outlined"
-            onClick={handleOpenUserModal}
-
-          >
-            <PersonAddAltIcon />
-            Ýerine Ýetirýän
-          </Button>
+              sx={{
+                color: "#F8F9FA",
+                textTransform: "revert",
+                background: "#2F6FD0",
+                "&:hover": { background: "#2F6FD0" },
+                gap: "10px",
+                width: 190,
+                height: 45,
+                borderRadius: "20px",
+              }}
+              variant="outlined"
+              onClick={handleOpenUserModal}
+            >
+              <PersonAddAltIcon />
+              Ýerine Ýetirýän
+            </Button>
           </Stack>
         </Stack>
         <Project setProjectName={handleChange} />

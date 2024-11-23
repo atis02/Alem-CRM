@@ -8,10 +8,11 @@ const index = () => {
 
   return (
     <Box
-      height="100%"
-      p={user.role === "USER" ? 0 : 2}
+      height="100vh"
+      // p={user.role === "USER" ? 0 : 2}
+      p="10px"
       width="100%"
-      backgroundColor="#f4f5f9"
+      backgroundColor="#fff"
       overflow="auto"
     >
       {user.role === "ADMIN" ? (

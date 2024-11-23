@@ -17,14 +17,19 @@ import { NonActiveUserItems } from "../../../Components/utils";
 import { postStatusUser } from "../../../Components/db/Redux/api/UserSlice";
 import AxiosInstance from "../../../Components/db/Redux/api/AxiosHelper";
 import { updateUserRole } from "../../../Components/db/Redux/api/ComeTimeSlice";
+import { useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
 
 const NonActiveUsers = () => {
   const [statusData, setStatusData] = useState(false);
   const [statusUsersData, setStatusUsersData] = useState([]);
   const [checkedStates, setCheckedStates] = useState({});
   const [checkedStatesModer, setCheckedStatesModer] = useState({});
+  const [date, setDate] = useState(dayjs());
+
   const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem("CRM_USER"));
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getStatusUsers = async () => {
@@ -76,7 +81,9 @@ const NonActiveUsers = () => {
     [user.id, dispatch]
   );
 
-  const filteredUsers = statusUsersData.filter((item) => item.role !== "ADMIN");
+  const filteredUsers = statusUsersData.filter(
+    (item) => item.role !== "ADMIN" && item.status === false
+  );
 
   const style2 = { p: 1, textAlign: "center", fontFamily: "DM Sans" };
 
@@ -148,7 +155,15 @@ const NonActiveUsers = () => {
                   </TableHead>
                   <TableBody>
                     {filteredUsers.map((user, index) => (
-                      <TableRow key={user.id}>
+                      <TableRow
+                        key={user.id}
+                        onClick={() =>
+                          navigate(`/employees/${user.id}?date=${date}`)
+                        }
+                        style={{
+                          cursor: "pointer",
+                        }}
+                      >
                         <TableCell sx={style2}>{index + 1}</TableCell>
                         <TableCell sx={style2}>{user.name}</TableCell>
                         <TableCell sx={style2}>{user.surname || "-"}</TableCell>

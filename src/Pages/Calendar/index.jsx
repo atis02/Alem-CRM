@@ -140,10 +140,13 @@ const index = () => {
 
   const statusUsers = useSelector((state) => state.users.status);
   const UsersData = useSelector((state) => state.users.data);
+
+  console.log(dateNote2);
+
   const defaultSelectedUsers =
     dateNote2 !== undefined
-      ? dateNote2.HolidayShares &&
-        dateNote2.HolidayShares.map((share) => ({
+      ? dateNote2.WarningShares &&
+        dateNote2.WarningShares.map((share) => ({
           userId: share.userId,
           name: share.User.name,
           surname: share.User.surname,
@@ -433,19 +436,19 @@ const index = () => {
   };
 
   return (
-    <Box height="100vh">
+    <Box height="100vh" backgroundColor="#fff">
       <Stack direction="row" mt="10px" justifyContent="space-around">
         <Stack direction="column" width="28%">
           <Stack
             backgroundColor="#fff"
             spacing="10px"
-            width="90%"
+            width="97%"
             sx={{
               height: "87.5vh",
             }}
             borderRadius="20px"
             alignItems="center"
-            m="0px 20px "
+            m="0px 10px "
             p="20px 10px 10px 20px"
             boxShadow=" 0px 0px 8px -5px rgba(0,0,0,0.75)"
             fontFamily="Montserrat"
@@ -602,7 +605,7 @@ const index = () => {
                                       onClick={() => handleUpdateNote(dateKey)}
                                       sx={{ mr: -1 }}
                                     >
-                                      <CreateIcon sx={{ color: "#9FC2A6" }} />
+                                      <CreateIcon sx={{ color: "#2F6FD0" }} />
                                     </IconButton>
                                     <IconButton
                                       onClick={() =>
@@ -727,7 +730,7 @@ const index = () => {
                                 }
                                 sx={{ mr: -1 }}
                               >
-                                <CreateIcon sx={{ color: "#9FC2A6" }} />
+                                <CreateIcon sx={{ color: "#2F6FD0" }} />
                               </IconButton>
                               <IconButton
                                 onClick={() =>
@@ -922,9 +925,9 @@ const index = () => {
                         onClick={handleAddAdminNoteSecond}
                         sx={{
                           "&:disabled": { background: "lightgray" },
-                          background: "#9FC2A5",
+                          background: "#2F6FD0",
                           color: "#fff",
-                          "&:hover": { background: "#9FC2A5" },
+                          "&:hover": { background: "#2F6FD0" },
                           height: "40px",
                           width: "115px",
                           borderRadius: "50px",
@@ -1123,9 +1126,9 @@ const index = () => {
                         onClick={adminProjectNoteUpdate}
                         sx={{
                           "&:disabled": { background: "lightgray" },
-                          background: "#9FC2A5",
+                          background: "#2F6FD0",
                           color: "#fff",
-                          "&:hover": { background: "#9FC2A5" },
+                          "&:hover": { background: "#2F6FD0" },
                           height: "40px",
                           width: "115px",
                           borderRadius: "50px",
@@ -1435,9 +1438,9 @@ const index = () => {
                           onClick={handleAddAdminNote}
                           sx={{
                             "&:disabled": { background: "lightgray" },
-                            background: "#9FC2A5",
+                            background: "#2F6FD0",
                             color: "#fff",
-                            "&:hover": { background: "#9FC2A5" },
+                            "&:hover": { background: "#2F6FD0" },
                             height: "40px",
                             width: "115px",
                             borderRadius: "50px",
@@ -1495,7 +1498,7 @@ const index = () => {
                           color="#474747"
                           mb="5px"
                         >
-                          Duýduryş
+                          Duýduryş y
                         </Typography>
                         <TextField
                           fullWidth
@@ -1724,9 +1727,9 @@ const index = () => {
                           onClick={() => handleUpdateAdminNotes()}
                           sx={{
                             "&:disabled": { background: "lightgray" },
-                            background: "#9FC2A5",
+                            background: "#2F6FD0",
                             color: "#fff",
-                            "&:hover": { background: "#9FC2A5" },
+                            "&:hover": { background: "#2F6FD0" },
                             height: "40px",
                             width: "115px",
                             borderRadius: "50px",

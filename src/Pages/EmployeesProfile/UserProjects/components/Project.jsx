@@ -192,7 +192,7 @@ const Project = ({ setProjectName, userData }) => {
                               style={{
                                 width: `${Math.floor(elem.completion)}%`,
                                 height: "14px",
-                                backgroundColor: "#00B69B",
+                                backgroundColor: "#2F6FD0",
                                 borderRadius: "100px",
                                 color: "#fff",
                                 display: "flex",
@@ -205,7 +205,7 @@ const Project = ({ setProjectName, userData }) => {
                             style={{
                               fontSize: 13,
 
-                              color: "#00B69B",
+                              color: "#2F6FD0",
                             }}
                           >
                             {`${Math.floor(elem.completion)}%`}

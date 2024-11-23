@@ -36,7 +36,7 @@ const index = ({ data }) => {
       height="90vh"
       p="0 15px"
       // width="100%"
-      backgroundColor="#f4f5f9"
+      backgroundColor="#F8F9FA"
       // overflow="auto"
       // height='50%'
     >
@@ -72,10 +72,10 @@ const index = ({ data }) => {
           </Stack>
           <Button
             sx={{
-              color: "#9A93FF",
+              color: "#fff",
               textTransform: "revert",
-              background: "#e7e7fb",
-              "&:hover": { background: "#e7e7fb" },
+              background: "#2F6FD0",
+              "&:hover": { background: "#2F6FD0" },
               gap: "10px",
               width: 250,
               height: 45,
@@ -85,11 +85,11 @@ const index = ({ data }) => {
             onClick={handleOpen}
           >
             <AddIcon
-              sx={{
-                color: "#90BAEB",
-                width: 25,
-                height: 25,
-              }}
+            // sx={{
+            //   color: "#fff",
+            //   width: 25,
+            //   height: 25,
+            // }}
             />
             Proýekt goşmak
           </Button>

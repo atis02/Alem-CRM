@@ -89,11 +89,12 @@ function ProjectHead() {
         <Grid item xs={12} key={index} sm={12} md={elem.width}>
           <Paper
             sx={{
-              height: "105px",
+              height: "85px",
               borderRadius: "12px",
               display: "flex",
               justifyContent: "space-around",
               alignItems: "center",
+              border: "0.5px solid lightgray",
             }}
           >
             <Stack

@@ -143,7 +143,7 @@ export const noteUpdate = createAsyncThunk("noteUpdate", async (body) => {
 });
 export const getAdminNotes = createAsyncThunk("getAdminNotes", async (body) => {
   const response = await AxiosInstance.get(
-    `/holidays/get/share?startDate=${body.startDate}&endDate=${body.endDate}&userId=${body.userId}`
+    `/warning/get/share?startDate=${body.startDate}&endDate=${body.endDate}&userId=${body.userId}`
   );
 
   if (response.data.status === 404) {
@@ -156,7 +156,7 @@ export const adminNotesOfMonth = createAsyncThunk(
   "adminNotesOfMonth",
   async (body) => {
     const response = await AxiosInstance.get(
-      `/holidays/get?startDate=${body.startDate}&endDate=${body.endDate}`
+      `/warning/get?startDate=${body.startDate}&endDate=${body.endDate}`
     );
     if (response.data.status === 404) {
       toast.error(response.data.message);
@@ -174,14 +174,14 @@ export const postAdminNote = createAsyncThunk("postAdminNote", async (body) => {
   };
 
   if (data.title !== "" && data.date !== null && data.users.length !== 0) {
-    const resp = await AxiosInstance.post(`/holidays/post`, data);
+    const resp = await AxiosInstance.post(`/warning/post`, data);
     resp.data == "OK" ? toast.success("Üstünlikli!") : toast.error("Şowsuz!");
   } else {
     toast.error("Maglumatlary giriziň");
   }
 
   const response = await AxiosInstance.get(
-    `/holidays/get?startDate=${body.startDate}&endDate=${body.endDate}`
+    `/warning/get?startDate=${body.startDate}&endDate=${body.endDate}`
   );
 
   if (response.data.status === 404) {
@@ -250,10 +250,10 @@ export const updateAdminNote = createAsyncThunk(
 export const deleteAdminNote = createAsyncThunk(
   "deleteAdminNote",
   async (body) => {
-    const resp = await AxiosInstance.delete(`/holidays/remove?id=${body.id}`);
+    const resp = await AxiosInstance.delete(`/warning/remove?id=${body.id}`);
     resp.data == "OK" ? toast.success("Üstünlikli!") : toast.error("Şowsuz!");
     const response = await AxiosInstance.get(
-      `/holidays/get?startDate=${body.startDate}&endDate=${body.endDate}`
+      `/warning/get?startDate=${body.startDate}&endDate=${body.endDate}`
     );
 
     if (response.data.status === 404) {
@@ -287,19 +287,19 @@ export const updateAdminNotes = createAsyncThunk(
   "updateAdminNotes",
   async (body) => {
     const data = {
-      holidayId: body.noteId,
+      warningId: body.noteId,
       title: body.content,
       date: new Date(`${body.date} ${body.dateHour}`).toJSON(),
       color: body.color,
       users: body.users,
     };
-    const resp = await AxiosInstance.put(`/holidays/updata`, data);
+    const resp = await AxiosInstance.put(`/warning/update`, data);
     resp.data.msg == "OK"
       ? toast.success("Üstünlikli!")
       : toast.error("Şowsuz!");
 
     const response = await AxiosInstance.get(
-      `holidays/get?startDate=${body.startDate}&endDate=${body.endDate}`
+      `warning/get?startDate=${body.startDate}&endDate=${body.endDate}`
     );
 
     if (response.data.status === 404) {

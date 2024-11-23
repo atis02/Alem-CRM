@@ -54,7 +54,7 @@ const WorkTime = () => {
     <Box
       height="100vh"
       width="100%"
-      backgroundColor="#f2f9fc"
+      backgroundColor="#fff"
       overflow="auto"
       p="10px"
     >
@@ -124,7 +124,7 @@ const WorkTime = () => {
               <Button
                 variant="contained"
                 onClick={handleGetValues}
-                style={{ marginTop: "10px", background: "#9FC2A6" }}
+                style={{ marginTop: "10px", background: "#2F6FD0" }}
               >
                 Ýatda sakla
               </Button>

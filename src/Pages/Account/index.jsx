@@ -70,7 +70,7 @@ export default function Account() {
 
   const currentPassword = "AlemTilsimat50";
   return (
-    <Box height="100vh" width="100%" backgroundColor="#F5F6FA" overflow="auto">
+    <Box height="100vh" width="100%" backgroundColor="#fff" overflow="auto">
       <ToastContainer />
       <Stack>
         <Typography
@@ -86,7 +86,7 @@ export default function Account() {
           direction="column"
           // spacing={1}
           minHeight="80vh"
-          borderRadius="20px"
+          borderRadius="10px"
           m="0px 20px 10px 20px"
           boxShadow=" 0px 0px 5px -2px rgba(0,0,0,0.75)"
         >

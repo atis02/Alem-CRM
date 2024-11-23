@@ -206,7 +206,7 @@ const CustomCalendar = ({ openModal, events, setStartDate, setEndDate }) => {
                         top: "10px",
                         right: "10px",
                         ...(moment().isSame(day, "day") && {
-                          background: "#9FC2A5",
+                          background: "#2F6FD0",
                           color: "#fff",
                           borderRadius: "100%",
                         }),
@@ -427,7 +427,7 @@ const CustomCalendar = ({ openModal, events, setStartDate, setEndDate }) => {
 
                 ...(viewMode === "week"
                   ? {
-                      background: "#9FC2A5",
+                      background: "#2F6FD0",
                       color: "#fff",
                       "&:hover": { background: "#809c85" },
                     }
@@ -452,7 +452,7 @@ const CustomCalendar = ({ openModal, events, setStartDate, setEndDate }) => {
 
                 ...(viewMode == "month"
                   ? {
-                      background: "#9FC2A5",
+                      background: "#2F6FD0",
                       color: "#fff",
                       "&:hover": { background: "#809c85" },
                       borderRadius: "0px",

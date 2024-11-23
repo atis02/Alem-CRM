@@ -74,13 +74,14 @@ export default function Navbar() {
     <Box
       height="75px"
       width="100%"
-      backgroundColor="#fff"
+      backgroundColor="#F8F9FA"
       // boxShadow="0px 1px 4px -11px #000"
       // boxShadow=" 0px 11px 11px -6px rgba(71,71,71,1)"
       sx={{
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
+        borderBottom: "1px solid lightgray",
       }}
     >
       <TextField
@@ -192,7 +193,7 @@ export default function Navbar() {
               <Avatar
                 alt={admin.name}
                 src={admin.name}
-                sx={{ background: "#9FC2A6", height: 50, width: 50 }}
+                sx={{ background: "#2F6FD0", height: 50, width: 50 }}
               />
             ) : (
               <img

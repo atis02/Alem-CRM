@@ -15,21 +15,24 @@ import { createPdf } from "../../../Components/db/Redux/api/PdfSlice";
 
 const DocumentModal = ({ open, handleClose, data }) => {
   const [files, setFiles] = useState(null);
-  const [docName, setDocName] = useState(data == "Goşmaça" ? data : data.title);
+  const [docName, setDocName] = useState(data && data.name);
   const loggedUser = JSON.parse(localStorage.getItem("CRM_USER"));
   const [user, setUser] = useState(loggedUser);
+  console.log(data);
 
   useEffect(() => {
-    setDocName(data == "Goşmaça" ? data : data.title);
+    setDocName(data && data.name);
 
     setUser(loggedUser);
   }, [data]);
+  console.log(data);
 
   const dispatch = useDispatch();
   const updateFiles = (e) => {
     const file = e.target.files[0];
     file && toast.success("Faýl saýlandy");
     setFiles(file);
+    setDocName(file.name);
   };
   const handleUpload = () => {
     if (docName == "") {
@@ -45,12 +48,7 @@ const DocumentModal = ({ open, handleClose, data }) => {
     body.append("userId", user.id);
     body.append("title", docName);
     body.append("file", files);
-    body.append(
-      "documentTypeId",
-      data !== "Goşmaça"
-        ? data.docTypeId
-        : "17e6fed6-a4bc-4d1d-98f1-d014fedb99f9"
-    );
+    body.append("documentTypeId", data.id);
     const data2 = {
       userId: user.id,
       body: body,
@@ -81,7 +79,7 @@ const DocumentModal = ({ open, handleClose, data }) => {
       <Box sx={style}>
         <Stack
           width="100%"
-          bgcolor="#00B69B"
+          bgcolor="#2F6FD0"
           p="15px 20px"
           direction="row"
           justifyContent="space-between"
@@ -186,12 +184,13 @@ const DocumentModal = ({ open, handleClose, data }) => {
             <Stack width="100%" alignItems="end">
               <Button
                 sx={{
-                  color: "#9A93FF",
+                  color: "#2F6FD0",
                   textTransform: "revert",
                   background: "#e7e7fb",
+                  border: "1px solid #2F6FD0",
+
                   "&:hover": {
                     background: "#e7e7fb",
-                    border: "1px solid #9A93FF ",
                   },
                   gap: "10px",
                   width: "30%",
