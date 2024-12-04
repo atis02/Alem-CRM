@@ -229,6 +229,8 @@ export default function Navbar() {
               fontSize={13}
               fontWeight={400}
               lineHeight="15px"
+              // textAlign="start"
+              // width="100%"
             >
               {admin.position != null && admin.position.name}
             </Typography>

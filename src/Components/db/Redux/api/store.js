@@ -9,6 +9,8 @@ import ProjectSlice from "./ProjectSlice";
 import ProjectDetailSlice from "./ProjectDetailSlice";
 import SetWorkTimeSlice from './SetWorkTimeSlice'
 import StandartSlice from './StandartSlice'
+import HolidaySlice from './HolidaySlice'
+import SubTaskSlice from './SubTaskSlice'
 
 export const store = configureStore({
   reducer: {
@@ -22,5 +24,7 @@ export const store = configureStore({
     projectDetail: ProjectDetailSlice,
     workTime:SetWorkTimeSlice,
     standarts:StandartSlice,
+    holidays:HolidaySlice,
+    subTask:SubTaskSlice,
   },
 });

@@ -27,7 +27,13 @@ import dayjs from "dayjs";
 import "dayjs/locale/tk";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 
-const CustomCalendar = ({ openModal, events, setStartDate, setEndDate }) => {
+const CustomCalendar = ({
+  openModal,
+  events,
+  setStartDate,
+  setEndDate,
+  holidays,
+}) => {
   moment.locale("tk");
   moment.updateLocale("tk", {
     weekdays: turkmenWeekdays.slice(0, 7),
@@ -126,6 +132,11 @@ const CustomCalendar = ({ openModal, events, setStartDate, setEndDate }) => {
     );
   };
 
+  const isholidays = (day) => {
+    return (
+      holidays && holidays.some((item) => moment(item.date).isSame(day, "day"))
+    );
+  };
   const renderCalendar = () => {
     if (viewMode === "day") {
       return renderDayView();
@@ -268,6 +279,45 @@ const CustomCalendar = ({ openModal, events, setStartDate, setEndDate }) => {
                                 + {filteredEvents(day).length - 1}
                               </Stack>
                             )}
+                          </Stack>
+                        ))}
+                    {isholidays(day) &&
+                      holidays
+                        .filter((elem) => moment(elem.date).isSame(day, "day"))
+                        .map((item, index) => (
+                          <Stack
+                            style={{
+                              fontSize: "14px",
+                              backgroundColor: item.color ? "#e5dffb" : "white",
+                              color: day ? item.color : "blue",
+                              borderRight: `6px solid ${item.color}`,
+                              height: "55%",
+                              fontWeight: 600,
+                              whiteSpace: "nowrap",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              width: "100%",
+                              display: " flex",
+                              position: "absolute",
+                              bottom: 0,
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                            width="100%"
+                            direction="row"
+                            justifyContent="space-evenly"
+                            spacing={1}
+                            key={index}
+                          >
+                            <Typography
+                              width="70%"
+                              whiteSpace="nowrap"
+                              overflow="hidden"
+                              textOverflow="ellipsis"
+                              textAlign="center"
+                            >
+                              {item.name}
+                            </Typography>
                           </Stack>
                         ))}
                   </TableCell>

@@ -7,6 +7,9 @@ import {
   Stack,
   TextField,
   Typography,
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Capitalize } from "../../Components/utils";
@@ -27,6 +30,7 @@ import DocumentModal from "./components/DocumentModal";
 import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import DocumentUpdateModal from "./components/DocumentUpdateModal";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const Index = () => {
   const [docTitle, setDocTitle] = useState("");
@@ -35,6 +39,7 @@ const Index = () => {
   const [openUpdate, setOpenUpdate] = useState(false);
   const loggedUser = JSON.parse(localStorage.getItem("CRM_USER"));
   const [user, setUser] = useState(loggedUser);
+  const [expanded, setExpanded] = useState(false); // State for handling expansion
   useEffect(() => {
     setUser(loggedUser);
   }, []);
@@ -50,9 +55,10 @@ const Index = () => {
     dispatch(getDocType(user.id));
     dispatch(getPDF(user.id));
   }, [dispatch]);
-  console.log(docType);
-  console.log(data);
 
+  const handleAccordionToggle = () => {
+    setExpanded(!expanded);
+  };
   const handleUploadFile = (e, name, id) => {
     const body = new FormData();
     body.append("userId", user.id);
@@ -70,18 +76,8 @@ const Index = () => {
 
     dispatch(createPdf(body));
   };
-  const shouldDisplayIconButton = (title) => {
-    return !(
-      birthDoc.some((doc) => doc.title === title) ||
-      pasport.some((doc) => doc.title === title) ||
-      certficate.some((doc) => doc.title === title) ||
-      diplom.some((doc) => doc.title === title) ||
-      weddDoc.some((doc) => doc.title === title)
-    );
-  };
-  const handleDeletePdf = (id) => {
-    console.log(id);
 
+  const handleDeletePdf = (id) => {
     const body = {
       userId: user.id,
       documentId: id[0].id,
@@ -89,8 +85,6 @@ const Index = () => {
     dispatch(deletePdf(body));
   };
   const handleOpen = (elem) => {
-    console.log(elem);
-
     setDocTitle(elem);
     setOpen(true);
   };
@@ -104,6 +98,12 @@ const Index = () => {
   const handleCloseUpdate = () => {
     setOpenUpdate(false);
   };
+  const sortedData = (() => {
+    const filteredData = data.filter((item) => item.name !== "Goşmaça");
+    return filteredData;
+  })();
+  const additionalDocs = data.filter((item) => item.name === "Goşmaça");
+
   return (
     <Box height="100vh" width="100%" backgroundColor="#fff" overflow="auto">
       <Typography
@@ -158,7 +158,7 @@ const Index = () => {
                 </Typography>
                 <Divider />
 
-                {data.map((elem, idx) => (
+                {sortedData.map((elem, idx) => (
                   <Stack
                     key={idx}
                     direction="row"
@@ -179,7 +179,9 @@ const Index = () => {
                     >
                       <FolderOpenIcon
                         sx={{
-                          color: "#2F6FD0",
+                          ...(elem.name === "Goşmaça"
+                            ? { color: "brown" }
+                            : { color: "#2F6FD0" }),
                           width: 36,
                           height: 36,
                         }}
@@ -187,7 +189,7 @@ const Index = () => {
                       <Typography
                         fontFamily="DM Sans"
                         fontWeight="400"
-                        fontSize={18}
+                        fontSize={elem.name === "Goşmaça" ? 20 : 18}
                         key={idx}
                         pl={5}
                         color="#474747"
@@ -202,7 +204,7 @@ const Index = () => {
                           : ""}
                       </Typography>
                     </Stack>
-                    <Stack direction="row">
+                    {/* <Stack direction="row">
                       {elem.pdfDocuments && elem.pdfDocuments.length ? (
                         <>
                           <IconButton onClick={() => handleOpenUpdate(elem)}>
@@ -242,32 +244,17 @@ const Index = () => {
                             height: 38,
                             position: "relative",
                             overflow: "hidden",
-                            // ...(shouldDisplayIconButton(elem.title)
-                            //   ? { display: "block" }
-                            //   : { display: "none" }),
+                           
                           }}
                           onClick={() => handleOpen(elem)}
                         >
-                          {/* <input
-                            type="file"
-                            accept=".docx,.xlsx,.pdf"
-                            onChange={handleOpen}
-                            style={{
-                              position: "absolute",
-                              left: 0,
-                              top: 0,
-                              zIndex: 100,
-                              right: 0,
-                              bottom: 0,
-                              width: "100%",
-                              height: "100%",
-                              opacity: 0,
-                              cursor: "pointer",
-                            }}
-                          /> */}
+                    
                           <PostAddIcon
                             sx={{
-                              color: "#2F6FD0",
+                              ...(elem.name === "Goşmaça"
+                                ? { color: "brown" }
+                                : { color: "#2F6FD0" }),
+                           
                               cursor: "pointer",
                               width: 28,
                               height: 28,
@@ -289,7 +276,295 @@ const Index = () => {
                           />
                         </IconButton>
                       )}
-                    </Stack>
+                    </Stack> */}
+                    {elem.name === "Goşmaça" ? (
+                      <Accordion
+                        expanded={expanded}
+                        onChange={handleAccordionToggle}
+                        sx={{
+                          width: "100%",
+                          backgroundColor: "#fff",
+                          boxShadow: "none",
+                        }}
+                      >
+                        <AccordionSummary
+                          expandIcon={<ExpandMoreIcon />}
+                          aria-controls="panel1a-content"
+                          id="panel1a-header"
+                        >
+                          {/* <Typography> {elem.name} </Typography> */}
+                        </AccordionSummary>
+                        <AccordionDetails>
+                          {elem.pdfDocuments.map((doc, docIdx) => (
+                            <Stack
+                              direction="row"
+                              key={docIdx}
+                              alignItems="center"
+                              justifyContent="space-between"
+                              sx={{ mb: 1 }}
+                            >
+                              <Typography>{doc.title}</Typography>
+                              <Stack direction="row" spacing={1}>
+                                <IconButton>
+                                  <Link
+                                    style={{
+                                      textDecoration: "none",
+                                      color: "#474747",
+                                    }}
+                                    target="_blank"
+                                    to={`http://192.168.1.46/files/${doc.pathPdf}`}
+                                  >
+                                    <RemoveRedEyeIcon
+                                      sx={{ color: "#9FA1C2" }}
+                                    />
+                                  </Link>
+                                </IconButton>
+                                <IconButton
+                                  onClick={() => handleDeletePdf([doc])}
+                                >
+                                  <img
+                                    style={{ width: 24, height: 24 }}
+                                    src={deleteIcon}
+                                    alt="Delete"
+                                  />
+                                </IconButton>
+                              </Stack>
+                            </Stack>
+                          ))}
+                        </AccordionDetails>
+                      </Accordion>
+                    ) : (
+                      // <IconButton
+                      //   sx={{
+                      //     width: 38,
+                      //     height: 38,
+                      //   }}
+                      //   onClick={() => handleDeletePdf(elem.pdfDocuments)}
+                      // >
+                      //   <img
+                      //     style={{ width: 24, height: 24 }}
+                      //     src={deleteIcon}
+                      //     alt="Delete"
+                      //   />
+                      // </IconButton>
+                      <Stack direction="row">
+                        {elem.pdfDocuments && elem.pdfDocuments.length ? (
+                          <>
+                            <IconButton onClick={() => handleOpenUpdate(elem)}>
+                              <BorderColorOutlinedIcon
+                                sx={{
+                                  color: "#0099ED",
+                                  width: 20,
+                                  height: 20,
+                                }}
+                              />
+                            </IconButton>
+
+                            <IconButton>
+                              <Link
+                                style={{
+                                  textDecoration: "none",
+                                  color: "#474747",
+                                  display: "flex",
+                                  justifyContent: "space-between",
+                                  width: "100%",
+                                }}
+                                target="_blank"
+                                to={`http://192.168.1.46/files/${elem.pdfDocuments[0].pathPdf}`}
+                              >
+                                <RemoveRedEyeIcon sx={{ color: "#9FA1C2" }} />
+                              </Link>
+                            </IconButton>
+                          </>
+                        ) : (
+                          ""
+                        )}
+
+                        {!elem.pdfDocuments.length ? (
+                          <IconButton
+                            sx={{
+                              width: 38,
+                              height: 38,
+                              position: "relative",
+                              overflow: "hidden",
+                            }}
+                            onClick={() => handleOpen(elem)}
+                          >
+                            <PostAddIcon
+                              sx={{
+                                ...(elem.name === "Goşmaça"
+                                  ? { color: "brown" }
+                                  : { color: "#2F6FD0" }),
+
+                                cursor: "pointer",
+                                width: 28,
+                                height: 28,
+                              }}
+                            />
+                          </IconButton>
+                        ) : (
+                          <IconButton
+                            sx={{
+                              width: 38,
+                              height: 38,
+                            }}
+                            onClick={() => handleDeletePdf(elem.pdfDocuments)}
+                          >
+                            <img
+                              style={{ width: 24, height: 24 }}
+                              src={deleteIcon}
+                              alt="Delete"
+                            />
+                          </IconButton>
+                        )}
+                      </Stack>
+                    )}
+                  </Stack>
+                ))}
+                {additionalDocs.map((doc, idx) => (
+                  <Stack
+                    direction="row"
+                    position="relative"
+                    alignItems="center"
+                  >
+                    <Accordion
+                      expanded={expanded}
+                      onChange={handleAccordionToggle}
+                      sx={{
+                        width: "97%",
+                        backgroundColor: "#fff",
+                        boxShadow: "none",
+                      }}
+                      key={idx}
+                    >
+                      <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel1a-content"
+                        id="panel1a-header"
+                        sx={{ alignItems: "center" }}
+                      >
+                        <Stack
+                          alignItems="center"
+                          justifyContent="space-between"
+                          direction="row"
+                        >
+                          <FolderOpenIcon
+                            sx={{
+                              color: "brown",
+                              width: 36,
+                              height: 36,
+                              ml: 0.7,
+                            }}
+                          />
+                          <Typography
+                            fontFamily="DM Sans"
+                            fontWeight="400"
+                            fontSize={20}
+                            pl={5}
+                            color="#474747"
+                            width="100%"
+                          >
+                            {" "}
+                            {doc.name}{" "}
+                          </Typography>
+                          <Stack
+                            border="1px solid #2F6FD0"
+                            backgroundColor="#2F6FD0"
+                            borderRadius="100%"
+                            width={45}
+                            alignItems="center"
+                            justifyContent="center"
+                            height={25}
+                            color="#fff"
+                          >
+                            {doc.pdfDocuments.length}
+                          </Stack>
+                        </Stack>
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        {doc.pdfDocuments.map((doc, docIdx) => (
+                          <>
+                            <Divider />
+                            <Stack
+                              direction="row"
+                              key={docIdx}
+                              alignItems="center"
+                              justifyContent="space-between"
+                              sx={{ mb: 1 }}
+                            >
+                              <Typography>{doc.title}</Typography>
+                              <Stack
+                                direction="row"
+                                alignItems="center"
+                                spacing={1}
+                              >
+                                <IconButton
+                                  onClick={() => handleOpenUpdate(doc)}
+                                >
+                                  <BorderColorOutlinedIcon
+                                    sx={{
+                                      color: "#0099ED",
+                                      width: 20,
+                                      height: 20,
+                                    }}
+                                  />
+                                </IconButton>
+
+                                <IconButton>
+                                  <Link
+                                    style={{
+                                      textDecoration: "none",
+                                      color: "#474747",
+                                      display: "flex",
+                                      alignItems: "center",
+                                    }}
+                                    target="_blank"
+                                    to={`http://192.168.1.46/files/${doc.pathPdf}`}
+                                  >
+                                    <RemoveRedEyeIcon
+                                      sx={{ color: "#9FA1C2" }}
+                                    />
+                                  </Link>
+                                </IconButton>
+                                <IconButton
+                                  onClick={() => handleDeletePdf([doc])}
+                                >
+                                  <img
+                                    style={{ width: 24, height: 24 }}
+                                    src={deleteIcon}
+                                    alt="Delete"
+                                  />
+                                </IconButton>
+                              </Stack>
+                            </Stack>
+                            <Divider />
+                          </>
+                        ))}
+                      </AccordionDetails>
+                    </Accordion>
+                    <IconButton
+                      sx={{
+                        width: 38,
+                        height: 38,
+                        position: "absolute",
+                        top: 10,
+                        right: 0,
+                        overflow: "hidden",
+                      }}
+                      onClick={() => handleOpen(doc)}
+                    >
+                      <PostAddIcon
+                        sx={{
+                          ...(doc.name === "Goşmaça"
+                            ? { color: "brown" }
+                            : { color: "#2F6FD0" }),
+
+                          cursor: "pointer",
+                          width: 28,
+                          height: 28,
+                        }}
+                      />
+                    </IconButton>
                   </Stack>
                 ))}
               </Stack>

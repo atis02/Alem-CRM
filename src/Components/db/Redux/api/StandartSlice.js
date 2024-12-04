@@ -100,7 +100,18 @@ export const updateStandart = createAsyncThunk("updateStandart", async (body) =>
     toast.error('Ýalňyşlyk!');
   }
 });
-
+export const changeLoginPassword = createAsyncThunk("changeLoginPassword", async (body) => {
+  
+  const resp = await AxiosInstance.patch(`/user/updata/password`,body)
+  console.log(resp.data);
+  
+  if(resp.data==`User ID ${body.userId} login and password updated successfully.`){
+    return toast.success('Üstünlikli!');
+  }
+  else {
+    toast.error('Ýalňyşlyk!');
+  }
+});
 
 // Create the slice
 const standartSlice = createSlice({
@@ -197,6 +208,19 @@ const standartSlice = createSlice({
         state.updated = true;
       })
       .addCase(updateStandart.rejected, (state, action) => {
+        state.loading = false;
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(changeLoginPassword.pending, (state) => {
+        state.status = "loading...";
+      })
+      .addCase(changeLoginPassword.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.data = action.payload;
+        state.updated = true;
+      })
+      .addCase(changeLoginPassword.rejected, (state, action) => {
         state.loading = false;
         state.status = "failed";
         state.error = action.error.message;

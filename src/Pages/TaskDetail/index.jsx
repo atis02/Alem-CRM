@@ -1,34 +1,47 @@
-import React, { useState } from "react";
 import { Box, Button, Stack, Typography } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import ProjectHead from "../Projects/components/ProjectHead";
-import Project from "./components/Project";
-import AddTask from "./components/AddTask";
-import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import { useSelector } from "react-redux";
-import TaskDetail from "../TaskDetail";
+import SubTask from "./components/SubTask";
+import { useDispatch } from "react-redux";
+import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 
-const Index = () => {
-  const [projectName, setProjectName] = useState("");
-  const [projectId, setProjectId] = useState("");
-  const UsersData = useSelector((state) => state.users.data);
+import {
+  deleteProjectTask,
+  getProjectDetail,
+} from "../../Components/db/Redux/api/ProjectDetailSlice";
+import { Capitalize } from "../../Components/utils";
+import AddSubTask from "./components/AddSubTask";
+import { ToastContainer } from "react-toastify";
+
+const index = () => {
   const [openUserModal, setOpenUserModal] = useState(false);
-  const user = JSON.parse(localStorage.getItem("CRM_USER"));
+
+  const { projectId, subId } = useParams();
+  const [projectName, setProjectName] = useState(() =>
+    JSON.parse(localStorage.getItem("subTaskId"))
+  );
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  // const status = useSelector((state) => state.projectDetail.status);
+  // const error = useSelector((state) => state.projectDetail.error);
+  // const data = useSelector((state) => state.projectDetail.data);
 
-  const handleChange = (name) => {
-    setProjectName(name);
-  };
+  console.log(projectName);
 
+  // useEffect(() => {
+  //   status === "succeeded" && setProjectName(data[0].name);
+  // }, [data]);
+  // useEffect(() => {
+  //   dispatch(getProjectDetail(projectId));
+  // }, [dispatch]);
   const handleOpenUserModal = () => {
     setOpenUserModal(true);
   };
-
   const handleCloseUserModal = () => {
     setOpenUserModal(false);
   };
-
   return (
     <Box
       height="100vh"
@@ -37,11 +50,14 @@ const Index = () => {
       backgroundColor="#fff"
       overflow="auto"
     >
-      {user.role === "USER" ? "" : <ProjectHead />}
+      {/* {user.role === "USER" ? "" : <ProjectHead />} */}
+      <ToastContainer />
+
       <Stack
         backgroundColor="#fff"
         width="100%"
-        minHeight={user.role === "USER" ? "97%" : "80%"}
+        // minHeight={user.role === "USER" ? "97%" : "80%"}
+        minHeight="97%"
         borderRadius="12px"
         p="20px"
         mt={2}
@@ -50,10 +66,13 @@ const Index = () => {
         <Stack
           backgroundColor="#F6FDFD"
           alignItems="center"
+          //   sx={{
+          //     ...(user.role === "USER"
+          //       ? ""
+          //       : { justifyContent: "space-between" }),
+          //   }}
           sx={{
-            ...(user.role === "USER"
-              ? ""
-              : { justifyContent: "space-between" }),
+            justifyContent: "space-between",
           }}
           p="10px 20px"
           borderRadius="12px"
@@ -82,18 +101,21 @@ const Index = () => {
               fontFamily="DM Sans"
               fontWeight="500"
             >
-              {projectName !== "" && projectName}
+              {projectName &&
+                `${Capitalize(projectName.name)} (${projectName.user.name} ${
+                  projectName.user.surname
+                })`}
             </Typography>
           </Stack>
 
           <Stack
             alignItems="center"
             justifyContent="center"
-            sx={{
-              ...(user.role === "USER"
-                ? { display: "none" }
-                : { display: "block" }),
-            }}
+            // sx={{
+            //   ...(user.role === "USER"
+            //     ? { display: "none" }
+            //     : { display: "block" }),
+            // }}
           >
             <Button
               sx={{
@@ -110,24 +132,25 @@ const Index = () => {
               onClick={handleOpenUserModal}
             >
               <PersonAddAltIcon />
-              Ýerine Ýetirýän
+              Ýumuş
             </Button>
           </Stack>
         </Stack>
-        <Project setProjectName={handleChange} setProjectId={setProjectId} />
+        <SubTask />
+        {/* <Project setProjectName={handleChange} setProjectId={setProjectId} />
         {user.role === "USER" ? (
           ""
         ) : (
-          <AddTask
-            openUserModal={openUserModal}
-            handleCloseUserModal={handleCloseUserModal}
-            allUsers={UsersData}
-            projectId={projectId}
-          />
-        )}
+          )} */}
+        <AddSubTask
+          openUserModal={openUserModal}
+          handleCloseUserModal={handleCloseUserModal}
+          // taskId={taskId}
+          user={projectName.user.id}
+        />
       </Stack>
     </Box>
   );
 };
 
-export default Index;
+export default index;

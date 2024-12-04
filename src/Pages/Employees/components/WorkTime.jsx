@@ -5,6 +5,7 @@ import {
   Typography,
   TextField,
   CircularProgress,
+  Autocomplete,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
@@ -18,19 +19,39 @@ import {
   getWorkTimeDay,
   postWorkTimeDay,
 } from "../../../Components/db/Redux/api/SetWorkTimeSlice";
+import { getHolidays } from "../../../Components/db/Redux/api/HolidaySlice";
+import ModeratorModal from "../../UserCalendar/components/ModeratorModal";
+import AddIcon from "@mui/icons-material/Add";
+import { Capitalize } from "../../../Components/utils";
+import { getUsers } from "../../../Components/db/Redux/api/UserSlice";
+import NewPassLoginUpdate from "./NewPassLoginUpdate";
 
 const WorkTime = () => {
+  const [users, setUsers] = useState(null);
+  const [openNewPass, setOpenNewPass] = useState(false);
+
   const time = useSelector((state) => state.workTime.data);
   const status = useSelector((state) => state.workTime.status);
+  const UsersData = useSelector((state) => state.users.data);
 
+  const holiday = useSelector((state) => state.holidays.data.data);
+  const statusHoliday = useSelector((state) => state.holidays.status);
+  const errorHoliday = useSelector((state) => state.holidays.error);
+
+  const [moderatorModalOpen, setModeratorModalOpen] = useState(false);
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
   const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem("CRM_USER"));
 
   useEffect(() => {
+    dispatch(getUsers());
     dispatch(getWorkTimeDay());
   }, [dispatch]);
+
+  const handleChange = (event, newValue) => {
+    setUsers(newValue);
+  };
   useEffect(() => {
     if (status === "succeeded" && time.length > 0) {
       setStartTime(time[0].startTime);
@@ -49,6 +70,9 @@ const WorkTime = () => {
       toast.error("Wagtlary giriz!");
     }
   };
+  useEffect(() => {
+    dispatch(getHolidays());
+  }, [dispatch]);
 
   return (
     <Box
@@ -68,6 +92,35 @@ const WorkTime = () => {
           boxShadow="0px 0px 8px -5px rgba(0,0,0,0.75)"
           p="30px 24px 17px"
         >
+          <Button
+            variant="contained"
+            sx={{
+              ...(user.role == "USER" && { display: "none" }),
+              // width: "10%",
+              textTransform: "revert",
+              height: "45px",
+              mb: 3,
+              fontSize: 17,
+              border: "0.5px solid #2F6FD0",
+              "&:hover": {
+                border: "0.5px solid #2F6FD0",
+              },
+            }}
+            onClick={() => setModeratorModalOpen(true)}
+          >
+            <AddIcon
+              sx={{
+                color: "#fff",
+                width: 25,
+                height: 25,
+              }}
+            />
+            Baýramçylyk güni goşmak
+          </Button>
+          <ModeratorModal
+            open={moderatorModalOpen}
+            handleClose={() => setModeratorModalOpen(false)}
+          />
           <Typography
             textAlign="center"
             fontFamily="DM Sans"
@@ -124,7 +177,13 @@ const WorkTime = () => {
               <Button
                 variant="contained"
                 onClick={handleGetValues}
-                style={{ marginTop: "10px", background: "#2F6FD0" }}
+                style={{
+                  marginTop: "10px",
+                  textTransform: "revert",
+                  fontSize: 17,
+                  background: "#2F6FD0",
+                  height: 43,
+                }}
               >
                 Ýatda sakla
               </Button>
@@ -132,8 +191,70 @@ const WorkTime = () => {
           ) : (
             ""
           )}
+          <Typography
+            textAlign="center"
+            fontFamily="DM Sans"
+            mb={2}
+            mt={3}
+            fontSize={20}
+          >
+            Ulanyjy login we parol çalyşmak
+          </Typography>
+          <Autocomplete
+            rows={4}
+            value={users}
+            fullWidth
+            options={UsersData}
+            getOptionLabel={(option) =>
+              `${Capitalize(option.name)} ${Capitalize(option.surname || "")}`
+            }
+            onChange={handleChange}
+            renderInput={(params) => (
+              <TextField
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    width: "100%",
+                  },
+                }}
+                {...params}
+                label="Adyny ýazyň ýa-da saýlaň"
+                fullWidth
+                autoComplete="off"
+                placeholder="Ady ýa-da Familiýasy"
+                variant="outlined"
+                InputProps={{
+                  ...params.InputProps,
+                  endAdornment: <>{params.InputProps.endAdornment}</>,
+                }}
+              />
+            )}
+          />
+          <Button
+            variant="contained"
+            sx={{
+              ...(user.role == "USER" && { display: "none" }),
+              textTransform: "revert",
+              mt: 2,
+              fontSize: 17,
+              border: "0.5px solid #2F6FD0",
+              "&:hover": {
+                border: "0.5px solid #2F6FD0",
+              },
+            }}
+            onClick={() => {
+              users !== null
+                ? setOpenNewPass(true)
+                : toast.error("Ulanyjy saýlaň!");
+            }}
+          >
+            Çalyşmak
+          </Button>
         </Stack>
-
+        <NewPassLoginUpdate
+          open={openNewPass}
+          handleClose={() => setOpenNewPass(false)}
+          userData={users}
+        />
         <NonActiveUsers />
         <ToastContainer />
       </Stack>

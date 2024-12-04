@@ -76,6 +76,12 @@ import check from "../../../public/images/check.png";
 import deleteIcon from "../../../public/images/Delete.png";
 import { formToJSON } from "axios";
 import { getProjects } from "../../Components/db/Redux/api/ProjectSlice";
+import {
+  deleteHoliday,
+  getHolidays,
+} from "../../Components/db/Redux/api/HolidaySlice";
+import AddIcon from "@mui/icons-material/Add";
+import ModeratorModalUpdate from "../UserCalendar/components/ModeratorModalUpdate";
 
 const index = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -97,8 +103,15 @@ const index = () => {
   const [dateHour, setDateHour] = useState();
   const [noteID, setNoteId] = useState();
   const [noteAdmin, setNoteAdmin] = useState();
+  const [notificationAdmin, setNotificationAdmin] = useState();
   const [projectId, setProjectId] = useState("");
+  const [updateHoliday, setUpdateHoliday] = useState();
+  const [updateHolidayModal, setUpdateHolidayModal] = useState();
   dayjs.locale("tk");
+  const holiday = useSelector((state) => state.holidays.data.data);
+  const statusHoliday = useSelector((state) => state.holidays.status);
+  const errorHoliday = useSelector((state) => state.holidays.error);
+
   const turkmenLocaleText = {
     // Customize any text that appears on the date or time pickers
     cancelButtonLabel: "Yza",
@@ -122,13 +135,22 @@ const index = () => {
       },
     },
   });
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const body = {
+      startDate: dayjs(startDate).format("YYYY-MM-DD"),
+      endDate: dayjs(endDate).format("YYYY-MM-DD"),
+    };
+    if (startDate != "" && endDate != "") {
+      dispatch(getHolidays(body));
+    }
+  }, [startDate, endDate, dispatch]);
   useEffect(() => {
     const labelElement = document.querySelector(".MuiTypography-overline");
     if (labelElement) {
       labelElement.textContent = "Your custom text"; // Replace with your desired text
     }
   }, []);
-  const dispatch = useDispatch();
   const projects = useSelector((state) => state.project.data);
   useEffect(() => {
     dispatch(getProjects());
@@ -141,12 +163,10 @@ const index = () => {
   const statusUsers = useSelector((state) => state.users.status);
   const UsersData = useSelector((state) => state.users.data);
 
-  console.log(dateNote2);
-
   const defaultSelectedUsers =
-    dateNote2 !== undefined
-      ? dateNote2.WarningShares &&
-        dateNote2.WarningShares.map((share) => ({
+    notificationAdmin !== undefined
+      ? notificationAdmin.WarningShares &&
+        notificationAdmin.WarningShares.map((share) => ({
           userId: share.userId,
           name: share.User.name,
           surname: share.User.surname,
@@ -382,14 +402,11 @@ const index = () => {
       noteId: noteID,
       content: notify,
       date: moment(dateNote2 && dateNote2.date).format("YYYY-MM-DD"),
-      // dateNote2 == undefined
-      //   ? moment(date).format("YYYY-MM-DD")
-      //   : moment(dateNote2).format("YYYY-MM-DD"),
       dateHour: dateHour == undefined ? moment(date).format("HH:mm") : dateHour,
       startDate: startDate,
       endDate: endDate,
       authorId: user.id,
-      users: users.length == 0 ? userIds : users,
+      users: users.length === 0 ? userIds : users,
       color: selectedColor,
     };
 
@@ -405,7 +422,7 @@ const index = () => {
     }
   };
   const handleUpdateNote = (item) => {
-    setDateNote2(item);
+    setNotificationAdmin(item);
     setAdminModalOpen(true);
     setDate(item.date);
     setNotify(item.title);
@@ -434,7 +451,20 @@ const index = () => {
     setNoteId(item.id);
     setNotify(item.content);
   };
-
+  const handleUpdateHoliday = (data) => {
+    setUpdateHoliday(data);
+    setUpdateHolidayModal(true);
+  };
+  const handleDeleteHoliday = (id) => {
+    const body = {
+      id: id,
+      startDate: dayjs(startDate).format("YYYY-MM-DD"),
+      endDate: dayjs(endDate).format("YYYY-MM-DD"),
+    };
+    if (body.id) {
+      dispatch(deleteHoliday(body));
+    }
+  };
   return (
     <Box height="100vh" backgroundColor="#fff">
       <Stack direction="row" mt="10px" justifyContent="space-around">
@@ -487,7 +517,8 @@ const index = () => {
               Bellik goşmak
             </Button>
 
-            {adminNoteStatus === "loading..." ? (
+            {adminNoteStatus === "loading..." ||
+            statusHoliday === "loading..." ? (
               <Stack
                 direction="column"
                 height="100%"
@@ -497,12 +528,15 @@ const index = () => {
                 <CircularProgress />
                 Loading...
               </Stack>
-            ) : adminNoteStatus === "failed" ? (
+            ) : adminNoteStatus === "failed" || statusHoliday === "failed" ? (
               <Typography textAlign="center" color="tomato" height="43%" mt={4}>
                 Ýalňyşlyk!
               </Typography>
-            ) : adminNoteStatus === "succeeded" ? (
-              adminNotes.length === 0 && adminNotesForProject.length == 0 ? (
+            ) : adminNoteStatus === "succeeded" ||
+              statusHoliday === "succeeded" ? (
+              adminNotes.length === 0 &&
+              adminNotesForProject.length == 0 &&
+              !holiday.length ? (
                 <Typography pt={4}>Bellik ýok</Typography>
               ) : (
                 <Stack
@@ -750,11 +784,140 @@ const index = () => {
                       ))
                     )}
                   </Stack>
+                  <Stack>
+                    <Typography
+                      textAlign="center "
+                      fontWeight={600}
+                      fontSize={15}
+                      mb={1}
+                      mt={1}
+                    >
+                      Baýramçylyklar
+                    </Typography>
+                    <Divider sx={{ width: "100%", mb: 1 }} />
+                    <Stack width="100%">
+                      {/* <Button
+                        variant="outlined"
+                        sx={{
+                          ...(user.role == "USER" && { display: "none" }),
+                          width: "100%",
+                          textTransform: "revert",
+                          // height:
+                          mt: 1,
+                          border: "0.5px solid green",
+                          color: "green",
+                          "&:hover": {
+                            border: "0.5px solid green",
+                          },
+                        }}
+                        onClick={() => setModeratorModalOpen(true)}
+                      >
+                        <AddIcon
+                          sx={{
+                            color: "green",
+                            width: 25,
+                            height: 25,
+                            mr: 2,
+                          }}
+                        />
+                        Baýramçylyk güni goşmak
+                      </Button> */}
+
+                      <Stack>
+                        {!holiday.length ? (
+                          <Typography mb={3} textAlign="center">
+                            Baýramçylyk ýok
+                          </Typography>
+                        ) : (
+                          holiday.map((item) => (
+                            <Stack
+                              sx={{
+                                padding: "6px",
+                                borderRadius: "5px",
+                                margin: "5px 0",
+                              }}
+                              direction="row"
+                              alignItems="center"
+                              justifyContent="space-between"
+                              gap="15px"
+                              mb="20px"
+                            >
+                              <Stack
+                                direction="row"
+                                gap="15px"
+                                alignItems="center"
+                              >
+                                <Stack
+                                  borderRadius="100%"
+                                  width={38}
+                                  height={38}
+                                  backgroundColor={item.color}
+                                ></Stack>
+                                <Stack direction="column">
+                                  <Typography
+                                    color="#202224"
+                                    fontSize={16}
+                                    fontWeight={500}
+                                  >
+                                    {item.name}
+                                  </Typography>
+                                  <Typography
+                                    color="#797a7c"
+                                    fontSize={14}
+                                    fontWeight={500}
+                                  >
+                                    {moment(item.date).format("DD.MM.YYYY")}
+                                  </Typography>
+                                </Stack>
+                              </Stack>
+                              <Stack
+                                direction="row"
+                                alignItems="center"
+                                sx={{
+                                  ...(moment().isSame(item.comeTime, "day") &&
+                                  user.role !== "USER"
+                                    ? {
+                                        display: "flex",
+                                      }
+                                    : {
+                                        display: "none",
+                                      }),
+                                }}
+                              >
+                                <IconButton
+                                  onClick={() => handleUpdateHoliday(item)}
+                                  sx={{ mr: -1 }}
+                                >
+                                  <CreateIcon sx={{ color: "#9FC2A6" }} />
+                                </IconButton>
+                                <IconButton
+                                  onClick={() => handleDeleteHoliday(item.id)}
+                                >
+                                  <img
+                                    style={{ width: 24, height: 24 }}
+                                    src={deleteIcon}
+                                    alt=""
+                                  />
+                                </IconButton>
+                              </Stack>
+                            </Stack>
+                          ))
+                        )}
+                      </Stack>
+                    </Stack>
+                  </Stack>
                 </Stack>
               )
             ) : (
               ""
             )}
+            <ModeratorModalUpdate
+              open={updateHolidayModal}
+              handleClose={() => setUpdateHolidayModal(false)}
+              holidayData={updateHoliday}
+              startDate={startDate}
+              endDate={endDate}
+            />
             <Modal
               closeAfterTransition
               open={modalOpenNote}
@@ -1724,7 +1887,7 @@ const index = () => {
                         spacing="10px"
                       >
                         <Button
-                          onClick={() => handleUpdateAdminNotes()}
+                          onClick={handleUpdateAdminNotes}
                           sx={{
                             "&:disabled": { background: "lightgray" },
                             background: "#2F6FD0",
@@ -1763,6 +1926,7 @@ const index = () => {
             setEvents={setEvent}
             setStartDate={(day) => setStartDate(day)}
             setEndDate={(day) => setEndDate(day)}
+            holidays={holiday}
           />
         </Stack>
       </Stack>

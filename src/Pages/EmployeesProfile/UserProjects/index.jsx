@@ -36,7 +36,7 @@ const index = ({ data }) => {
       height="90vh"
       p="0 15px"
       // width="100%"
-      backgroundColor="#F8F9FA"
+      backgroundColor="#fff"
       // overflow="auto"
       // height='50%'
     >

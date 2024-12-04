@@ -3,8 +3,12 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import TextField from "@mui/material/TextField"; // Импорт из @mui/material
 import dayjs from "dayjs";
+import { useLocation } from "react-router-dom";
 
 const CustomDatePicker = ({ selectedDay, setDateNote }) => {
+  const location = useLocation();
+  const isEmployeesPage = location.pathname === "/employees";
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker
@@ -25,11 +29,11 @@ const CustomDatePicker = ({ selectedDay, setDateNote }) => {
           textField: {
             InputProps: {
               sx: {
-                backgroundColor: "#f6e9e2", // Оранжевый цвет фона
+                backgroundColor: "#fcfcfc", // Оранжевый цвет фона
                 borderRadius: "40px", // Закругленные углы
                 color: "#ff730f !important", // Белый текст
                 padding: "0 16px", // Внутренний отступ
-                height: 45,
+                height: isEmployeesPage ? 45 : 35,
                 width: 190,
                 "&:hover": {
                   border: "none", // Цвет границы при наведении

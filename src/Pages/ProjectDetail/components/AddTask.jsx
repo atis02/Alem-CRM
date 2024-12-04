@@ -37,7 +37,7 @@ const AddTask = ({
 }) => {
   const [users, setUsers] = useState();
   const [priority, setPriority] = useState([]);
-  const [selectedValue, setSelectedValue] = useState("");
+  const [selectedValue, setSelectedValue] = useState("Orta");
   const [selectedStatus, setStatus] = useState("Başlanmadyk");
   const [value, setValue] = useState("");
   const [userId, setUserId] = useState("");
@@ -50,6 +50,7 @@ const AddTask = ({
   const handleChangeStatus = (event) => {
     setStatus(event.target.value);
   };
+
   useEffect(() => {
     const getPriority = async () => {
       await AxiosInstance.get("/project/status/priority").then((resp) => {
@@ -62,6 +63,8 @@ const AddTask = ({
   const handleChangeStep = (e) => {
     setUsers(e.target.value);
   };
+  console.log(projectId);
+
   const handleSubmit = () => {
     const body = {
       projectId: projectId,
@@ -74,6 +77,7 @@ const AddTask = ({
     };
 
     if (
+      projectId &&
       value !== "" &&
       selectedStatus != "" &&
       selectedValue !== "" &&
@@ -153,7 +157,7 @@ const AddTask = ({
                 onChange={handleChangeStep}
               >
                 {allUsers.map((elem) => (
-                  <MenuItem value={elem.id}>
+                  <MenuItem value={elem.id} key={elem.id}>
                     {elem.name} {elem.surname}
                   </MenuItem>
                 ))}

@@ -141,7 +141,7 @@ const Project = ({ setProjectName }) => {
                             }`
                           )
                         }
-                        sx={style2}
+                        sx={{ ...style2, width: "35%" }}
                       >
                         {elem.name}
                       </TableCell>
@@ -153,7 +153,9 @@ const Project = ({ setProjectName }) => {
                             }`
                           )
                         }
-                        sx={style2}
+                        sx={{
+                          textAlign: "center",
+                        }}
                       >
                         {moment(elem.startDate).format("DD.MM.YYYY")} -{" "}
                         {moment(elem.endDate).format("DD.MM.YYYY")}
@@ -216,13 +218,16 @@ const Project = ({ setProjectName }) => {
                           )
                         }
                         sx={{
-                          ...style2,
+                          // ...style2,
+                          textAlign: "center",
+                          width: "15%",
                         }}
                       >
                         {elem.priority == "Pes" ? (
                           <Typography
                             backgroundColor="#d4f4fc"
                             borderRadius="50px"
+                            border="1px solid blue"
                             color="gray"
                             width="100%"
                             textAlign="center"
@@ -233,6 +238,7 @@ const Project = ({ setProjectName }) => {
                           <Typography
                             backgroundColor="#E9FAF4"
                             borderRadius="50px"
+                            border="1px solid #29D697"
                             color="#29D697"
                           >
                             Orta
@@ -242,6 +248,7 @@ const Project = ({ setProjectName }) => {
                             backgroundColor="#9A93FF26"
                             borderRadius="50px"
                             color="#9A93FF"
+                            border="1px solid #9A93FF"
                           >
                             Ýokary
                           </Typography>
@@ -255,12 +262,13 @@ const Project = ({ setProjectName }) => {
                             }`
                           )
                         }
-                        sx={style2}
+                        sx={{ textAlign: "center", width: "15%" }}
                       >
                         {elem.status == "Dowam edýän" ? (
                           <Typography
                             backgroundColor="#FFF1E0"
                             borderRadius="50px"
+                            border="1px solid #E79124"
                             color="#E79124"
                             width="100%"
                             textAlign="center"
@@ -272,6 +280,7 @@ const Project = ({ setProjectName }) => {
                             backgroundColor="#E9FAF4"
                             borderRadius="50px"
                             color="#29D697"
+                            border="1px solid #29D697 "
                           >
                             Tamamlanan
                           </Typography>
@@ -280,6 +289,7 @@ const Project = ({ setProjectName }) => {
                             backgroundColor="#FFF0ED"
                             borderRadius="50px"
                             color="#FF6A54"
+                            border="1px solid #FF6A54 "
                           >
                             {elem.status}
                           </Typography>

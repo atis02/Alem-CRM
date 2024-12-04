@@ -40,9 +40,21 @@ import checked from "../../../public/images/checked.png";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { toast } from "react-toastify";
+import ModeratorModal from "./components/ModeratorModal";
+import {
+  deleteHoliday,
+  getHolidays,
+} from "../../Components/db/Redux/api/HolidaySlice";
+import AddIcon from "@mui/icons-material/Add";
+import dayjs from "dayjs";
+import ModeratorModalUpdate from "./components/ModeratorModalUpdate";
 
 const index = () => {
   const [modalOpen, setModalOpen] = useState(false);
+  const [showHolidays, setShowHolidays] = useState(() =>
+    JSON.parse(localStorage.getItem("holidayShown"))
+  );
+  const [moderatorModalOpen, setModeratorModalOpen] = useState(false);
   const [modalOpenNoteUpdate, setModalOpenNoteUpdate] = useState(false);
   const [colors, setColors] = useState([]);
   const [selectedColor, setSelectedColor] = useState("#7551E9");
@@ -54,11 +66,27 @@ const index = () => {
   const [users, setUsers] = useState([]);
   const [noteID, setNoteId] = useState();
   const [update, setUpdate] = useState();
+  const [updateHoliday, setUpdateHoliday] = useState();
+  const [updateHolidayModal, setUpdateHolidayModal] = useState();
 
   const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem("CRM_USER"));
   const data = useSelector((state) => state.getWorkDate.data);
   const statusMonth = useSelector((state) => state.getWorkDate.statusMonth);
+
+  const holiday = useSelector((state) => state.holidays.data.data);
+  const statusHoliday = useSelector((state) => state.holidays.status);
+  const errorHoliday = useSelector((state) => state.holidays.error);
+
+  useEffect(() => {
+    const body = {
+      startDate: dayjs(startDate).format("YYYY-MM-DD"),
+      endDate: dayjs(endDate).format("YYYY-MM-DD"),
+    };
+    if (startDate !== "" && endDate !== "") {
+      dispatch(getHolidays(body));
+    }
+  }, [startDate, endDate, dispatch]);
 
   const monthWorkData = useSelector(
     (state) => state.getWorkDate.employeerTime.employeerTime
@@ -91,7 +119,9 @@ const index = () => {
       userId: user.id,
       date: day,
     };
-    dispatch(getUserDayWorkTime(body));
+    if (moment().isSame(day, "day")) {
+      dispatch(getUserDayWorkTime(body));
+    }
   };
   const filteredData = data.filter((item) => item.leaveTime === null);
 
@@ -151,7 +181,6 @@ const index = () => {
   };
 
   const openModal = (day) => {
-    console.log(day);
     setSelectedDay(day);
     setModalOpen(true);
     handleDayWorkTime(day);
@@ -253,6 +282,20 @@ const index = () => {
       dispatch(deleteUserNote(body));
     }
   };
+  const handleDeleteHoliday = (id) => {
+    const body = {
+      id: id,
+      startDate: dayjs(startDate).format("YYYY-MM-DD"),
+      endDate: dayjs(endDate).format("YYYY-MM-DD"),
+    };
+    if (body.id) {
+      dispatch(deleteHoliday(body));
+    }
+  };
+  const handleUpdateHoliday = (data) => {
+    setUpdateHoliday(data);
+    setUpdateHolidayModal(true);
+  };
   return (
     <Box backgroundColor="#fff">
       <Stack direction="row" mt="10px" justifyContent="space-around">
@@ -275,16 +318,32 @@ const index = () => {
             overflow="auto"
           >
             <Stack maxHeight="100%">
-              <Typography
-                textAlign="start"
-                fontWeight={600}
-                color="#DC6262"
-                fontSize={15}
-                mb="10px"
-                p="15px 20px 0 20px"
-              >
-                Admindan bellik
-              </Typography>
+              <Stack direction="row">
+                <Typography
+                  textAlign="start"
+                  fontWeight={600}
+                  color="#DC6262"
+                  fontSize={15}
+                  mb="10px"
+                  p="18px 20px 0 14px"
+                >
+                  Admindan bellik
+                </Typography>
+              </Stack>
+              <ModeratorModal
+                open={moderatorModalOpen}
+                handleClose={() => setModeratorModalOpen(false)}
+                startDate={startDate}
+                endDate={endDate}
+              />
+              <ModeratorModalUpdate
+                open={updateHolidayModal}
+                handleClose={() => setUpdateHolidayModal(false)}
+                holidayData={updateHoliday}
+                startDate={startDate}
+                endDate={endDate}
+              />
+
               <Stack>
                 {adminNoteStatus === "loading..." ? (
                   <Stack
@@ -407,155 +466,359 @@ const index = () => {
             fontFamily="Montserrat"
             overflow="auto"
           >
-            <Stack>
-              <Typography textAlign="start" fontWeight={600} fontSize={15}>
+            <Stack direction="row" spacing={2}>
+              <Button
+                variant="outlined"
+                sx={{
+                  fontWeight: 600,
+                  color: "#474747",
+                  textTransform: "revert",
+                  fontSize: 14,
+                  width: "100%",
+                  height: "45px",
+                  ...(showHolidays == true
+                    ? {
+                        bgcolor: "#2F6FD0",
+                        color: "#fff",
+                        "&:hover": { bgcolor: "#2F6FD0", color: "#fff" },
+                      }
+                    : {
+                        bgcolor: "#fff",
+                        color: "#474747",
+                        "&:hover": { bgcolor: "#fff", color: "#474747" },
+                      }),
+                }}
+                onClick={() => {
+                  setShowHolidays(true);
+                  localStorage.setItem("holidayShown", JSON.stringify(true));
+                }}
+              >
                 Ýetişik bellikleri
-              </Typography>
+              </Button>
+              <Button
+                variant="outlined"
+                sx={{
+                  fontWeight: 600,
+                  color: "#474747",
+                  textTransform: "revert",
+                  fontSize: 14,
+                  width: "90%",
+                  height: "45px",
+                  "&:hover": { bgcolor: "#fff", color: "#474747" },
+
+                  ...(showHolidays == false
+                    ? {
+                        bgcolor: "#2F6FD0",
+                        color: "#fff",
+                        "&:hover": { bgcolor: "#2F6FD0", color: "#fff" },
+                      }
+                    : { bgcolor: "#fff", color: "#474747" }),
+                }}
+                onClick={() => {
+                  setShowHolidays(false);
+                  localStorage.setItem("holidayShown", JSON.stringify(false));
+                }}
+              >
+                Baýramçylyklar
+              </Button>
             </Stack>
             <Divider sx={{ width: "100%" }} />
-            {statusMonth === "loading..." ||
-            adminNoteStatus === "loading..." ? (
-              <Stack
-                direction="column"
-                height="100%"
-                alignItems="center"
-                sx={{ gap: "10px", mt: "60px" }}
-              >
-                <CircularProgress />
-                Loading...
-              </Stack>
-            ) : statusMonth === "failed" || adminNoteStatus === "failed" ? (
-              <Typography textAlign="center" color="tomato" height="43%" mt={4}>
-                Ýalňyşlyk!
-              </Typography>
-            ) : statusMonth === "succeeded" ||
-              adminNoteStatus === "succeeded" ? (
-              filteredByDate.length === 0 || filteredByDate === undefined ? (
-                <Typography pt={4}>Bellik ýok</Typography>
-              ) : (
+
+            {showHolidays == true ? (
+              statusMonth === "loading..." ||
+              adminNoteStatus === "loading..." ? (
                 <Stack
-                  p="6px"
+                  direction="column"
                   height="100%"
-                  width="100%"
-                  className="times"
-                  overflow="scroll"
+                  alignItems="center"
+                  sx={{ gap: "10px", mt: "60px" }}
                 >
-                  <Stack>
-                    {Object.keys(groupedByDate).map((item, index) => (
-                      <Accordion key={index}>
-                        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                          <Stack
-                            alignItems="center"
-                            direction="row"
-                            justifyContent="space-between"
-                            width="100%"
-                          >
-                            <Typography
-                              color="#202224"
-                              fontFamily="Montserrat"
-                              fontSize={15}
-                              fontWeight={600}
-                            >
-                              {moment(item).format("DD.MM.YYYY")}
-                            </Typography>
-                            <Stack
-                              width={30}
-                              height={30}
-                              backgroundColor="#90BAEB"
-                              color="#fff"
-                              alignItems="center"
-                              justifyContent="center"
-                              fontFamily="Montserrat"
-                              borderRadius="100%"
-                            >
-                              {groupedByDate[item].length}
-                            </Stack>
-                          </Stack>
-                        </AccordionSummary>
-                        <AccordionDetails sx={{ p: 0 }}>
-                          {groupedByDate[item].map((dateKey) => (
-                            <Stack key={dateKey.id}>
+                  <CircularProgress />
+                  Loading...
+                </Stack>
+              ) : statusMonth === "failed" || adminNoteStatus === "failed" ? (
+                <Typography
+                  textAlign="center"
+                  color="tomato"
+                  height="43%"
+                  mt={4}
+                >
+                  Ýalňyşlyk!
+                </Typography>
+              ) : statusMonth === "succeeded" ||
+                adminNoteStatus === "succeeded" ? (
+                filteredByDate.length === 0 || filteredByDate === undefined ? (
+                  <Typography pt={4}>Bellik ýok</Typography>
+                ) : (
+                  <Grow
+                    in={showHolidays == true}
+                    style={{ transformOrigin: "0 0 0" }}
+                    {...(checked ? { timeout: 500 } : {})}
+                  >
+                    <Stack
+                      p="6px"
+                      height="100%"
+                      width="100%"
+                      className="times"
+                      overflow="scroll"
+                    >
+                      <Stack>
+                        {Object.keys(groupedByDate).map((item, index) => (
+                          <Accordion key={index}>
+                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                               <Stack
-                                sx={{
-                                  padding: "10px",
-                                  borderRadius: "5px",
-                                  margin: "5px 0",
-                                }}
-                                direction="row"
                                 alignItems="center"
-                                gap="15px"
-                                mb="20px"
+                                direction="row"
+                                justifyContent="space-between"
+                                width="100%"
                               >
-                                <Stack
-                                  borderRadius="100%"
-                                  width={38}
-                                  height={38}
-                                  backgroundColor={dateKey.color}
-                                ></Stack>
-                                <Stack direction="column">
-                                  <Typography
-                                    color="#202224"
-                                    fontSize={15}
-                                    fontWeight={600}
-                                  >
-                                    {Capitalize(dateKey.note)}
-                                  </Typography>
-                                  <Typography
-                                    color="#797a7c"
-                                    fontSize={14}
-                                    fontWeight={500}
-                                  >
-                                    {moment(dateKey.comeTime).format(
-                                      "DD.MM.YYYY HH:mm"
-                                    )}
-                                  </Typography>
-                                </Stack>
-                                <Stack
-                                  direction="row"
-                                  alignItems="center"
-                                  sx={{
-                                    ...(moment().isSame(dateKey.comeTime, "day")
-                                      ? {
-                                          display: "flex",
-                                        }
-                                      : {
-                                          display: "none",
-                                        }),
-                                  }}
+                                <Typography
+                                  color="#202224"
+                                  fontFamily="Montserrat"
+                                  fontSize={15}
+                                  fontWeight={600}
                                 >
-                                  <IconButton
-                                    onClick={() =>
-                                      handleUpdateNoteForProject(dateKey)
-                                    }
-                                    sx={{ mr: -1 }}
-                                  >
-                                    <CreateIcon sx={{ color: "#9FC2A6" }} />
-                                  </IconButton>
-                                  <IconButton
-                                    onClick={() =>
-                                      handleDeleteNoteForProject(dateKey.id)
-                                    }
-                                  >
-                                    <img
-                                      style={{ width: 24, height: 24 }}
-                                      src={deleteIcon}
-                                      alt=""
-                                    />
-                                  </IconButton>
+                                  {moment(item).format("DD.MM.YYYY")}
+                                </Typography>
+                                <Stack
+                                  width={30}
+                                  height={30}
+                                  backgroundColor="#90BAEB"
+                                  color="#fff"
+                                  alignItems="center"
+                                  justifyContent="center"
+                                  fontFamily="Montserrat"
+                                  borderRadius="100%"
+                                >
+                                  {groupedByDate[item].length}
                                 </Stack>
                               </Stack>
-                              <Divider sx={{ width: "100%" }} />
-                            </Stack>
-                          ))}
-                        </AccordionDetails>
-                      </Accordion>
-                    ))}
-                  </Stack>
-                </Stack>
+                            </AccordionSummary>
+                            <AccordionDetails sx={{ p: 0 }}>
+                              {groupedByDate[item].map((dateKey) => (
+                                <Stack key={dateKey.id}>
+                                  <Stack
+                                    sx={{
+                                      padding: "6px",
+                                      borderRadius: "5px",
+                                      margin: "5px 0",
+                                    }}
+                                    direction="row"
+                                    alignItems="center"
+                                    gap="15px"
+                                    mb="20px"
+                                  >
+                                    <Stack
+                                      borderRadius="100%"
+                                      width={38}
+                                      height={38}
+                                      backgroundColor={dateKey.color}
+                                    ></Stack>
+                                    <Stack direction="column">
+                                      <Typography
+                                        color="#202224"
+                                        fontSize={15}
+                                        fontWeight={600}
+                                      >
+                                        {Capitalize(dateKey.note)}
+                                      </Typography>
+                                      <Typography
+                                        color="#797a7c"
+                                        fontSize={14}
+                                        fontWeight={500}
+                                      >
+                                        {moment(dateKey.comeTime).format(
+                                          "DD.MM.YYYY HH:mm"
+                                        )}
+                                      </Typography>
+                                    </Stack>
+                                    <Stack
+                                      direction="row"
+                                      alignItems="center"
+                                      sx={{
+                                        ...(moment().isSame(
+                                          dateKey.comeTime,
+                                          "day"
+                                        )
+                                          ? {
+                                              display: "flex",
+                                            }
+                                          : {
+                                              display: "none",
+                                            }),
+                                      }}
+                                    >
+                                      <IconButton
+                                        onClick={() =>
+                                          handleUpdateNoteForProject(dateKey)
+                                        }
+                                        sx={{ mr: -1 }}
+                                      >
+                                        <CreateIcon sx={{ color: "#9FC2A6" }} />
+                                      </IconButton>
+                                      <IconButton
+                                        onClick={() =>
+                                          handleDeleteNoteForProject(dateKey.id)
+                                        }
+                                      >
+                                        <img
+                                          style={{ width: 24, height: 24 }}
+                                          src={deleteIcon}
+                                          alt=""
+                                        />
+                                      </IconButton>
+                                    </Stack>
+                                  </Stack>
+                                  <Divider sx={{ width: "100%" }} />
+                                </Stack>
+                              ))}
+                            </AccordionDetails>
+                          </Accordion>
+                        ))}
+                      </Stack>
+                    </Stack>
+                  </Grow>
+                )
+              ) : (
+                ""
               )
             ) : (
-              ""
+              <Stack width="100%">
+                <Button
+                  variant="outlined"
+                  sx={{
+                    ...(user.role == "USER" && { display: "none" }),
+                    width: "100%",
+                    textTransform: "revert",
+                    // height:
+                    mt: 1,
+                    border: "0.5px solid green",
+                    color: "green",
+                    "&:hover": {
+                      border: "0.5px solid green",
+                    },
+                  }}
+                  onClick={() => setModeratorModalOpen(true)}
+                >
+                  <AddIcon
+                    sx={{
+                      color: "green",
+                      width: 25,
+                      height: 25,
+                      mr: 2,
+                    }}
+                  />
+                  Baýramçylyk güni goşmak
+                </Button>
+                <Stack>
+                  {statusHoliday === "loading..." ? (
+                    <Stack
+                      direction="column"
+                      height="100%"
+                      alignItems="center"
+                      sx={{ gap: "10px", mt: "60px" }}
+                    >
+                      <CircularProgress />
+                      Loading...
+                    </Stack>
+                  ) : statusHoliday === "failed" ? (
+                    <Typography
+                      textAlign="center"
+                      color="tomato"
+                      height="43%"
+                      mt={4}
+                    >
+                      Ýalňyşlyk!
+                    </Typography>
+                  ) : statusHoliday === "succeeded" ? (
+                    !holiday.length ? (
+                      <Typography pt={4} textAlign="center">
+                        Baýramçylyk ýok
+                      </Typography>
+                    ) : (
+                      holiday.map((item) => (
+                        <Grow in={showHolidays == false}>
+                          <Stack
+                            sx={{
+                              padding: "6px",
+                              borderRadius: "5px",
+                              margin: "5px 0",
+                            }}
+                            direction="row"
+                            alignItems="center"
+                            justifyContent="space-between"
+                            gap="15px"
+                            mb="20px"
+                          >
+                            <Stack
+                              direction="row"
+                              gap="15px"
+                              alignItems="center"
+                            >
+                              <Stack
+                                borderRadius="100%"
+                                width={38}
+                                height={38}
+                                backgroundColor={item.color}
+                              ></Stack>
+                              <Stack direction="column">
+                                <Typography
+                                  color="#202224"
+                                  fontSize={15}
+                                  fontWeight={600}
+                                >
+                                  {item.name}
+                                </Typography>
+                                <Typography
+                                  color="#797a7c"
+                                  fontSize={14}
+                                  fontWeight={500}
+                                >
+                                  {moment(item.date).format("DD.MM.YYYY")}
+                                </Typography>
+                              </Stack>
+                            </Stack>
+                            <Stack
+                              direction="row"
+                              alignItems="center"
+                              sx={{
+                                ...(moment().isSame(item.comeTime, "day") &&
+                                user.role !== "USER"
+                                  ? {
+                                      display: "flex",
+                                    }
+                                  : {
+                                      display: "none",
+                                    }),
+                              }}
+                            >
+                              <IconButton
+                                onClick={() => handleUpdateHoliday(item)}
+                                sx={{ mr: -1 }}
+                              >
+                                <CreateIcon sx={{ color: "#9FC2A6" }} />
+                              </IconButton>
+                              <IconButton
+                                onClick={() => handleDeleteHoliday(item.id)}
+                              >
+                                <img
+                                  style={{ width: 24, height: 24 }}
+                                  src={deleteIcon}
+                                  alt=""
+                                />
+                              </IconButton>
+                            </Stack>
+                          </Stack>
+                        </Grow>
+                      ))
+                    )
+                  ) : (
+                    ""
+                  )}
+                </Stack>
+              </Stack>
             )}
+
             {moment(selectedDay).isAfter(moment(), "day") ? (
               ""
             ) : (
@@ -571,7 +834,11 @@ const index = () => {
                 }}
                 disableAutoFocus
               >
-                <Grow in={modalOpen}>
+                <Grow
+                  in={modalOpen}
+                  style={{ transformOrigin: "1 0 0" }}
+                  {...(checked ? { timeout: 500 } : {})}
+                >
                   <Box sx={style} height="605px">
                     <Stack
                       direction="row"
@@ -1118,6 +1385,7 @@ const index = () => {
             setEvents={setEvent}
             setStartDate={(day) => setStartDate(day)}
             setEndDate={(day) => setEndDate(day)}
+            holidays={holiday}
           />
         </Stack>
       </Stack>

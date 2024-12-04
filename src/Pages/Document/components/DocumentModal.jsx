@@ -18,14 +18,12 @@ const DocumentModal = ({ open, handleClose, data }) => {
   const [docName, setDocName] = useState(data && data.name);
   const loggedUser = JSON.parse(localStorage.getItem("CRM_USER"));
   const [user, setUser] = useState(loggedUser);
-  console.log(data);
 
   useEffect(() => {
     setDocName(data && data.name);
 
     setUser(loggedUser);
   }, [data]);
-  console.log(data);
 
   const dispatch = useDispatch();
   const updateFiles = (e) => {

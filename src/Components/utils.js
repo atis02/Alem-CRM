@@ -120,15 +120,19 @@ export const personalItems = [
   { id: 5, title: "Gijä galan sagady" },
   { id: 6, title: "Bellik" },
 ];
-export function personalItems2  (data) {
-
+export function personalItems2  (data,totalLate) {
+  if (!data.workingHours || typeof data.workingHours !== "string") {
+    return "Invalid time data";
+  }
+  const [hours, minutes] = data.workingHours.split(":");
   return [
     { id: 1, title: "Jemi:" },
     { id: 2, title: "" },
     { id: 3, title: "" },
-    { id: 4, title: data.workingHours },
-    { id: 5, title: "" },
-    { id: 6, title: "" },
+    // { id: 4, title: "" },
+    { id: 4, title: `${hours}(sag):${minutes}(min)` },
+    { id: 5, title: `${totalLate.totalLateMinutes}(min)` },
+    { id: 6, title: '' },
   ];
 }
 
@@ -160,7 +164,7 @@ export const projectTitlesFor = [
   { id: 4, title: "Derejesi" },
   { id: 5, title: "Wajyplygy" },
   { id: 6, title: "Statusy" },
-  { id: 6, title: "" },
+  // { id: 6, title: "" },
 ];
 export const StyledTableRow = styled(TableRow)(({ theme }) => ({
   fontFamily: "DM Sans, sans-serif",

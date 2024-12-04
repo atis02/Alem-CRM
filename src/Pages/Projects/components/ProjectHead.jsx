@@ -112,7 +112,7 @@ function ProjectHead() {
                 gap: "16px",
               }}
               justifyContent="center"
-              onClick={elem.id == 4 ? handleOpen : ""}
+              onClick={elem.id == 4 ? handleOpen : null}
             >
               <Stack
                 width={60}

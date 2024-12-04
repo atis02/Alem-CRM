@@ -22,30 +22,36 @@ import {
   deleteProjectTask,
   getProjectDetail,
 } from "../../../Components/db/Redux/api/ProjectDetailSlice";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import deleteIcon from "../../../../public/images/Delete.png";
 import UpdateProjectUserModal from "./UpdateProjectUserModal";
 import AddTask from "./AddTask";
 
-const Project = ({ setProjectName }) => {
+const Project = ({ setProjectName, setProjectId }) => {
   const [selectedUsers, setSelectedUsers] = useState("");
   const [openUserModal, setOpenUserModal] = useState(false);
   const [workers, setWorkers] = useState([]);
-  const { id } = useParams();
+  const { projectId, subId } = useParams();
   const status = useSelector((state) => state.projectDetail.status);
   const error = useSelector((state) => state.projectDetail.error);
   const data = useSelector((state) => state.projectDetail.data);
   const [allData, setAllData] = useState([data]);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  console.log(data);
+
   const user = JSON.parse(localStorage.getItem("CRM_USER"));
-
   useEffect(() => {
-    dispatch(getProjectDetail(id));
+    if (status === "succeeded") {
+      setProjectName(data[0].name);
+      setProjectId(data[0].id);
+    }
+  }, [status, data, setProjectName, setProjectId]);
+  useEffect(() => {
+    dispatch(getProjectDetail(projectId));
   }, [dispatch]);
-
-  status === "succeeded" ? setProjectName(data) : "";
   const style2 = {
     p: 2,
     textAlign: "center",
@@ -55,6 +61,7 @@ const Project = ({ setProjectName }) => {
     overflow: "hidden",
     textOverflow: "ellipsis",
     fontWeight: 500,
+    cursor: "pointer",
   };
   const handleChange = (elem) => {
     setOpenUserModal(true);
@@ -62,12 +69,12 @@ const Project = ({ setProjectName }) => {
   };
   const handleDeleteProjectTask = (elem) => {
     const body = {
-      projectId: id,
+      projectId: projectId,
       taskId: elem.id,
       responsibleUserId: user.id,
     };
-    if (elem && id) {
-      dispatch(deleteProjectTask({ body: body, age: id }));
+    if (elem && projectId) {
+      dispatch(deleteProjectTask({ body: body, age: projectId }));
     }
   };
   return (
@@ -126,23 +133,63 @@ const Project = ({ setProjectName }) => {
                     ))}
                   </TableRow>
                 </TableHead>
-
                 <TableBody>
                   {data.map(
                     (item) =>
                       item.tasks &&
                       item.tasks.map((elem) => (
-                        <StyledTableRow>
-                          <TableCell sx={style2}>{elem.name}</TableCell>
-                          <TableCell sx={style2}>
+                        <StyledTableRow key={elem.id}>
+                          {console.log(item)}
+
+                          <TableCell
+                            sx={style2}
+                            onClick={() => {
+                              navigate(`/projects/${projectId}/${elem.id}`);
+                              localStorage.setItem(
+                                "subTaskId",
+                                JSON.stringify(elem)
+                              );
+                            }}
+                          >
+                            {elem.name}
+                          </TableCell>
+                          <TableCell
+                            sx={style2}
+                            onClick={() => {
+                              navigate(`/projects/${projectId}/${elem.id}`);
+                              localStorage.setItem(
+                                "subTaskId",
+                                JSON.stringify(elem)
+                              );
+                            }}
+                          >
+                            {console.log(elem)}
                             {elem.user && elem.user.name}{" "}
                             {elem.user && elem.user.surname}
                           </TableCell>
-                          <TableCell sx={style2}>
+                          <TableCell
+                            sx={style2}
+                            onClick={() => {
+                              navigate(`/projects/${projectId}/${elem.id}`);
+                              localStorage.setItem(
+                                "subTaskId",
+                                JSON.stringify(elem)
+                              );
+                            }}
+                          >
                             {moment(elem.startDate).format("DD.MM.YYYY")} -{" "}
                             {moment(elem.endDate).format("DD.MM.YYYY")}
                           </TableCell>
-                          <TableCell sx={style2}>
+                          <TableCell
+                            sx={style2}
+                            onClick={() => {
+                              navigate(`/projects/${projectId}/${elem.id}`);
+                              localStorage.setItem(
+                                "subTaskId",
+                                JSON.stringify(elem)
+                              );
+                            }}
+                          >
                             <Stack
                               direction="row"
                               alignItems="center"
@@ -183,15 +230,21 @@ const Project = ({ setProjectName }) => {
                             </Stack>
                           </TableCell>
                           <TableCell
-                            sx={{
-                              ...style2,
+                            sx={style2}
+                            onClick={() => {
+                              navigate(`/projects/${projectId}/${elem.id}`);
+                              localStorage.setItem(
+                                "subTaskId",
+                                JSON.stringify(elem)
+                              );
                             }}
                           >
                             {elem.priority == "Pes" ? (
                               <Typography
-                                backgroundColor="#d4f4fc"
+                                backgroundColor="#F0F7FF"
                                 borderRadius="50px"
                                 color="gray"
+                                border="1px solid lightblue"
                                 width="100%"
                                 textAlign="center"
                               >
@@ -199,6 +252,7 @@ const Project = ({ setProjectName }) => {
                               </Typography>
                             ) : elem.priority == "Orta" ? (
                               <Typography
+                                border="1px solid #29D697"
                                 backgroundColor="#E9FAF4"
                                 borderRadius="50px"
                                 color="#29D697"
@@ -207,6 +261,7 @@ const Project = ({ setProjectName }) => {
                               </Typography>
                             ) : (
                               <Typography
+                                border="1px solid #9A93FF"
                                 backgroundColor="#9A93FF26"
                                 borderRadius="50px"
                                 color="#9A93FF"
@@ -215,13 +270,22 @@ const Project = ({ setProjectName }) => {
                               </Typography>
                             )}
                           </TableCell>
-                          <TableCell sx={style2}>
+                          <TableCell
+                            sx={style2}
+                            onClick={() => {
+                              navigate(`/projects/${projectId}/${elem.id}`);
+                              localStorage.setItem(
+                                "subTaskId",
+                                JSON.stringify(elem)
+                              );
+                            }}
+                          >
                             {elem.status == "Dowam edýän" ? (
                               <Typography
                                 backgroundColor="#FFF1E0"
                                 borderRadius="50px"
                                 color="#E79124"
-                                width="100%"
+                                border="1px solid #E79124"
                                 textAlign="center"
                               >
                                 Dowam edýän
@@ -230,6 +294,7 @@ const Project = ({ setProjectName }) => {
                               <Typography
                                 backgroundColor="#E9FAF4"
                                 borderRadius="50px"
+                                border="1px solid #29D697"
                                 color="#29D697"
                               >
                                 Tamamlanan
@@ -237,6 +302,7 @@ const Project = ({ setProjectName }) => {
                             ) : (
                               <Typography
                                 backgroundColor="#FFF0ED"
+                                border="1px solid #FF6A54"
                                 borderRadius="50px"
                                 color="#FF6A54"
                               >

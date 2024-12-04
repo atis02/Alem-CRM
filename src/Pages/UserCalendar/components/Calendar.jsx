@@ -21,11 +21,18 @@ import {
 } from "../../../Components/utils";
 import pattern from "../../../../public/images/pattern.png";
 
-const CustomCalendar = ({ openModal, events, setStartDate, setEndDate }) => {
+const CustomCalendar = ({
+  openModal,
+  events,
+  setStartDate,
+  setEndDate,
+  holidays,
+}) => {
   moment.locale("tk");
   moment.updateLocale("tk", {
     weekdays: turkmenWeekdays.slice(0, 7),
   });
+
   moment.updateLocale("tk", {
     months: turkmenMonths,
   });
@@ -91,41 +98,21 @@ const CustomCalendar = ({ openModal, events, setStartDate, setEndDate }) => {
     setEndDate(endDay.format("YYYY-MM-DD"));
   }, [currentDate, viewMode, setStartDate, setEndDate]);
   const isSunday = (day) => day.day() === 0;
-
-  // const { calendar, firstDay, lastDay } = generateCalendar();
-
-  // console.log("Calendar:", calendar);
-  // console.log("First Day:", firstDay);
-  // console.log("Last Day:", lastDay);
-
   const handleDayClick = (day) => {
     setSelectedDay(day),
       isSunday(day) ? "" : openModal(day.format("YYYY-MM-DD"));
-    // setSelectedDay(day);
-    // setEventText(events[day.format("YYYY-MM-DD")] || "");
-    // setOpen(true);
   };
-  // monthWorkData;
-
-  const isMarked = (day) => {
-    // console.log(day.format("DD.MM.YYYY"));
-    return events.some(
-      (item) =>
-        // user.role === "USER"
-        moment(item.comeTime).isSame(day, "day")
-      // :moment(item.date, "DD/MM/YYYY").isSame(day, "day")
+  const isholidays = (day) => {
+    return (
+      holidays && holidays.some((item) => moment(item.date).isSame(day, "day"))
     );
+  };
+  const isMarked = (day) => {
+    return events.some((item) => moment(item.comeTime).isSame(day, "day"));
   };
 
   const filteredEvents = (day) =>
-    events.filter(
-      (item) =>
-        // user.role === "USER" || user.role === "MODERATOR"
-        moment(item.comeTime).isSame(day, "day")
-      // : moment(item.date, "DD/MM/YYYY").isSame(day, "day")
-    );
-
-  //   });
+    events.filter((item) => moment(item.comeTime).isSame(day, "day"));
 
   const renderCalendar = () => {
     if (viewMode === "day") {
@@ -209,127 +196,112 @@ const CustomCalendar = ({ openModal, events, setStartDate, setEndDate }) => {
                           background: "#2F6FD0",
                           color: "#fff",
                           borderRadius: "100%",
+                          zIndex: 100,
                         }),
                       }}
                     >
                       {day.format("D")}
                     </Stack>
 
-                    {isMarked(day)
-                      ? events
-                          .filter((item) =>
-                            moment(item.comeTime).isSame(day, "day")
-                          )
-                          .map((item, index) => (
-                            <Stack
-                              style={{
-                                fontSize: "14px",
-                                backgroundColor: item.color
-                                  ? "#e5dffb"
-                                  : "white",
-                                color: day ? item.color : "blue",
-                                borderLeft: `6px solid ${item.color}`,
-                                height: 25,
-                                fontWeight: 600,
-                                whiteSpace: "nowrap",
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                                width: "100%",
-                                display: " flex",
-                                position: "absolute",
-                                bottom: 0,
-                                alignItems: "center",
-                                justifyContent: "center",
-                              }}
-                              width="100%"
-                              direction="row"
-                              justifyContent="space-evenly"
-                              spacing={1}
-                              key={index}
+                    {isMarked(day) &&
+                      events
+                        .filter((item) =>
+                          moment(item.comeTime).isSame(day, "day")
+                        )
+                        .map((item, index) => (
+                          <Stack
+                            style={{
+                              fontSize: "14px",
+                              backgroundColor: item.color ? "#e5dffb" : "white",
+                              color: day ? item.color : "blue",
+                              borderLeft: `6px solid ${item.color}`,
+                              height: 25,
+                              fontWeight: 600,
+                              whiteSpace: "nowrap",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              width: "100%",
+                              display: " flex",
+                              position: "absolute",
+                              bottom: 0,
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                            width="100%"
+                            direction="row"
+                            justifyContent="space-evenly"
+                            spacing={1}
+                            key={index}
+                          >
+                            <Typography
+                              width="70%"
+                              whiteSpace="nowrap"
+                              overflow="hidden"
+                              textOverflow="ellipsis"
+                              textAlign="center"
                             >
-                              <Typography
-                                width="70%"
-                                whiteSpace="nowrap"
-                                overflow="hidden"
-                                textOverflow="ellipsis"
-                                textAlign="center"
+                              {Capitalize(item.note)}
+                            </Typography>
+                            {filteredEvents(day).length !== (1 || 0) && (
+                              <Stack
+                                width={20}
+                                height={20}
+                                backgroundColor={item.color}
+                                color="#fff"
+                                alignItems="center"
+                                justifyContent="center"
+                                fontFamily="Montserrat"
+                                borderRadius="100%"
+                                fontSize={12}
                               >
-                                {Capitalize(item.note)}
-                              </Typography>
-                              {filteredEvents(day).length !== (1 || 0) && (
-                                <Stack
-                                  width={20}
-                                  height={20}
-                                  backgroundColor={item.color}
-                                  color="#fff"
-                                  alignItems="center"
-                                  justifyContent="center"
-                                  fontFamily="Montserrat"
-                                  borderRadius="100%"
-                                  fontSize={12}
-                                >
-                                  + {filteredEvents(day).length - 1}
-                                </Stack>
-                              )}
-                            </Stack>
-                          ))
-                      : events
-                          .filter((item) =>
-                            moment(item.date, "DD/MM/YYYY").isSame(day, "day")
-                          )
-                          .map((item, index) => (
-                            <Stack
-                              style={{
-                                fontSize: "14px",
-                                backgroundColor: item.color
-                                  ? "#e5dffb"
-                                  : "white",
-                                color: day ? item.color : "blue",
-                                borderLeft: `6px solid ${item.color}`,
-                                height: 25,
-                                fontWeight: 600,
-                                whiteSpace: "nowrap",
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                                width: "100%",
-                                display: " flex",
-                                position: "absolute",
-                                bottom: 0,
-                                alignItems: "center",
-                                justifyContent: "center",
-                              }}
-                              width="100%"
-                              direction="row"
-                              justifyContent="space-evenly"
-                              spacing={1}
-                              key={index}
+                                + {filteredEvents(day).length - 1}
+                              </Stack>
+                            )}
+                          </Stack>
+                        ))}
+                    {isholidays(day) &&
+                      holidays
+                        .filter((elem) => moment(elem.date).isSame(day, "day"))
+                        .map((item, index) => (
+                          <Stack
+                            style={{
+                              fontSize: "14px",
+                              backgroundColor: item.color
+                                ? "transparent"
+                                : "white",
+                              color: day ? item.color : "blue",
+                              border: `3px solid ${item.color}`,
+                              height: "100%",
+                              fontWeight: 600,
+                              whiteSpace: "nowrap",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              width: "100%",
+                              display: " flex",
+                              position: "absolute",
+                              bottom: 0,
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                            width="100%"
+                            direction="row"
+                            justifyContent="flex-end"
+                            alignItems="end"
+                            spacing={1}
+                            key={index}
+                          >
+                            <Typography
+                              width="90%"
+                              whiteSpace="nowrap"
+                              overflow="hidden"
+                              textOverflow="ellipsis"
+                              textAlign="start"
+                              pt={2}
                             >
-                              <Typography
-                                width="70%"
-                                whiteSpace="nowrap"
-                                overflow="hidden"
-                                textOverflow="ellipsis"
-                                textAlign="center"
-                              >
-                                {Capitalize(item.note)}
-                              </Typography>
-                              {filteredEvents(day).length !== (1 || 0) && (
-                                <Stack
-                                  width={20}
-                                  height={20}
-                                  backgroundColor={item.color}
-                                  color="#fff"
-                                  alignItems="center"
-                                  justifyContent="center"
-                                  fontFamily="Montserrat"
-                                  borderRadius="100%"
-                                  fontSize={12}
-                                >
-                                  + {filteredEvents(day).length - 1}
-                                </Stack>
-                              )}
-                            </Stack>
-                          ))}
+                              {item.name}
+                            </Typography>
+                          </Stack>
+                        ))}
                   </TableCell>
                 ))}
               </TableRow>

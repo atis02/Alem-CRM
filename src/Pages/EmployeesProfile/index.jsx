@@ -32,8 +32,12 @@ import UserProjects from "./UserProjects";
 import Project from "../UserProjects/components/Project";
 import ProjectDetail from "../ProjectDetail";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import CustomDatePicker from "../Employees/components/Datepicker";
+import dayjs from "dayjs";
 
 const Index = () => {
+  const [date, setDate] = useState(dayjs());
+
   const [projectName, setProjectName] = useState("");
   const { id } = useParams();
   const [searchParams] = useSearchParams();
@@ -50,10 +54,10 @@ const Index = () => {
   useEffect(() => {
     const body = {
       userId: id,
-      date: moment(params).format("YYYY-MM-DD"),
+      date: moment(date).format("YYYY-MM-DD"),
     };
     dispatch(getUserMonthWorkTime(body));
-  }, [dispatch]);
+  }, [date, dispatch]);
 
   const handleExpandClick = (day) => {
     setExpandedDay((prevDay) => (prevDay === day ? null : day));
@@ -132,12 +136,56 @@ const Index = () => {
       note,
     };
   });
-  // console.log(data);
-  // console.log(data.user && data.user.id);
+  console.log(data);
+  const calculateTotalLateTime = (employeeWorkTime) => {
+    // Group comeTime by date
+    const groupedByDate = employeeWorkTime.reduce((acc, record) => {
+      const date = new Date(record.comeTime).toISOString().split("T")[0]; // Get only the date part
+      if (!acc[date]) {
+        acc[date] = [];
+      }
+      acc[date].push(new Date(record.comeTime));
+      return acc;
+    }, {});
+
+    let totalLateMinutes = 0;
+
+    // Calculate late time for the first comeTime of each day
+    Object.entries(groupedByDate).forEach(([date, times]) => {
+      // Sort times to get the earliest comeTime for the day
+      const earliestComeTime = times.sort((a, b) => a - b)[0];
+
+      // Reference time (09:00 AM)
+      const startTime = new Date(earliestComeTime);
+      startTime.setHours(9, 0, 0, 0);
+
+      // Check if the employee came after 09:00 AM
+      if (earliestComeTime > startTime) {
+        const lateTimeInMillis = earliestComeTime - startTime; // Difference in milliseconds
+        const lateMinutes = Math.floor(lateTimeInMillis / (1000 * 60)); // Convert to minutes
+        totalLateMinutes += lateMinutes; // Accumulate total late minutes
+      }
+    });
+
+    // Convert total late minutes to hours and minutes
+    const totalLateHours = Math.floor(totalLateMinutes / 60);
+    const remainingMinutes = totalLateMinutes % 60;
+
+    return {
+      totalLateHours,
+      totalLateMinutes,
+      totalLateTimeFormatted: `${totalLateHours} hours and ${remainingMinutes} minutes`,
+    };
+  };
+
+  const totalLateTime =
+    status === "succeeded" && calculateTotalLateTime(data.employeerTime);
+  console.log("Total Late Time:", totalLateTime);
+
   const handleChange = (name) => {
     setProjectName(name);
   };
-  const totalData = personalItems2(data);
+  const totalData = personalItems2(data, totalLateTime);
   console.log(totalData);
 
   return (
@@ -146,6 +194,7 @@ const Index = () => {
         direction="row"
         alignItems="center"
         justifyContent="space-between"
+        pr={2}
         // p="0 10px 0 0"
       >
         <Link
@@ -172,6 +221,7 @@ const Index = () => {
             Işgärler / Profili
           </Typography>
         </Link>
+        <CustomDatePicker selectedDay={date} setDateNote={setDate} />
       </Stack>
 
       <Stack
@@ -189,7 +239,7 @@ const Index = () => {
           // pb="20px"
           boxShadow=" 0px 0px 8px -5px rgba(0,0,0,0.75)"
         >
-          <Stack>
+          <Stack width="100%">
             {status === "loading..." ? (
               <Stack
                 direction="column"
@@ -230,7 +280,7 @@ const Index = () => {
                             fontWeight: 500,
                             fontSize: 14,
                             textAlign: "center",
-                            p: 1.6,
+                            p: 1.4,
                           }}
                           key={elem.id}
                         >
@@ -384,9 +434,9 @@ const Index = () => {
                       bottom: 0,
                       zIndex: 100,
                       boxShadow: "0px -2px 10px 0px rgba(199,199,199,1)",
-
                       height: 35,
                       p: 0,
+                      width: "100%",
                     }}
                   >
                     {totalData.map((elem) => (
@@ -397,8 +447,7 @@ const Index = () => {
                           fontSize: 14,
                           textAlign: "center",
                           boxShadow: "0px -6px 9px 0px rgba(199,199,199,1)",
-
-                          p: 1,
+                          p: 0.6,
                         }}
                       >
                         {elem.title}

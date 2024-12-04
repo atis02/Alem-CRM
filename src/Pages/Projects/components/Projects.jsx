@@ -49,6 +49,11 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import "dayjs/locale/tk";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter"; // Import plugin
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore"; // Import plugin
+
+dayjs.extend(isSameOrAfter); // Extend dayjs with the plugin
+dayjs.extend(isSameOrBefore);
 dayjs.locale("tk");
 
 const Projects = () => {
@@ -75,16 +80,61 @@ const Projects = () => {
   const handleOpenFilter = () => setOpenFilter(true);
   const handleCloseFilter = () => setOpenFilter(false);
 
-  console.log(dateFrom);
-  console.log(data);
+  const filteredData = data.filter((item) => {
+    const itemStart = dayjs(item.startdate);
+    const itemEnd = dayjs(item.enddate);
+
+    // Skip invalid dates
+    if (!itemStart.isValid() || !itemEnd.isValid()) {
+      return false;
+    }
+
+    const from = dateFrom ? dayjs(dateFrom, "YYYY-MM-DD") : null;
+    const to = dateTo ? dayjs(dateTo, "YYYY-MM-DD") : null;
+
+    // Apply the date range filter
+    return (
+      (!from || itemStart.isSameOrAfter(from)) &&
+      (!to || itemEnd.isSameOrBefore(to))
+    );
+  });
+
+  // const filteredProjects =
+  //   status === "succeeded"
+  //     ? data.filter(
+  //         (item) =>
+  //           item.id !== 9 &&
+  //           item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  //       )
+  //     : [];
 
   const filteredProjects =
     status === "succeeded"
-      ? data.filter(
-          (item) =>
-            item.id !== 9 &&
-            item.name.toLowerCase().includes(searchTerm.toLowerCase())
-        )
+      ? data.filter((item) => {
+          // Date filtering
+          const itemStart = dayjs(item.startdate);
+          const itemEnd = dayjs(item.enddate);
+
+          if (!itemStart.isValid() || !itemEnd.isValid()) {
+            return false; // Skip invalid dates
+          }
+
+          const from = dateFrom ? dayjs(dateFrom, "YYYY-MM-DD") : null;
+          const to = dateTo ? dayjs(dateTo, "YYYY-MM-DD") : null;
+
+          const isWithinDateRange =
+            (!from || itemStart.isSameOrAfter(from)) &&
+            (!to || itemEnd.isSameOrBefore(to));
+
+          // Text and ID filtering
+          const matchesSearchTerm = item.name
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase());
+          const notExcludedId = item.id !== 9;
+
+          // Return combined conditions
+          return isWithinDateRange && matchesSearchTerm && notExcludedId;
+        })
       : [];
 
   // const filteredProjects =
@@ -130,7 +180,6 @@ const Projects = () => {
   //     : [];
 
   // console.log(filteredByDate);
-  console.log(filteredProjects);
 
   const handleChange = (event) => {
     setAge(event.target.value);
@@ -160,11 +209,17 @@ const Projects = () => {
     textAlign: "center",
     fontFamily: "DM Sans",
   };
+  const style4 = {
+    p: "0 10px",
+    textAlign: "center",
+    fontFamily: "DM Sans",
+    width: "350px",
+  };
   const style3 = {
     fontSize: "14px",
     textAlign: "center",
     fontFamily: "DM Sans",
-    maxWidth: "250px",
+    // width: "",
     whiteSpace: "normal",
     overflow: "hidden",
     textOverflow: "ellipsis",
@@ -236,6 +291,7 @@ const Projects = () => {
           p="10px 10px"
           borderRadius="12px"
           direction="row"
+          // border="1px solid #75C4E8"
         >
           <Stack width="80%" alignContent="center" justifyContent="center">
             <Typography fontFamily="DM Sans" fontWeight={600} fontSize={18}>
@@ -645,7 +701,7 @@ const Projects = () => {
                             value={user.name}
                             data={
                               <TableCell
-                                sx={style2}
+                                sx={style4}
                                 onClick={() =>
                                   navigate(
                                     `/projects/${

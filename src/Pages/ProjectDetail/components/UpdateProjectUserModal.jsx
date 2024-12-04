@@ -301,7 +301,7 @@ const UpdateProjectUserModal = ({
                   onChange={handleChangeStep}
                 >
                   {UsersData.map((elem) => (
-                    <MenuItem value={elem.id}>
+                    <MenuItem value={elem.id} key={elem.id}>
                       {elem.name} {elem.surname}
                     </MenuItem>
                   ))}

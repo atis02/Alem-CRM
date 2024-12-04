@@ -21,14 +21,14 @@ const DocumentUpdateModal = ({ open, handleClose, data }) => {
   const [docName, setDocName] = useState(
     open && data.pdfDocuments && data.pdfDocuments[0].title
   );
-  console.log(data);
+  const [title, setTitle] = useState(open && data.title);
 
   const loggedUser = JSON.parse(localStorage.getItem("CRM_USER"));
   const [user, setUser] = useState(loggedUser);
 
   useEffect(() => {
     open && data.pdfDocuments && setDocName(data.pdfDocuments[0].title);
-
+    open && setTitle(data.title);
     setUser(loggedUser);
   }, [open, data]);
 
@@ -156,7 +156,7 @@ const DocumentUpdateModal = ({ open, handleClose, data }) => {
                   placeholder="Resminama ady"
                   onChange={(e) => setDocName(e.target.value)}
                   fullWidth
-                  value={docName}
+                  value={docName == false ? title : docName}
                   sx={{
                     width: "100%",
                   }}

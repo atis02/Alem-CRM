@@ -18,6 +18,7 @@ import Regulating from "./Pages/Employees/components/Regulating";
 import WorkTime from "./Pages/Employees/components/WorkTime";
 import Calendar from "./Pages/Calendar";
 import SpecificStandart from "./Pages/Standarts/components/SpecificStandart";
+import TaskDetail from "./Pages/TaskDetail";
 function App() {
   const ProtectedRoute = ({ children }) => {
     const isLoggedIn = localStorage.getItem("CRM_USER");
@@ -92,8 +93,12 @@ function App() {
           element: <Chat />,
         },
         {
-          path: "/projects/:id",
+          path: "/projects/:projectId",
           element: <ProjectDetail />,
+        },
+        {
+          path: "/projects/:projectId/:subId",
+          element: <TaskDetail />,
         },
       ],
     },
