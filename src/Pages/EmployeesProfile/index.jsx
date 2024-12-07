@@ -25,7 +25,11 @@ import { getUserMonthWorkTime } from "../../Components/db/Redux/api/ComeTimeSlic
 import moment from "moment";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 import UserInfo from "./components/UserInfo";
-import { personalItems, personalItems2 } from "../../Components/utils";
+import {
+  personalItems,
+  personalItems2,
+  personalItemsWithTime,
+} from "../../Components/utils";
 import EmployeesProjects from "./components/EmployeesProjects";
 import Projects from "../Projects/components/Projects";
 import UserProjects from "./UserProjects";
@@ -62,6 +66,7 @@ const Index = () => {
   const handleExpandClick = (day) => {
     setExpandedDay((prevDay) => (prevDay === day ? null : day));
   };
+  console.log(data.user);
 
   const style2 = {
     p: 0,
@@ -137,56 +142,52 @@ const Index = () => {
     };
   });
   console.log(data);
-  const calculateTotalLateTime = (employeeWorkTime) => {
-    // Group comeTime by date
-    const groupedByDate = employeeWorkTime.reduce((acc, record) => {
-      const date = new Date(record.comeTime).toISOString().split("T")[0]; // Get only the date part
-      if (!acc[date]) {
-        acc[date] = [];
-      }
-      acc[date].push(new Date(record.comeTime));
-      return acc;
-    }, {});
 
-    let totalLateMinutes = 0;
+  const calculateLateTime = (comeTime, referenceStartTime) => {
+    if (!referenceStartTime) {
+      console.error("Reference start time is null or undefined");
+      return null;
+    }
+    const comeDate = new Date(comeTime);
+    const referenceDate = new Date(comeTime);
 
-    // Calculate late time for the first comeTime of each day
-    Object.entries(groupedByDate).forEach(([date, times]) => {
-      // Sort times to get the earliest comeTime for the day
-      const earliestComeTime = times.sort((a, b) => a - b)[0];
+    const [refHours, refMinutes] = referenceStartTime.split(":").map(Number);
+    referenceDate.setHours(refHours, refMinutes, 0, 0);
 
-      // Reference time (09:00 AM)
-      const startTime = new Date(earliestComeTime);
-      startTime.setHours(9, 0, 0, 0);
+    if (comeDate > referenceDate) {
+      const lateMilliseconds = comeDate - referenceDate;
+      const lateMinutes = Math.floor(lateMilliseconds / (1000 * 60));
+      const lateHours = Math.floor(lateMinutes / 60);
+      const remainingMinutes = lateMinutes % 60;
 
-      // Check if the employee came after 09:00 AM
-      if (earliestComeTime > startTime) {
-        const lateTimeInMillis = earliestComeTime - startTime; // Difference in milliseconds
-        const lateMinutes = Math.floor(lateTimeInMillis / (1000 * 60)); // Convert to minutes
-        totalLateMinutes += lateMinutes; // Accumulate total late minutes
-      }
-    });
+      return lateMinutes;
+    }
 
-    // Convert total late minutes to hours and minutes
-    const totalLateHours = Math.floor(totalLateMinutes / 60);
-    const remainingMinutes = totalLateMinutes % 60;
+    return null;
+  };
 
-    return {
-      totalLateHours,
-      totalLateMinutes,
-      totalLateTimeFormatted: `${totalLateHours} hours and ${remainingMinutes} minutes`,
-    };
+  const calculateTotalLateTime = (times, referenceStartTime) => {
+    return times.reduce((total, comeTime) => {
+      return total + calculateLateTime(comeTime, referenceStartTime);
+    }, 0);
   };
 
   const totalLateTime =
-    status === "succeeded" && calculateTotalLateTime(data.employeerTime);
+    status === "succeeded" &&
+    calculateTotalLateTime(
+      data.employeerTime?.map((item) => item.comeTime) || [],
+      data.user?.workTime?.startTime || null
+    );
   console.log("Total Late Time:", totalLateTime);
 
-  const handleChange = (name) => {
-    setProjectName(name);
-  };
   const totalData = personalItems2(data, totalLateTime);
   console.log(totalData);
+
+  const userWorkTime = personalItemsWithTime(
+    data.user?.workTime?.startTime || null,
+    data.user?.workTime?.endTime || null
+  );
+  console.log(userWorkTime);
 
   return (
     <Box backgroundColor="#fff" overflow="auto" height="100vh">
@@ -273,7 +274,7 @@ const Index = () => {
                         boxShadow: " 0px 12px 7px -14px rgba(71,71,71,1)",
                       }}
                     >
-                      {personalItems.map((elem) => (
+                      {userWorkTime.map((elem) => (
                         <TableCell
                           sx={{
                             color: "#222222",
@@ -329,35 +330,22 @@ const Index = () => {
                               // : ""
                             }
                           </TableCell>
+
                           <TableCell sx={{ ...style2, color: "tomato" }}>
-                            {new Date(user.firstComeTime).getHours() >= 9 ? (
-                              new Date(user.firstComeTime).getHours() - 9 > 0 ||
-                              new Date(user.firstComeTime).getMinutes() > 0 ? (
-                                <>
-                                  {new Date(user.firstComeTime).getHours() - 9 >
-                                    0 &&
-                                    new Date(user.firstComeTime).getHours() -
-                                      9 +
-                                      "(sag)"}
-                                  {new Date(user.firstComeTime).getMinutes() >
-                                    0 && (
-                                    <>
-                                      {new Date(user.firstComeTime).getHours() -
-                                        9 >
-                                        0 && ":"}
-                                      {new Date(
-                                        user.firstComeTime
-                                      ).getMinutes()}
-                                      (min)
-                                    </>
-                                  )}
-                                </>
-                              ) : (
-                                ""
-                              )
-                            ) : (
-                              ""
-                            )}
+                            {(() => {
+                              const lateTime = calculateLateTime(
+                                user.firstComeTime,
+                                data?.user?.workTime?.startTime || null // Safe chaining and fallback
+                              );
+
+                              return lateTime
+                                ? `${
+                                    Math.floor(lateTime / 60) > 0
+                                      ? `${Math.floor(lateTime / 60)}(sag):`
+                                      : ""
+                                  }${lateTime % 60}(min)`
+                                : "-";
+                            })()}
                           </TableCell>
 
                           <TableCell sx={style2}>{user.note}</TableCell>

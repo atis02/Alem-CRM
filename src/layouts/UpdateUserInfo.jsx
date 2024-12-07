@@ -1,19 +1,15 @@
 import {
-  Box,
   Button,
   CircularProgress,
   FormControl,
-  InputAdornment,
-  InputLabel,
   MenuItem,
   Select,
   Stack,
-  Switch,
   TextField,
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -34,7 +30,6 @@ const UpdateUserInfo = ({ img, setFile }) => {
   const [phoneNumber, setPhoneNumber] = useState(admin.phoneNumber);
   const [surname, setSurname] = useState(admin.surname);
   const [name, setName] = useState(admin.name);
-  const [password, setPassword] = useState("");
   const [selectedValue, setSelectedValue] = useState(
     admin.position ? admin.position.id : "ADMIN"
   );
@@ -58,7 +53,6 @@ const UpdateUserInfo = ({ img, setFile }) => {
     setFile(null);
   };
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   useEffect(() => {
     const position = async () => {
       await AxiosInstance.get("/position/get").then((res) => {

@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import AxiosInstance from "./AxiosHelper";
 import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
 
 const initialState = {
   data: [],
@@ -13,18 +12,16 @@ export const getSubTasks = createAsyncThunk("getSubTasks", async (body) => {
   const response = await AxiosInstance.get(`/subtask/get?userId=${body.userId}&taskId=${body.taskId}`);
   return response.data;
 });
-export const createHoliday = createAsyncThunk("createHoliday", async (body) => {
+export const createSubTasks = createAsyncThunk("createSubTasks", async (body) => {
     const data = {
-        name: body.name,
-        date: body.date,
-        color: body.color,
+        subTasks:body.subTasks
     }
     
-    const resp = await AxiosInstance.post(`/holiday/add`, data);
-    if(resp.data.message==='Successfully added'){
+    const resp = await AxiosInstance.post(`/subtask/add`, data);
+    if(resp.data.message==='Secsefully'){
   
-      toast.success("Üstünlikli üýtgedildi!")
-      const response = await AxiosInstance.get(`/holiday/get/interval?startDate=${body.startDate}&endDate=${body.endDate}`);
+      toast.success("Üstünlikli!")
+      const response = await AxiosInstance.get(`/subtask/get?userId=${body.userId}&taskId=${body.taskId}`);
       return response.data
       
     }
@@ -33,13 +30,18 @@ export const createHoliday = createAsyncThunk("createHoliday", async (body) => {
       else {toast.error("Şowsuz!")};
   
   });
-export const deleteHoliday = createAsyncThunk("deleteHoliday", async (body) => {
+export const deleteSubTask = createAsyncThunk("deleteSubTask", async (body) => {
+  
+    const data = {
+      subTaskIds:body.subTaskId,
+    }
     
-    const resp = await AxiosInstance.delete(`/holiday/delete?id=${body.id}`);
-    if(resp.data.message==='Successfully deleted'){
+    const resp = await AxiosInstance.delete(`/subtask/delete?subTaskId=${body.subTaskId}&taskId=${body.taskId}&permissionId=${body.userId}`);
+    
+    if(resp.data.message==='Successfully deleted 1 subtask(s)'){
   
       toast.success("Üstünlikli üýtgedildi!")
-      const response = await AxiosInstance.get(`/holiday/get/interval?startDate=${body.startDate}&endDate=${body.endDate}`);
+      const response = await AxiosInstance.get(`/subtask/get?userId=${body.userId}&taskId=${body.taskId}`);
       return response.data
       
     }
@@ -48,19 +50,15 @@ export const deleteHoliday = createAsyncThunk("deleteHoliday", async (body) => {
       else {toast.error("Şowsuz!")};
   
   });
-export const updateHoliday = createAsyncThunk("updateHoliday", async (body) => {
-    const data = {
-      id:body.id,
-        name: body.name,
-        date: body.date,
-        color: body.color,
-    }
+export const updateSubTask = createAsyncThunk("updateSubTask", async (body) => {
+   
     
-    const resp = await AxiosInstance.put(`/holiday/update`, data);
-    if(resp.data.message==='Successfully update'){
+    const resp = await AxiosInstance.put(`/subtask/update`, body);
+    
+    if(resp.data.message==='Secsefully'){
   
       toast.success("Üstünlikli üýtgedildi!")
-      const response = await AxiosInstance.get(`/holiday/get/interval?startDate=${body.startDate}&endDate=${body.endDate}`);
+      const response = await AxiosInstance.get(`/subtask/get?userId=${body.userId}&taskId=${body.taskId}`);
       return response.data
       
     }
@@ -89,38 +87,38 @@ const subTask = createSlice({
         state.error = action.error.message;
       })
     
-      .addCase(createHoliday.pending, (state) => {
+      .addCase(createSubTasks.pending, (state) => {
         state.status = "loading...";
       })
-      .addCase(createHoliday.fulfilled, (state, action) => {
+      .addCase(createSubTasks.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.data = action.payload;
       })
-      .addCase(createHoliday.rejected, (state, action) => {
+      .addCase(createSubTasks.rejected, (state, action) => {
         state.loading = false;
         state.status = "failed";
         state.error = action.error.message;
       })
-      .addCase(deleteHoliday.pending, (state) => {
+      .addCase(deleteSubTask.pending, (state) => {
         state.status = "loading...";
       })
-      .addCase(deleteHoliday.fulfilled, (state, action) => {
+      .addCase(deleteSubTask.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.data = action.payload;
       })
-      .addCase(deleteHoliday.rejected, (state, action) => {
+      .addCase(deleteSubTask.rejected, (state, action) => {
         state.loading = false;
         state.status = "failed";
         state.error = action.error.message;
       })
-      .addCase(updateHoliday.pending, (state) => {
+      .addCase(updateSubTask.pending, (state) => {
         state.status = "loading...";
       })
-      .addCase(updateHoliday.fulfilled, (state, action) => {
+      .addCase(updateSubTask.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.data = action.payload;
       })
-      .addCase(updateHoliday.rejected, (state, action) => {
+      .addCase(updateSubTask.rejected, (state, action) => {
         state.loading = false;
         state.status = "failed";
         state.error = action.error.message;

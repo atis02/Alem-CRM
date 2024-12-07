@@ -107,342 +107,323 @@ const index = () => {
             item.name.toLowerCase().includes(searchTerm.toLowerCase())
         )
       : [];
+console.log(data);
 
-  const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: "40%",
-    bgcolor: "background.paper",
-    border: "1px solid lightgray",
-    gap: "10px",
-    height: 650,
-    justifyContent: "center",
-    borderRadius: "20px",
-    display: "flex",
-    alignItems: "center",
-    flexDirection: "column",
-  };
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "40%",
+  bgcolor: "background.paper",
+  border: "1px solid lightgray",
+  gap: "10px",
+  height: 650,
+  justifyContent: "center",
+  borderRadius: "20px",
+  display: "flex",
+  alignItems: "center",
+  flexDirection: "column",
+};
 
-  const style2 = { p: 1, textAlign: "center", fontFamily: "DM Sans" };
-  const Note = () => {
-    return (
-      <Typography color="tomato" fontSize={14}>
-        -
-      </Typography>
-    );
-  };
-
-  const currentDate = moment()
-    .set({
-      year: 2024,
-      month: 8,
-      date: 28,
-      hour: 9,
-      minute: 0,
-      second: 0,
-      millisecond: 0,
-    })
-    .toISOString();
+const style2 = { p: 1, textAlign: "center", fontFamily: "DM Sans" };
+const Note = () => {
   return (
-    <Box
-      height="100vh"
-      width="100%"
-      backgroundColor="#fff"
-      overflow="auto"
-      p="10px"
+    <Typography color="tomato" fontSize={14}>
+      -
+    </Typography>
+  );
+};
+
+const currentDate = moment()
+  .set({
+    year: 2024,
+    month: 8,
+    date: 28,
+    hour: 9,
+    minute: 0,
+    second: 0,
+    millisecond: 0,
+  })
+  .toISOString();
+const calculateLateTime = (comeTime, referenceStartTime) => {
+  if (!referenceStartTime || typeof referenceStartTime !== "string") {
+    console.warn("Invalid referenceStartTime provided");
+    return null;
+  }
+  const comeDate = new Date(comeTime);
+  const referenceDate = new Date(comeTime);
+  console.log(referenceStartTime);
+
+  const [refHours, refMinutes] = referenceStartTime.split(":").map(Number);
+  referenceDate.setHours(refHours, refMinutes, 0, 0);
+
+  if (comeDate > referenceDate) {
+    const lateMilliseconds = comeDate - referenceDate;
+    const lateMinutes = Math.floor(lateMilliseconds / (1000 * 60));
+    const lateHours = Math.floor(lateMinutes / 60);
+    const remainingMinutes = lateMinutes % 60;
+
+    return lateMinutes;
+  }
+
+  return null;
+};
+return (
+  <Box
+    height="100vh"
+    width="100%"
+    backgroundColor="#fff"
+    overflow="auto"
+    p="10px"
+  >
+    <Stack
+      direction="row"
+      alignItems="center"
+      justifyContent="space-between"
+      p="0 30px 8px 0"
     >
-      <Stack
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-        p="0 30px 8px 0"
+      <Typography
+        p="0px 5px"
+        fontSize="30px"
+        fontWeight="500"
+        fontFamily="Montserrat"
       >
-        <Typography
-          p="0px 5px"
-          fontSize="30px"
-          fontWeight="500"
-          fontFamily="Montserrat"
-        >
-          Işgärler
-        </Typography>
-        <Stack direction="row" alignItems="center" spacing={1}>
-          <TextField
-            id="outlined-basic"
-            variant="outlined"
-            autoComplete="off"
-            sx={{
+        Işgärler
+      </Typography>
+      <Stack direction="row" alignItems="center" spacing={1}>
+        <TextField
+          id="outlined-basic"
+          variant="outlined"
+          autoComplete="off"
+          sx={{
+            color: "#000",
+            minWidth: "150px",
+            borderRadius: "40px",
+            mr: "20px",
+          }}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          value={searchTerm}
+          placeholder="Ady boýunça gözle"
+          InputProps={{
+            sx: {
+              height: "45px",
               color: "#000",
-              minWidth: "150px",
+              fontWeight: "600",
               borderRadius: "40px",
-              mr: "20px",
-            }}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            value={searchTerm}
-            placeholder="Ady boýunça gözle"
-            InputProps={{
-              sx: {
-                height: "45px",
-                color: "#000",
-                fontWeight: "600",
-                borderRadius: "40px",
-                padding: "none",
-              },
-            }}
-          />
-          <CustomDatePicker selectedDay={date} setDateNote={setDate} />
+              padding: "none",
+            },
+          }}
+        />
+        <CustomDatePicker selectedDay={date} setDateNote={setDate} />
 
-          <Button
-            sx={{
-              color: "#9A93FF",
-              textTransform: "revert",
-              background: "#e7e7fb",
-              "&:hover": { background: "#e7e7fb" },
-              gap: "10px",
-              width: 190,
-              height: 45,
-              borderRadius: "20px",
-            }}
-            variant="outlined"
-            onClick={handleOpen}
-          >
-            <PersonAddAltIcon />
-            Işgär goşmak
-          </Button>
-        </Stack>
+        <Button
+          sx={{
+            color: "#9A93FF",
+            textTransform: "revert",
+            background: "#e7e7fb",
+            "&:hover": { background: "#e7e7fb" },
+            gap: "10px",
+            width: 190,
+            height: 45,
+            borderRadius: "20px",
+          }}
+          variant="outlined"
+          onClick={handleOpen}
+        >
+          <PersonAddAltIcon />
+          Işgär goşmak
+        </Button>
       </Stack>
-      <Stack
-        backgroundColor="#fff"
-        minHeight="78vh"
-        borderRadius="20px"
-        pb="10px"
-        boxShadow=" 0px 0px 8px -5px rgba(0,0,0,0.75)"
-      >
-        <Stack direction="row" alignItems="center" justifyContent="center">
-          <ToastContainer />
+    </Stack>
+    <Stack
+      backgroundColor="#fff"
+      minHeight="78vh"
+      borderRadius="20px"
+      pb="10px"
+      boxShadow=" 0px 0px 8px -5px rgba(0,0,0,0.75)"
+    >
+      <Stack direction="row" alignItems="center" justifyContent="center">
+        <ToastContainer />
 
-          <Modal
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-          >
-            <Box sx={style}>
-              <Stack alignItems="end" width="100%" p="0 20px" mt={2}>
-                <IconButton
-                  sx={{ fontWeight: 600, fontSize: 20 }}
-                  onClick={handleClose}
-                >
-                  X
-                </IconButton>
-              </Stack>
-
-              <Register />
-            </Box>
-          </Modal>
-        </Stack>
-        <Stack>
-          {status === "loading..." ? (
-            <Stack
-              direction="column"
-              height="100%"
-              alignItems="center"
-              sx={{ gap: "10px" }}
-            >
-              <CircularProgress />
-              Loading...
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <Stack alignItems="end" width="100%" p="0 20px" mt={2}>
+              <IconButton
+                sx={{ fontWeight: 600, fontSize: 20 }}
+                onClick={handleClose}
+              >
+                X
+              </IconButton>
             </Stack>
-          ) : status === "failed" ? (
-            toast.error(error)
-          ) : status === "succeeded" ? (
-            <Stack>
-              {filteredUsers === undefined ? (
-                <Typography textAlign="center" fontSize={20}>
-                  Ulanyjy tapylmady!
-                </Typography>
-              ) : (
-                <TableContainer
-                  sx={{
-                    height: "77vh",
-                    overflowY: "scroll",
-                    borderRadius: "20px",
-                  }}
-                  className="times2"
-                >
-                  <Table>
-                    <TableHead>
-                      <TableRow
-                        sx={{
-                          backgroundColor: "#F6FDFD",
-                          fontFamily: "DM Sans",
-                          position: "sticky",
-                          top: 0,
-                          zIndex: 100,
-                          boxShadow: " 0px 12px 7px -14px rgba(71,71,71,1)",
-                        }}
-                      >
-                        {items.map((elem) => (
-                          <TableCell
-                            sx={{
-                              color: "#222222",
-                              fontWeight: 500,
-                              fontSize: 18,
-                              textAlign: "center",
-                            }}
-                            key={elem.id}
-                          >
-                            {elem.title}
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {filteredUsers.map((user, index) => (
-                        <StyledTableRow
-                          key={user.id}
-                          onClick={() =>
-                            navigate(`/employees/${user.id}?date=${date}`)
-                          }
-                          style={{ cursor: "pointer" }}
-                        >
-                          <TableCell sx={style2}>{index + 1}</TableCell>
-                          <TableCell sx={{ ...style2, textAlign: "start" }}>
-                            {user.name}
-                          </TableCell>
-                          <TableCell sx={style2}>{user.surname}</TableCell>
 
-                          <TableCell sx={style2}>
-                            {user.employeeRegistrationTimes.length > 0 &&
-                            user.employeeRegistrationTimes[0]?.comeTime ? (
-                              dayjs(
-                                user.employeeRegistrationTimes[0].comeTime
-                              ).format("HH:mm")
-                            ) : (
-                              <Note />
-                            )}
-                          </TableCell>
-                          <TableCell sx={style2}>
-                            {user.employeeRegistrationTimes &&
-                            user.employeeRegistrationTimes.length > 0 &&
+            <Register />
+          </Box>
+        </Modal>
+      </Stack>
+      <Stack>
+        {status === "loading..." ? (
+          <Stack
+            direction="column"
+            height="100%"
+            alignItems="center"
+            sx={{ gap: "10px" }}
+          >
+            <CircularProgress />
+            Loading...
+          </Stack>
+        ) : status === "failed" ? (
+          toast.error(error)
+        ) : status === "succeeded" ? (
+          <Stack>
+            {filteredUsers === undefined ? (
+              <Typography textAlign="center" fontSize={20}>
+                Ulanyjy tapylmady!
+              </Typography>
+            ) : (
+              <TableContainer
+                sx={{
+                  height: "77vh",
+                  overflowY: "scroll",
+                  borderRadius: "20px",
+                }}
+                className="times2"
+              >
+                <Table>
+                  <TableHead>
+                    <TableRow
+                      sx={{
+                        backgroundColor: "#F6FDFD",
+                        fontFamily: "DM Sans",
+                        position: "sticky",
+                        top: 0,
+                        zIndex: 100,
+                        boxShadow: " 0px 12px 7px -14px rgba(71,71,71,1)",
+                      }}
+                    >
+                      {items.map((elem) => (
+                        <TableCell
+                          sx={{
+                            color: "#222222",
+                            fontWeight: 500,
+                            fontSize: 18,
+                            textAlign: "center",
+                          }}
+                          key={elem.id}
+                        >
+                          {elem.title}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {filteredUsers.map((user, index) => (
+                      <StyledTableRow
+                        key={user.id}
+                        onClick={() =>
+                          navigate(`/employees/${user.id}?date=${date}`)
+                        }
+                        style={{ cursor: "pointer" }}
+                      >
+                        <TableCell sx={style2}>{index + 1}</TableCell>
+                        <TableCell sx={{ ...style2, textAlign: "start" }}>
+                          {user.name}
+                        </TableCell>
+                        <TableCell sx={style2}>{user.surname}</TableCell>
+
+                        <TableCell sx={style2}>
+                          {user.employeeRegistrationTimes.length > 0 &&
+                          user.employeeRegistrationTimes[0]?.comeTime ? (
+                            dayjs(
+                              user.employeeRegistrationTimes[0].comeTime
+                            ).format("HH:mm")
+                          ) : (
+                            <Note />
+                          )}
+                        </TableCell>
+                        <TableCell sx={style2}>
+                          {user.employeeRegistrationTimes &&
+                          user.employeeRegistrationTimes.length > 0 &&
+                          user.employeeRegistrationTimes[
+                            user.employeeRegistrationTimes.length - 1
+                          ] ? (
                             user.employeeRegistrationTimes[
                               user.employeeRegistrationTimes.length - 1
-                            ] ? (
-                              user.employeeRegistrationTimes[
-                                user.employeeRegistrationTimes.length - 1
-                              ].leaveTime === null ? (
-                                "Bellik edilmedi"
-                              ) : (
-                                dayjs(
-                                  user.employeeRegistrationTimes[
-                                    user.employeeRegistrationTimes.length - 1
-                                  ].leaveTime
-                                ).format("HH:mm")
-                              )
+                            ].leaveTime === null ? (
+                              "Bellik edilmedi"
                             ) : (
-                              <Note />
-                            )}
-                          </TableCell>
-                          <TableCell sx={{ ...style2, color: "tomato" }}>
-                            {new Date(
-                              user.employeeRegistrationTimes[0]?.comeTime
-                                ? user.employeeRegistrationTimes[0].comeTime
-                                : ""
-                            ).getHours() >= 9 ? (
-                              new Date(
-                                user.employeeRegistrationTimes[0]?.comeTime
-                                  ? user.employeeRegistrationTimes[0].comeTime
-                                  : ""
-                              ).getHours() -
-                                9 >
-                                0 ||
-                              new Date(
-                                user.employeeRegistrationTimes[0]?.comeTime
-                                  ? user.employeeRegistrationTimes[0].comeTime
-                                  : ""
-                              ).getMinutes() > 0 ? (
-                                <>
-                                  {new Date(
-                                    user.employeeRegistrationTimes[0]?.comeTime
-                                      ? user.employeeRegistrationTimes[0]
-                                          .comeTime
-                                      : ""
-                                  ).getHours() -
-                                    9 >
-                                    0 &&
-                                    new Date(
-                                      user.employeeRegistrationTimes[0]
-                                        ?.comeTime
-                                        ? user.employeeRegistrationTimes[0]
-                                            .comeTime
-                                        : ""
-                                    ).getHours() -
-                                      9 +
-                                      "(sag)"}
-                                  {new Date(
-                                    user.employeeRegistrationTimes[0]?.comeTime
-                                      ? user.employeeRegistrationTimes[0]
-                                          .comeTime
-                                      : ""
-                                  ).getMinutes() > 0 && (
-                                    <>
-                                      {new Date(
-                                        user.employeeRegistrationTimes[0]
-                                          ?.comeTime
-                                          ? user.employeeRegistrationTimes[0]
-                                              .comeTime
-                                          : ""
-                                      ).getHours() -
-                                        9 >
-                                        0 && ":"}
-                                      {new Date(
-                                        user.employeeRegistrationTimes[0]
-                                          ?.comeTime
-                                          ? user.employeeRegistrationTimes[0]
-                                              .comeTime
-                                          : ""
-                                      ).getMinutes()}
-                                      (min)
-                                    </>
-                                  )}
-                                </>
-                              ) : (
-                                ""
-                              )
-                            ) : (
-                              ""
-                            )}
-                          </TableCell>
+                              dayjs(
+                                user.employeeRegistrationTimes[
+                                  user.employeeRegistrationTimes.length - 1
+                                ].leaveTime
+                              ).format("HH:mm")
+                            )
+                          ) : (
+                            <Note />
+                          )}
+                        </TableCell>
+                        <TableCell sx={{ ...style2, color: "tomato" }}>
+                          {/* calculateTotalLateTime(
+  data.employeerTime && data.employeerTime.map((item) => item.comeTime),
+  data.user?.workTime?.startTime
+); */}
+                          {/* {(() => {
+                            const lateTime = calculateLateTime(
+                              user.employeeRegistrationTimes[0]?.comeTime,
+                              user.workTime && user.workTime.startTime
+                            );
+                            return lateTime ? `${lateTime} (min)` : "-";
+                          })()} */}
+                          {(() => {
+                            const lateTime = calculateLateTime(
+                              user.employeeRegistrationTimes[0]?.comeTime,
+                              user?.workTime?.startTime || null
+                            );
 
-                          <TableCell
-                            key={index}
-                            sx={{
-                              maxWidth: "230px",
-                              whiteSpace: "nowrap",
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                              textAlign: "center",
-                            }}
-                          >
-                            {user.employeeRegistrationTimes.length > 0 &&
-                            user.employeeRegistrationTimes[0]?.note
-                              ? user.employeeRegistrationTimes[0].note
-                              : ""}
-                          </TableCell>
-                        </StyledTableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              )}
-            </Stack>
-          ) : (
-            ""
-          )}
-        </Stack>
+                            return lateTime
+                              ? `${
+                                  Math.floor(lateTime / 60) > 0
+                                    ? `${Math.floor(lateTime / 60)}(sag):`
+                                    : ""
+                                }${lateTime % 60}(min)`
+                              : "-";
+                          })()}
+                        </TableCell>
+
+                        <TableCell
+                          key={index}
+                          sx={{
+                            maxWidth: "230px",
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            textAlign: "center",
+                          }}
+                        >
+                          {user.employeeRegistrationTimes.length > 0 &&
+                          user.employeeRegistrationTimes[0]?.note
+                            ? user.employeeRegistrationTimes[0].note
+                            : ""}
+                        </TableCell>
+                      </StyledTableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            )}
+          </Stack>
+        ) : (
+          ""
+        )}
       </Stack>
-    </Box>
-  );
+    </Stack>
+  </Box>
+);
 };
 
 export default index;

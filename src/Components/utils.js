@@ -1,4 +1,5 @@
 import { Stack, styled, TableRow, Typography } from "@mui/material";
+import moment from "moment";
 
 export const getRandomColor = () => {
   const letters = "0123456789ABCDEF";
@@ -111,10 +112,36 @@ export const NonActiveUserItems = [
   { id: 3, title: "Familiýasy" },
   { id: 4, title: "Statusy" },
   { id: 5, title: "Moderator" },
+  { id: 6, title: "Iş wagty" },
+  { id: 7, title: "" },
 ];
+export const personalItemsWithTime = (startTime,endTime)=>{
+  if (!startTime ||!endTime) {
+    return [
+      { id: 1, title: "Sene" },
+      { id: 2, title: `Gelen wagty` },
+      { id: 3, title: `Giden wagty` },
+      { id: 4, title: "Işlän sagady" },
+      { id: 5, title: "Gijä galan wagty" },
+      { id: 6, title: "Bellik" },
+    ];
+  };
+  const start = moment(startTime, "HH:mm:ss").format("HH:mm");
+  const end = moment(endTime, "HH:mm:ss").format("HH:mm");
+  console.log(endTime);
+  
+  return  [
+    { id: 1, title: "Sene" },
+    { id: 2, title: `Gelen wagty ${start} ` },
+    { id: 3, title: `Giden wagty ${end}` },
+    { id: 4, title: "Işlän sagady" },
+    { id: 5, title: "Gijä galan wagty" },
+    { id: 6, title: "Bellik" },
+  ];
+}
 export const personalItems = [
   { id: 1, title: "Sene" },
-  { id: 2, title: "Gelen wagty" },
+  { id: 2, title: `Gelen wagty` },
   { id: 3, title: "Giden wagty" },
   { id: 4, title: "Işlän sagady" },
   { id: 5, title: "Gijä galan sagady" },
@@ -131,7 +158,7 @@ export function personalItems2  (data,totalLate) {
     { id: 3, title: "" },
     // { id: 4, title: "" },
     { id: 4, title: `${hours}(sag):${minutes}(min)` },
-    { id: 5, title: `${totalLate.totalLateMinutes}(min)` },
+    { id: 5, title: `${totalLate}(min)` },
     { id: 6, title: '' },
   ];
 }

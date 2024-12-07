@@ -3,6 +3,7 @@ import AxiosInstance from "./AxiosHelper";
 import { toast } from "react-toastify";
 
 const initialState = {
+  userStatus:[],
   data: [],
   status: "idle",
   error: null,
@@ -18,13 +19,21 @@ export const getWorkTimeDay = createAsyncThunk(
     return resp.data;
   }
 );
+export const getUserStatusWork = createAsyncThunk(
+  "getUserStatusWork",
+  async () => {
+    const resp = await AxiosInstance.get(`/user/status`);
+
+    return resp.data.messagge;
+  }
+);
 export const postWorkTimeDay = createAsyncThunk('postWorkTimeDay',
   async (body)=>{
-    const resp = await AxiosInstance.post('/time/set',body)
+    const resp = await AxiosInstance.post('/time/add/user',body)
     console.log(resp.data);
-    if(resp.data.status){
+    if(resp.data.message === `Successfully create work time for userId ${body.userId}`){
       toast.success('Üstünlikli!')
-    const response = await AxiosInstance.get(`/time/get`);
+    const response = await AxiosInstance.get(`/user/status`);
     return response.data;
     }
   }
@@ -47,6 +56,18 @@ const getTimeOfWork = createSlice({
         state.data = action.payload;
       })
       .addCase(getWorkTimeDay.rejected, (state, action) => {
+        state.loading = false;
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(getUserStatusWork.pending, (state) => {
+        state.status = "loading...";
+      })
+      .addCase(getUserStatusWork.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.userStatus = action.payload;
+      })
+      .addCase(getUserStatusWork.rejected, (state, action) => {
         state.loading = false;
         state.status = "failed";
         state.error = action.error.message;

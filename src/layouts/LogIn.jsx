@@ -4,7 +4,6 @@ import {
   CircularProgress,
   IconButton,
   InputAdornment,
-  OutlinedInput,
   Stack,
   TextField,
   Typography,
@@ -13,9 +12,8 @@ import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
-  login,
   loginFailure,
   loginSuccess,
 } from "../Components/db/Redux/reducers/AuthSlice";
@@ -27,7 +25,6 @@ import logo2 from "../../public/images/login (2).png";
 import logo3 from "../../public/images/login (1).png";
 
 const Login = () => {
-  const [data, setData] = useState();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errMsg, setErrMsg] = useState("");

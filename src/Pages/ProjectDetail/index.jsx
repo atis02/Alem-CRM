@@ -7,7 +7,6 @@ import Project from "./components/Project";
 import AddTask from "./components/AddTask";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import { useSelector } from "react-redux";
-import TaskDetail from "../TaskDetail";
 
 const Index = () => {
   const [projectName, setProjectName] = useState("");

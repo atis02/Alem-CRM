@@ -44,7 +44,7 @@ const Project = ({ setProjectName, setProjectId }) => {
 
   const user = JSON.parse(localStorage.getItem("CRM_USER"));
   useEffect(() => {
-    if (status === "succeeded") {
+    if (status === "succeeded" && data.length) {
       setProjectName(data[0].name);
       setProjectId(data[0].id);
     }

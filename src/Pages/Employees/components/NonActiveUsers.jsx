@@ -1,6 +1,8 @@
 import {
+  Button,
   CircularProgress,
   FormControlLabel,
+  IconButton,
   Stack,
   Switch,
   Table,
@@ -19,32 +21,45 @@ import AxiosInstance from "../../../Components/db/Redux/api/AxiosHelper";
 import { updateUserRole } from "../../../Components/db/Redux/api/ComeTimeSlice";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
+import moment from "moment";
+import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
+import deleteIcon from "../../../../public/images/Delete.png";
+import UserWorkTimeSet from "./UserWorkTimeSet";
+import { getUserStatusWork } from "../../../Components/db/Redux/api/SetWorkTimeSlice";
 
 const NonActiveUsers = () => {
   const [statusData, setStatusData] = useState(false);
-  const [statusUsersData, setStatusUsersData] = useState([]);
+  const [openUserTimeModal, setOpenUserTimeModal] = useState(false);
+  // const [statusUsersData, setStatusUsersData] = useState([]);
   const [checkedStates, setCheckedStates] = useState({});
   const [checkedStatesModer, setCheckedStatesModer] = useState({});
   const [date, setDate] = useState(dayjs());
+  const [details, setDetails] = useState(null);
 
   const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem("CRM_USER"));
   const navigate = useNavigate();
 
+  const statusUsersData = useSelector((state) => state.workTime.userStatus);
+  const statusUsersHoliday = useSelector((state) => state.workTime.status);
+  const statusUsersError = useSelector((state) => state.workTime.error);
+  console.log(statusUsersData);
+
   useEffect(() => {
-    const getStatusUsers = async () => {
-      try {
-        setStatusData(true);
-        const response = await AxiosInstance.get("/user/status");
-        setStatusUsersData(response.data.messagge);
-      } catch (error) {
-        console.error("Error fetching user status:", error);
-      } finally {
-        setStatusData(false);
-      }
-    };
-    getStatusUsers();
-  }, []);
+    // const getStatusUsers = async () => {
+    //   try {
+    //     setStatusData(true);
+    //     const response = await AxiosInstance.get("/user/status");
+    //     setStatusUsersData(response.data.messagge);
+    //   } catch (error) {
+    //     console.error("Error fetching user status:", error);
+    //   } finally {
+    //     setStatusData(false);
+    //   }
+    // };
+    // getStatusUsers();
+    dispatch(getUserStatusWork());
+  }, [dispatch]);
 
   useEffect(() => {
     const initialCheckedStates = statusUsersData.reduce((acc, user) => {
@@ -81,11 +96,24 @@ const NonActiveUsers = () => {
     [user.id, dispatch]
   );
 
-  const filteredUsers = statusUsersData.filter(
+  const notActiveUsers = statusUsersData.filter(
     (item) => item.role !== "ADMIN" && item.status === false
   );
+  const moderators =
+    // statusUsersData.length &&
+    statusUsersData.filter((item) => item.role == "MODERATOR");
+  const activeUsers = statusUsersData.filter(
+    (user) =>
+      user.role !== "ADMIN" && user.role !== "MODERATOR" && user.status === true
+  );
+  const allUsers = [...moderators, ...activeUsers, ...notActiveUsers];
+  console.log(allUsers);
 
-  const style2 = { p: 1, textAlign: "center", fontFamily: "DM Sans" };
+  const style2 = {
+    p: 1,
+    textAlign: "center",
+    fontFamily: "DM Sans",
+  };
 
   return (
     <Stack
@@ -154,20 +182,46 @@ const NonActiveUsers = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {filteredUsers.map((user, index) => (
+                    {allUsers.map((user, index) => (
                       <TableRow
                         key={user.id}
-                        onClick={() =>
-                          navigate(`/employees/${user.id}?date=${date}`)
-                        }
+                        // onClick={() =>
+                        //   navigate(`/employees/${user.id}?date=${date}`)
+                        // }
                         style={{
                           cursor: "pointer",
                         }}
                       >
-                        <TableCell sx={style2}>{index + 1}</TableCell>
-                        <TableCell sx={style2}>{user.name}</TableCell>
-                        <TableCell sx={style2}>{user.surname || "-"}</TableCell>
-                        <TableCell sx={style2}>
+                        <TableCell
+                          onClick={() =>
+                            navigate(`/employees/${user.id}?date=${date}`)
+                          }
+                          sx={style2}
+                        >
+                          {index + 1}
+                        </TableCell>
+                        <TableCell
+                          onClick={() =>
+                            navigate(`/employees/${user.id}?date=${date}`)
+                          }
+                          sx={style2}
+                        >
+                          {user.name}
+                        </TableCell>
+                        <TableCell
+                          onClick={() =>
+                            navigate(`/employees/${user.id}?date=${date}`)
+                          }
+                          sx={style2}
+                        >
+                          {user.surname || "-"}
+                        </TableCell>
+                        <TableCell
+                          onClick={() =>
+                            navigate(`/employees/${user.id}?date=${date}`)
+                          }
+                          sx={style2}
+                        >
                           <FormControlLabel
                             control={
                               <Switch
@@ -179,7 +233,12 @@ const NonActiveUsers = () => {
                             label=""
                           />
                         </TableCell>
-                        <TableCell sx={style2}>
+                        <TableCell
+                          onClick={() =>
+                            navigate(`/employees/${user.id}?date=${date}`)
+                          }
+                          sx={style2}
+                        >
                           <FormControlLabel
                             control={
                               <Switch
@@ -198,8 +257,48 @@ const NonActiveUsers = () => {
                             label=""
                           />
                         </TableCell>
+                        <TableCell
+                          onClick={() =>
+                            navigate(`/employees/${user.id}?date=${date}`)
+                          }
+                          sx={style2}
+                        >
+                          {user.workTime && user.workTime.startTime
+                            ? ` ${moment(
+                                user.workTime && user.workTime.startTime,
+                                "HH:mm:ss"
+                              ).format("HH:mm")} -
+                                ${moment(
+                                  user.workTime && user.workTime.endTime,
+                                  "HH:mm:ss"
+                                ).format("HH:mm")}`
+                            : "-"}
+                        </TableCell>
+                        <TableCell sx={{ width: "50px" }}>
+                          <Stack direction="row" alignItems="end" spacing={1}>
+                            <IconButton
+                              onClick={() => {
+                                setOpenUserTimeModal(true);
+                                setDetails(user);
+                              }}
+                            >
+                              <BorderColorOutlinedIcon
+                                sx={{
+                                  color: "#0099ED",
+                                  width: 20,
+                                  height: 20,
+                                }}
+                              />
+                            </IconButton>
+                          </Stack>
+                        </TableCell>
                       </TableRow>
                     ))}
+                    <UserWorkTimeSet
+                      open={openUserTimeModal}
+                      handleClose={() => setOpenUserTimeModal(false)}
+                      userDetails={details}
+                    />
                   </TableBody>
                 </Table>
               </TableContainer>

@@ -360,14 +360,28 @@ const UserInfo = () => {
                         style={{ width: 25, height: 25 }}
                         alt="mail2"
                       />
-                      <Typography
-                        mt="7px"
-                        textAlign="center"
-                        fontSize={16}
-                        color="#727272"
-                      >
-                        {data.user && data.user.mail}
-                      </Typography>
+                      <FadeTooltip
+                        value={data.user && data.user.mail}
+                        data={
+                          <Typography
+                            mt="7px"
+                            textAlign="center"
+                            fontSize={16}
+                            color="#727272"
+                            sx={{
+                              textAlign: "center",
+                              fontFamily: "DM Sans",
+                              maxWidth: 700,
+                              whiteSpace: "nowrap",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              fontWeight: 500,
+                            }}
+                          >
+                            {data.user && data.user.mail}
+                          </Typography>
+                        }
+                      />
                     </Stack>
                   )}
                   {data.user && data.user.phoneNumber && (

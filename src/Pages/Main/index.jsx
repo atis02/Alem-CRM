@@ -16,7 +16,7 @@ const index = () => {
       height="100vh"
       width="100%"
       className="notes"
-      backgroundColor="#f5f6fa"
+      backgroundColor="#fff"
       overflow="auto"
     >
       {user.role === "USER" ? (

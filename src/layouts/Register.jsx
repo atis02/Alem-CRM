@@ -1,45 +1,33 @@
 import {
-  Box,
   Button,
   CircularProgress,
   FormControl,
-  InputAdornment,
   InputLabel,
   MenuItem,
   Select,
   Stack,
-  Switch,
   TextField,
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  login,
-  loginFailure,
-  loginSuccess,
-  registerFailure,
-} from "../Components/db/Redux/reducers/AuthSlice";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import AxiosInstance from "../Components/db/Redux/api/AxiosHelper";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { Capitalize } from "../Components/utils";
-// import { jwtDecode } from "jwt-decode";
 
 const Register = ({ openModal }) => {
-  const [data, setData] = useState();
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("+993");
   const [logined, setLogined] = useState("");
   const [surname, setSurname] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
-  const [errMsg, setErrMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const [selectedValue, setSelectedValue] = useState("");
   const [selectedValueLang, setSelectedValueLang] = useState("TKM");
@@ -90,25 +78,24 @@ const Register = ({ openModal }) => {
           languages: selectedValueLang,
           role: "USER",
           positionId: selectedValue,
-        }).then((res) =>
-          res.data
-            ? (setTimeout(() => navigate("/login"), 2000),
-              toast.success("Üstünlikli registrasiýa!"),
-              setEmail(""),
-              setPhoneNumber("+993"),
-              setLogined(""),
-              setSurname(""),
-              setName(""),
-              setPassword(""),
-              setLoading(false),
-              setEducation(""),
-              setSelectedValue(""),
-              setSelectedValueLang(""),
-              setLive(""),
-              setValue(dayjs()),
-              openModal(false))
-            : ""
-        );
+        });
+        if (response.data.data === "Successfully") {
+          setTimeout(() => navigate("/login"), 2000);
+          toast.success("Üstünlikli registrasiýa!");
+          setEmail("");
+          setPhoneNumber("+993");
+          setLogined("");
+          setSurname("");
+          setName("");
+          setPassword("");
+          setLoading(false);
+          setEducation("");
+          setSelectedValue("");
+          setSelectedValueLang("");
+          setLive("");
+          setValue(dayjs());
+          openModal(false);
+        }
       }
     } catch (error) {
       toast.error(

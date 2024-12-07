@@ -1,8 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Avatar,
   Box,
-  Container,
   IconButton,
   Stack,
   TextField,
@@ -12,48 +11,15 @@ import {
   useMediaQuery,
   useTheme,
   Drawer,
-  Badge,
 } from "@mui/material";
-import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
-import {
-  DateCalendar,
-  LocalizationProvider,
-  StaticTimePicker,
-  TimeClock,
-} from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
-import dayjs from "dayjs";
-import { useDispatch, useSelector } from "react-redux";
-import { store } from "../../Components/db/Redux/api/store";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Link, NavLink } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
-import MenuOpenIcon from "@mui/icons-material/MenuOpen";
-import {
-  MenuItem,
-  Menu,
-  Sidebar,
-  SubMenu,
-  sidebarClasses,
-} from "react-pro-sidebar";
-import SettingsIcon from "@mui/icons-material/Settings";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import ArchiveIcon from "@mui/icons-material/Archive";
-import UnarchiveIcon from "@mui/icons-material/Unarchive";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import TelegramIcon from "@mui/icons-material/Telegram";
-import EmailIcon from "@mui/icons-material/Email";
-import AutoStoriesIcon from "@mui/icons-material/AutoStories";
+import { MenuItem, Menu } from "react-pro-sidebar";
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
-import NoteAddIcon from "@mui/icons-material/NoteAdd";
-import HomeIcon from "@mui/icons-material/Home";
-import BorderColorIcon from "@mui/icons-material/BorderColor";
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import Diversity3Icon from "@mui/icons-material/Diversity3";
 import Alert from "./../../../public/images/Alert Badge.png";
 import search from "../../../public/images/Search (1).png";
-import axios from "axios";
 import menuItems from "./components/menuItems";
 
 export default function Navbar() {

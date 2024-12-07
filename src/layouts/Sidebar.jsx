@@ -1,39 +1,19 @@
 import React, { useState } from "react";
-import {
-  Button,
-  Stack,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from "@mui/material";
+import { Button, Stack, useMediaQuery, useTheme } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import TelegramIcon from "@mui/icons-material/Telegram";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import Diversity3Icon from "@mui/icons-material/Diversity3";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
-import ForumIcon from '@mui/icons-material/Forum';
+import ForumIcon from "@mui/icons-material/Forum";
 import SettingsIcon from "@mui/icons-material/Settings";
 import GavelIcon from "@mui/icons-material/Gavel";
-import {
-  KeyboardArrowDown as KeyboardArrowDownIcon,
-  KeyboardArrowUp as KeyboardArrowUpIcon,
-} from "@mui/icons-material";
 import LogoutIcon from "@mui/icons-material/Logout";
-
-import {
-  MenuItem,
-  Menu,
-  Sidebar,
-  sidebarClasses,
-  SubMenu,
-} from "react-pro-sidebar";
+import { MenuItem, Menu, Sidebar, sidebarClasses } from "react-pro-sidebar";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { logout } from "../Components/db/Redux/reducers/AuthSlice";
-import signOut from "../../public/images/Sign Out.png";
 import logo from "../../public/images/alemtilsimat.png";
 // import projectIcon from "../../public/images/project.png";
 // import projectWhiteIcon from "../../public/images/projectWhite.png";

@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import SubTask from "./components/SubTask";
 import { useDispatch } from "react-redux";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
-
+import AddTaskIcon from "@mui/icons-material/AddTask";
 import {
   deleteProjectTask,
   getProjectDetail,
@@ -73,6 +73,7 @@ const index = () => {
           //   }}
           sx={{
             justifyContent: "space-between",
+            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
           }}
           p="10px 20px"
           borderRadius="12px"
@@ -131,7 +132,7 @@ const index = () => {
               variant="outlined"
               onClick={handleOpenUserModal}
             >
-              <PersonAddAltIcon />
+              <AddTaskIcon />
               Ýumuş
             </Button>
           </Stack>

@@ -52,7 +52,7 @@ import ModeratorModalUpdate from "./components/ModeratorModalUpdate";
 const index = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [showHolidays, setShowHolidays] = useState(() =>
-    JSON.parse(localStorage.getItem("holidayShown"))
+    JSON.parse(localStorage.getItem("holidayShown") || true)
   );
   const [moderatorModalOpen, setModeratorModalOpen] = useState(false);
   const [modalOpenNoteUpdate, setModalOpenNoteUpdate] = useState(false);

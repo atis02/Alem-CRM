@@ -52,12 +52,12 @@ const WorkTime = () => {
   const handleChange = (event, newValue) => {
     setUsers(newValue);
   };
-  useEffect(() => {
-    if (status === "succeeded" && time.length > 0) {
-      setStartTime(time[0].startTime);
-      setEndTime(time[0].endTime);
-    }
-  }, [status, time]);
+  // useEffect(() => {
+  //   if (status === "succeeded" && time.length > 0) {
+  //     setStartTime(time[0].startTime);
+  //     setEndTime(time[0].endTime);
+  //   }
+  // }, [status, time]);
   const handleGetValues = () => {
     const body = {
       userId: user.id,
@@ -85,7 +85,7 @@ const WorkTime = () => {
       <Stack p={1} direction="row" alignItems="center" height="100%">
         <Stack
           backgroundColor="#fff"
-          width="40%"
+          width="30%"
           height="100%"
           borderRadius="20px"
           pb="10px"
@@ -121,15 +121,15 @@ const WorkTime = () => {
             open={moderatorModalOpen}
             handleClose={() => setModeratorModalOpen(false)}
           />
-          <Typography
+          {/* <Typography
             textAlign="center"
             fontFamily="DM Sans"
             mb={2}
             fontSize={20}
           >
             Iş wagtyny sazlamak
-          </Typography>
-          {status === "loading..." ? (
+          </Typography> */}
+          {/* {status === "loading..." ? (
             <Stack
               direction="column"
               height="90%"
@@ -145,7 +145,6 @@ const WorkTime = () => {
             <Stack>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <Stack direction="row" spacing={1}>
-                  {/* First TimePicker (Start Time) */}
                   <TimePicker
                     label="Başlanýan wagty"
                     format="HH:mm"
@@ -153,12 +152,10 @@ const WorkTime = () => {
                     onChange={(newValue) => {
                       setStartTime(newValue ? newValue.format("HH:mm") : null);
                     }}
-                    // onChange={(newValue) => setStartTime(newValue)} // Update the state with selected time
                     renderInput={(params) => <TextField {...params} />}
                     ampm={false}
                   />
 
-                  {/* Second TimePicker (End Time) */}
                   <TimePicker
                     ampm={false}
                     value={endTime ? dayjs(endTime, "HH:mm") : null}
@@ -166,14 +163,11 @@ const WorkTime = () => {
                       setEndTime(newValue ? newValue.format("HH:mm") : null);
                     }}
                     label="Tamamlanýan wagty"
-                    // value={endTime}
-                    // onChange={(newValue) => setEndTime(newValue)} // Update the state with selected time
                     renderInput={(params) => <TextField {...params} />}
                     format="HH:mm"
                   />
                 </Stack>
               </LocalizationProvider>
-              {/* Button to trigger value retrieval */}
               <Button
                 variant="contained"
                 onClick={handleGetValues}
@@ -190,7 +184,7 @@ const WorkTime = () => {
             </Stack>
           ) : (
             ""
-          )}
+          )} */}
           <Typography
             textAlign="center"
             fontFamily="DM Sans"
