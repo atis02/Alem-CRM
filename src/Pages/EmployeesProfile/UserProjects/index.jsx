@@ -17,6 +17,7 @@ const index = ({ data }) => {
   useEffect(() => {
     setUserData([data]);
   }, [data]);
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 

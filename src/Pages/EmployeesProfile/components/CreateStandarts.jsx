@@ -79,6 +79,7 @@ const CreateStandarts = ({ open, handleClose, userId, defaultUser }) => {
     { id: "selectAll", name: "Ählisi", surname: "" },
     ...UsersData,
   ];
+
   const handleSubmit = () => {
     const body = {
       title: title,

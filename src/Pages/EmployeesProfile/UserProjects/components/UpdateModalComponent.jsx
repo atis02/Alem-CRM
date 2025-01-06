@@ -114,7 +114,7 @@ const UpdateModalComponent = ({ open, handleClose, details, userData }) => {
 
   const handleSubmit = () => {
     const body = {
-      userId: id,
+      userId: user.id,
       projectId: details && details.id,
       archived: false,
       name: value,
@@ -130,7 +130,7 @@ const UpdateModalComponent = ({ open, handleClose, details, userData }) => {
       startDateProject !== null &&
       endDateProject != null
     ) {
-      dispatch(updateProjectForUser(body));
+      dispatch(updateProjectForUser({ body: body, id: id }));
       handleClose();
     } else {
       toast.error("Dogry maglumatyňyzy giriziň!");

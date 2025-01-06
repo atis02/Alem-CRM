@@ -3,6 +3,7 @@ import AxiosInstance from "./AxiosHelper";
 import { toast } from "react-toastify";
 
 const initialState = {
+  standartForUser:[],
   data: [],
   status: "idle",
   error: null,
@@ -17,6 +18,14 @@ export const getStandarts = createAsyncThunk("getStandarts", async (userId) => {
   }
   return response.data;
 });
+export const getStandartsForAll = createAsyncThunk("getStandartsForAll", async () => {
+  const response = await AxiosInstance.get(`/labor/protection/get/for/all`);
+  
+  if (response.data.status === 404) {
+    toast.error(response.data.message);
+  }
+  return response.data.data;
+});
 export const getStandartsForUser = createAsyncThunk("getStandartsForUser", async (userId) => {
   const response = await AxiosInstance.get(`/labor/protection/get/user?userId=${userId}`);
   if (response.data.status === 404) {
@@ -24,7 +33,7 @@ export const getStandartsForUser = createAsyncThunk("getStandartsForUser", async
   }
   return response.data;
 });
-export const deleteStandart = createAsyncThunk("deleteStandart", async (body) => {
+ export const deleteStandart = createAsyncThunk("deleteStandart", async (body) => {
   
   const resp = await AxiosInstance.delete(`/labor/protection/delete?id=${body.laborId}&userId=${body.userId}`)
   if(resp.data.message==='LaborProtection deleted successfully'){
@@ -37,12 +46,25 @@ export const deleteStandart = createAsyncThunk("deleteStandart", async (body) =>
     toast.error('Ýalňyşlyk!');
   }
 });
+export const deleteStandartForAll = createAsyncThunk("deleteStandartForAll", async (body) => {
+  
+  const resp = await AxiosInstance.delete(`/labor/protection/delete/for/all?permissionUserId=${body.permissionUserId}&id=${body.laborId}`)
+  if(resp.data.message==='LaborProtection deleted successfully'){
+    toast.success('Üstünlikli!');
+    const response = await AxiosInstance.get(`/labor/protection/get/for/all`);
+    return response.data.data;
+
+  }
+  else {
+    toast.error('Ýalňyşlyk!');
+  }
+});
 export const deleteStandartForUser = createAsyncThunk("deleteStandartForUser", async (body) => {
   
   const resp = await AxiosInstance.delete(`/labor/protection/delete?id=${body.laborId}&userId=${body.userId}`)
   if(resp.data.message==='LaborProtection deleted successfully'){
     toast.success('Üstünlikli!');
-  const response = await AxiosInstance.get(`/labor/protection/get/user?userId=${body.id}`);
+  const response = await AxiosInstance.get(`/labor/protection/get/user?userId=${body.userId}`);
     return response.data;
 
   }
@@ -74,8 +96,15 @@ export const postStandart = createAsyncThunk("postStandart", async (body) => {
     title: body.title,
     description: body.description,
     usersId: body.usersId,
+    userId:body.userId
   };
-  const resp = await AxiosInstance.post(`/labor/protection/add`,data)
+  const withoutUsersId = {
+    permissionUserId:body.permissionUserId,
+    title:body.title,
+    description:body.description
+  }
+  if(body.usersId.length){
+    const resp = await AxiosInstance.post(`/labor/protection/add`,data)
   if(resp.data=='OK'){
     toast.success('Üstünlikli!');
     const response = await AxiosInstance.get(`/labor/protection/get?userId=${body.userId}`);
@@ -86,10 +115,38 @@ export const postStandart = createAsyncThunk("postStandart", async (body) => {
   else {
     toast.error('Ýalňyşlyk!');
   }
+}else{
+  const resp = await AxiosInstance.post(`/labor/protection/add/for/all`,withoutUsersId)
+  
+  if(resp.data.message=='Ok'){
+    toast.success('Üstünlikli!');
+    const response = await AxiosInstance.get(`/labor/protection/get/for/all`);
+
+    return response.data.data;
+
+  }
+  else {
+    toast.error('Ýalňyşlyk!');
+  }
+}
+
 });
 export const updateStandart = createAsyncThunk("updateStandart", async (body) => {
- 
-  const resp = await AxiosInstance.put(`/labor/protection/update`,body)
+ const data ={
+      id: body.id,
+      title: body.title,
+      description: body.description,
+      usersId: body.usersId,
+      userId: body.userId,
+ }
+ const withoutUsersId ={
+  id: body.id,
+  title: body.title,
+  description: body.description,
+  permissionUserId: body.permissionUserId,
+}
+ if(body.usersId){
+  const resp = await AxiosInstance.put(`/labor/protection/update`,data)
   if(resp.data){
     toast.success('Üstünlikli!');
     const response = await AxiosInstance.get(`/labor/protection/get?userId=${body.userId}`);
@@ -99,12 +156,24 @@ export const updateStandart = createAsyncThunk("updateStandart", async (body) =>
   else {
     toast.error('Ýalňyşlyk!');
   }
+ }else{
+  const resp = await AxiosInstance.put(`/labor/protection/update/for/all`,withoutUsersId)
+  
+  if(resp.data){
+    toast.success('Üstünlikli!');
+    const response = await AxiosInstance.get(`/labor/protection/get/for/all`);
+    return response.data.data;
+
+  }
+  else {
+    toast.error('Ýalňyşlyk!');
+  }
+ }
+ 
 });
 export const changeLoginPassword = createAsyncThunk("changeLoginPassword", async (body) => {
   
   const resp = await AxiosInstance.patch(`/user/updata/password`,body)
-  console.log(resp.data);
-  
   if(resp.data==`User ID ${body.userId} login and password updated successfully.`){
     return toast.success('Üstünlikli!');
   }
@@ -134,12 +203,25 @@ const standartSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message;
       })
+      .addCase(getStandartsForAll.pending, (state) => {
+        state.status = "loading...";
+      })
+      .addCase(getStandartsForAll.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.data = action.payload;
+        state.updated = true;
+      })
+      .addCase(getStandartsForAll.rejected, (state, action) => {
+        state.loading = false;
+        state.status = "failed";
+        state.error = action.error.message;
+      })
       .addCase(getStandartsForUser.pending, (state) => {
         state.status = "loading...";
       })
       .addCase(getStandartsForUser.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.data = action.payload;
+        state.standartForUser = action.payload;
         state.updated = true;
       })
       .addCase(getStandartsForUser.rejected, (state, action) => {
@@ -147,15 +229,15 @@ const standartSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message;
       })
-      .addCase(deleteStandart.pending, (state) => {
+      .addCase(deleteStandartForAll.pending, (state) => {
         state.status = "loading...";
       })
-      .addCase(deleteStandart.fulfilled, (state, action) => {
+      .addCase(deleteStandartForAll.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.data = action.payload;
         state.updated = true;
       })
-      .addCase(deleteStandart.rejected, (state, action) => {
+      .addCase(deleteStandartForAll.rejected, (state, action) => {
         state.loading = false;
         state.status = "failed";
         state.error = action.error.message;

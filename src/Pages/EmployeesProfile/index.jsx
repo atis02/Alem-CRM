@@ -11,6 +11,7 @@ import {
   Typography,
   IconButton,
   Collapse,
+  Button,
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,29 +21,22 @@ import {
   useParams,
   useSearchParams,
 } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { getUserMonthWorkTime } from "../../Components/db/Redux/api/ComeTimeSlice";
 import moment from "moment";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 import UserInfo from "./components/UserInfo";
-import {
-  personalItems,
-  personalItems2,
-  personalItemsWithTime,
-} from "../../Components/utils";
-import EmployeesProjects from "./components/EmployeesProjects";
-import Projects from "../Projects/components/Projects";
+import { personalItems2, personalItemsWithTime } from "../../Components/utils";
 import UserProjects from "./UserProjects";
-import Project from "../UserProjects/components/Project";
-import ProjectDetail from "../ProjectDetail";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CustomDatePicker from "../Employees/components/Datepicker";
 import dayjs from "dayjs";
+import Absense from "./components/Absense";
 
 const Index = () => {
   const [date, setDate] = useState(dayjs());
+  const [openAbsense, setOpenAbsense] = useState(false);
 
-  const [projectName, setProjectName] = useState("");
   const { id } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -50,9 +44,7 @@ const Index = () => {
   const status = useSelector((state) => state.getWorkDate.statusMonth);
   const error = useSelector((state) => state.getWorkDate.errorMonth);
   const data = useSelector((state) => state.getWorkDate.employeerTime);
-  const params = searchParams.get("date");
 
-  // State to track which day is expanded
   const [expandedDay, setExpandedDay] = useState(null);
 
   useEffect(() => {
@@ -66,9 +58,18 @@ const Index = () => {
   const handleExpandClick = (day) => {
     setExpandedDay((prevDay) => (prevDay === day ? null : day));
   };
-  console.log(data.user);
-
+  const handleOpenAbsense = () => setOpenAbsense(true);
+  const handleCloseAbsense = () => setOpenAbsense(false);
   const style2 = {
+    p: 0,
+    textAlign: "center",
+    fontFamily: "DM Sans",
+    maxWidth: "50px",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+  };
+  const style3 = {
     p: 0,
     textAlign: "center",
     fontFamily: "DM Sans",
@@ -77,7 +78,6 @@ const Index = () => {
     overflow: "hidden",
     textOverflow: "ellipsis",
   };
-
   const workHoursByDate =
     status === "succeeded" &&
     data.employeerTime.reduce((acc, entry) => {
@@ -141,11 +141,9 @@ const Index = () => {
       note,
     };
   });
-  console.log(data);
 
   const calculateLateTime = (comeTime, referenceStartTime) => {
     if (!referenceStartTime) {
-      console.error("Reference start time is null or undefined");
       return null;
     }
     const comeDate = new Date(comeTime);
@@ -166,9 +164,31 @@ const Index = () => {
     return null;
   };
 
+  // const calculateTotalLateTime = (times, referenceStartTime) => {
+  //   console.log(referenceStartTime);
+
+  //   return times.reduce((total, firstComeTime) => {
+  //     console.log(total);
+  //     console.log(firstComeTime);
+  //     return total + calculateLateTime(firstComeTime, referenceStartTime);
+  //   }, 0);
+  // };
   const calculateTotalLateTime = (times, referenceStartTime) => {
-    return times.reduce((total, comeTime) => {
-      return total + calculateLateTime(comeTime, referenceStartTime);
+    // Gunun dine birinji gezekki gelen wagtyny alyar meselem sagat 09:00dan alyar
+    const firstComeTimesByDay = times.reduce((acc, time) => {
+      const day = new Date(time).toISOString().split("T")[0];
+      if (!acc[day]) {
+        acc[day] = time;
+      }
+      return acc;
+    }, {});
+
+    // Extract the first come times as an array
+    const firstComeTimes = Object.values(firstComeTimesByDay);
+
+    // Calculate the total late time using only the first come times
+    return firstComeTimes.reduce((total, firstComeTime) => {
+      return total + calculateLateTime(firstComeTime, referenceStartTime);
     }, 0);
   };
 
@@ -178,16 +198,13 @@ const Index = () => {
       data.employeerTime?.map((item) => item.comeTime) || [],
       data.user?.workTime?.startTime || null
     );
-  console.log("Total Late Time:", totalLateTime);
 
   const totalData = personalItems2(data, totalLateTime);
-  console.log(totalData);
 
   const userWorkTime = personalItemsWithTime(
     data.user?.workTime?.startTime || null,
     data.user?.workTime?.endTime || null
   );
-  console.log(userWorkTime);
 
   return (
     <Box backgroundColor="#fff" overflow="auto" height="100vh">
@@ -222,9 +239,33 @@ const Index = () => {
             Işgärler / Profili
           </Typography>
         </Link>
-        <CustomDatePicker selectedDay={date} setDateNote={setDate} />
+
+        <Stack direction="row" spacing={2}>
+          <Button
+            sx={{
+              color: "#9A93FF",
+              textTransform: "revert",
+              background: "#e7e7fb",
+              "&:hover": { background: "#e7e7fb" },
+              gap: "10px",
+              width: 190,
+              // height: 45,
+              borderRadius: "20px",
+            }}
+            variant="outlined"
+            onClick={handleOpenAbsense}
+          >
+            Rugsat güni goşmak
+          </Button>
+          <CustomDatePicker selectedDay={date} setDateNote={setDate} />
+        </Stack>
       </Stack>
 
+      <Absense
+        open={openAbsense}
+        data={data.user}
+        handleClose={handleCloseAbsense}
+      />
       <Stack
         pb={1}
         direction="row"
@@ -294,10 +335,10 @@ const Index = () => {
                   <TableBody>
                     {result.map((user, index) => (
                       <>
-                        <TableRow key={user.date}>
+                        <TableRow key={index}>
                           <TableCell
                             sx={{
-                              ...style2,
+                              ...style3,
                               direction: "row",
                               justifyContent: "space-between",
                             }}
@@ -348,7 +389,7 @@ const Index = () => {
                             })()}
                           </TableCell>
 
-                          <TableCell sx={style2}>{user.note}</TableCell>
+                          <TableCell sx={style3}>{user.note}</TableCell>
                         </TableRow>
                         <TableRow>
                           <TableCell
@@ -429,6 +470,7 @@ const Index = () => {
                   >
                     {totalData.map((elem) => (
                       <TableCell
+                        key={elem.title}
                         sx={{
                           color: "#222222",
                           fontWeight: 500,

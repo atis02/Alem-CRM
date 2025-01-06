@@ -14,42 +14,72 @@ import BorderColorIcon from "@mui/icons-material/BorderColor";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import Diversity3Icon from "@mui/icons-material/Diversity3";
 import { Badge } from "@mui/material";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import FileCopyIcon from "@mui/icons-material/FileCopy";
+import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
+import ForumIcon from "@mui/icons-material/Forum";
+import GavelIcon from "@mui/icons-material/Gavel";
+import LogoutIcon from "@mui/icons-material/Logout";
 
-const menuItems = [
-  { title: "Baş sahypa", link: "/", icon: <HomeIcon /> },
-  { title: "Dolandyryş", link: "/dashboard", icon: <DashboardIcon /> },
-  {
-    title: "Gelen",
-    link: "/document/inbox",
-    icon: (
-      <Badge badgeContent={1} color="primary">
-        <ArchiveIcon />
-      </Badge>
-    ),
-  },
-  {
-    title: "Giden",
-    link: "/document/out",
-    icon: (
-      <Badge badgeContent={1} color="primary">
-        <UnarchiveIcon />
-      </Badge>
-    ),
-  },
-  {
-    title: " Arhiw",
-    link: "/document/archive",
-    icon: (
-      <Badge badgeContent={1} color="primary">
-        <AutoStoriesIcon />
-      </Badge>
-    ),
-  },
-  { title: "Täze Resminama", link: "/document/new", icon: <NoteAddIcon /> },
-  { title: "Söhbetdeşlik", link: "/chat", icon: <HomeIcon /> },
+const user = JSON.parse(localStorage.getItem("CRM_USER"));
+const menuItems = user && [
+  // { title: "Baş sahypa", link: "/", icon: <HomeIcon /> },
   { title: "Profil", link: "/account", icon: <AccountCircleIcon /> },
-  { title: "Buýruklar", link: "/orders", icon: <BorderColorIcon /> },
+  {
+    title: "Resminama",
+    link: "/document",
+    icon: (
+      // <Badge badgeContent={1} color="primary">
+      <FileCopyIcon />
+      // </Badge>
+    ),
+  },
+  {
+    title:
+      user.role === "USER" || user.role === "MODERATOR"
+        ? "Bellikler"
+        : "Kalendar",
+
+    link:
+      user.role === "USER"
+        ? "/"
+        : user.role === "MODERATOR"
+        ? "/"
+        : "/calendar",
+    icon: (
+      // <Badge badgeContent={1} color="primary">
+      <CheckCircleOutlineIcon />
+      // </Badge>
+    ),
+  },
+  {
+    title: "Proýektler",
+    link: "/projects",
+    icon: (
+      // <Badge badgeContent={1} color="primary">
+      <InventoryOutlinedIcon />
+      // </Badge>
+    ),
+  },
+  {
+    title: "Tertip - düzgün...",
+    link: "/standarts/specific/user",
+    icon: <GavelIcon />,
+  },
+  { title: "Söhbetdeşlik", link: "/chat", icon: <ForumIcon /> },
+  // user.role !== "USER" &&
+  {
+    title: "Aýratyn (Tertip...)",
+    link: "/standarts/specific",
+    icon: <GavelIcon />,
+  },
+  {
+    title: "Ähli işgärler",
+    link: "/standarts/all",
+    icon: <GavelIcon />,
+  },
   { title: "Işgärler", link: "/employees", icon: <Diversity3Icon /> },
   { title: "Bildiriş", link: "/notifications", icon: <NotificationsIcon /> },
+  { title: "Sazlamalar", link: "/settings", icon: <SettingsIcon /> },
 ];
 export default menuItems;

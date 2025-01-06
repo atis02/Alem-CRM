@@ -13,8 +13,8 @@ import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import CreateStandarts from "./components/CreateStandarts";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  deleteStandart,
-  getStandarts,
+  deleteStandartForAll,
+  getStandartsForAll,
   getStandartsForUser,
 } from "../../Components/db/Redux/api/StandartSlice";
 import deleteIcon from "../../../public/images/Delete.png";
@@ -26,6 +26,7 @@ import {
   color,
   getRandomColorAndBackground,
 } from "../../Components/utils";
+import CreateStandartsForAll from "./components/CreateStandartsForAll";
 
 const index = () => {
   const [open, setOpen] = useState(false);
@@ -45,15 +46,16 @@ const index = () => {
 
   const user = JSON.parse(localStorage.getItem("CRM_USER"));
   const UsersData = useSelector((state) => state.users.data);
+  console.log(data);
 
-  const allData = data.filter((elem) => elem.users.length == UsersData.length);
-  const filteredData = data.filter(
-    (elem) => (elem.users && elem.users.length) !== UsersData.length
-  );
+  // const allData = data.filter((elem) => !elem.users);
+  // const filteredData = data.filter(
+  //   (elem) => (elem.users && elem.users.length) !== UsersData.length
+  // );
 
   useEffect(() => {
     if (user.role === "ADMIN") {
-      dispatch(getStandarts(user.id));
+      dispatch(getStandartsForAll());
     } else {
       dispatch(getStandartsForUser(user.id));
     }
@@ -62,8 +64,9 @@ const index = () => {
     const body = {
       laborId: id,
       userId: user.id,
+      permissionUserId: user.id,
     };
-    dispatch(deleteStandart(body));
+    dispatch(deleteStandartForAll(body));
   };
 
   return (
@@ -119,7 +122,7 @@ const index = () => {
           </Button>
         )}
 
-        <CreateStandarts
+        <CreateStandartsForAll
           open={open}
           userId={user.id}
           handleClose={handleClose}
@@ -145,7 +148,7 @@ const index = () => {
               // minHeight: "340px",
             }}
           >
-            {allData.length == 0 ? (
+            {data.length == 0 ? (
               <Typography textAlign="center" mt={5} fontSize={18} width="100%">
                 Düzgünnama ýok
               </Typography>
@@ -173,7 +176,7 @@ const index = () => {
                       >
                         Ähli işgärler
                       </Typography> */}
-                      {allData.map((elem, index) => (
+                      {data.map((elem, index) => (
                         <Grid
                           item
                           xs={12}
@@ -225,27 +228,25 @@ const index = () => {
                                   width="90%"
                                 >
                                   {elem.title}
-                                  {elem.users &&
-                                  elem.users.length === UsersData.length ? (
-                                    <Button
-                                      sx={{
-                                        color: "#2F6FD0",
-                                        textTransform: "revert",
-                                        background: "#d9e8ff",
-                                        "&:hover": { background: "#e7e7fb" },
-                                        gap: "10px",
-                                        width: 140,
-                                        height: 35,
-                                        fontWeight: 500,
-                                        borderRadius: "20px",
-                                        border: `1px solid #2F6FD0`,
-                                        ...(index == 0 ? { ml: 3 } : { ml: 1 }),
-                                      }}
-                                      variant="outlined"
-                                    >
-                                      Ähli ulanyjylar
-                                    </Button>
-                                  ) : (
+                                  <Button
+                                    sx={{
+                                      color: "#2F6FD0",
+                                      textTransform: "revert",
+                                      background: "#d9e8ff",
+                                      "&:hover": { background: "#e7e7fb" },
+                                      gap: "10px",
+                                      width: 140,
+                                      height: 35,
+                                      fontWeight: 500,
+                                      borderRadius: "20px",
+                                      border: `1px solid #2F6FD0`,
+                                      ...(index == 0 ? { ml: 3 } : { ml: 1 }),
+                                    }}
+                                    variant="outlined"
+                                  >
+                                    Ähli ulanyjylar
+                                  </Button>
+                                  {/* { 
                                     elem.users.map((item, index) => (
                                       <Button
                                         key={index}
@@ -269,7 +270,7 @@ const index = () => {
                                         {item.name}
                                       </Button>
                                     ))
-                                  )}
+                                  )} */}
                                 </Typography>
                                 {user.role === "USER" ? (
                                   ""

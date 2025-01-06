@@ -85,7 +85,6 @@ export const updatePdf = createAsyncThunk(
           }
         }
       );
-      console.log(resp.data);
 
       if (resp.data.message
         === "Successfully") {
@@ -148,7 +147,6 @@ export const updatePdfByAdmin = createAsyncThunk(
           }
         }
       );
-      console.log(resp.data);
 
       if (resp.data.message
         === "Successfully") {

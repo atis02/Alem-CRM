@@ -36,7 +36,6 @@ export const updateUserRole = createAsyncThunk(
   async (body) => {
    
     const resp = await AxiosInstance.patch(`/user/updata/role`, body);
-    console.log(resp.data);
     
    if( resp.data == `User ID ${body.userId} role updated successfully.`){
     const response = await AxiosInstance.get("/user/status");

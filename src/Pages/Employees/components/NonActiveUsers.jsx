@@ -43,7 +43,6 @@ const NonActiveUsers = () => {
   const statusUsersData = useSelector((state) => state.workTime.userStatus);
   const statusUsersHoliday = useSelector((state) => state.workTime.status);
   const statusUsersError = useSelector((state) => state.workTime.error);
-  console.log(statusUsersData);
 
   useEffect(() => {
     // const getStatusUsers = async () => {
@@ -107,7 +106,6 @@ const NonActiveUsers = () => {
       user.role !== "ADMIN" && user.role !== "MODERATOR" && user.status === true
   );
   const allUsers = [...moderators, ...activeUsers, ...notActiveUsers];
-  console.log(allUsers);
 
   const style2 = {
     p: 1,

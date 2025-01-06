@@ -15,7 +15,10 @@ import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
-import { postWorkTimeDay } from "../../../Components/db/Redux/api/SetWorkTimeSlice";
+import {
+  postWorkTimeDay,
+  updateWorkTime,
+} from "../../../Components/db/Redux/api/SetWorkTimeSlice";
 
 const style = {
   position: "absolute",
@@ -30,7 +33,7 @@ const style = {
   p: 2,
   borderRadius: "8px",
 };
-export const user = JSON.parse(localStorage.getItem("CRM_USER"));
+const user = JSON.parse(localStorage.getItem("CRM_USER"));
 
 const UserWorkTimeSet = ({ open, handleClose, userDetails }) => {
   const [startTime, setStartTime] = useState(null);
@@ -40,7 +43,6 @@ const UserWorkTimeSet = ({ open, handleClose, userDetails }) => {
     field1: "",
     field2: "",
   });
-  console.log(userDetails);
 
   const dispatch = useDispatch();
 
@@ -56,15 +58,16 @@ const UserWorkTimeSet = ({ open, handleClose, userDetails }) => {
     const { name, value } = e.target;
     setTextFieldValues({ ...textFieldValues, [name]: value });
   };
-  const handleGetValues = () => {
+  const handleGetValues = (id) => {
     const body = {
+      id: id,
       permissionUserId: user.id,
       userId: userDetails.id,
       startTime: startTime,
       endTime: endTime,
     };
     if (startTime !== null && endTime !== null) {
-      dispatch(postWorkTimeDay(body));
+      dispatch(updateWorkTime(body));
       handleClose();
     } else {
       toast.error("Wagtlary giriz!");
@@ -77,8 +80,6 @@ const UserWorkTimeSet = ({ open, handleClose, userDetails }) => {
       newLogin: textFieldValues.field1,
       newPassword: textFieldValues.field2,
     };
-    console.log(body);
-
     if (
       user &&
       newPassUser !== "" &&
@@ -165,7 +166,14 @@ const UserWorkTimeSet = ({ open, handleClose, userDetails }) => {
                 <Button onClick={handleClose} variant="outlined">
                   Yza
                 </Button>
-                <Button onClick={handleGetValues} variant="contained">
+                <Button
+                  onClick={() =>
+                    handleGetValues(
+                      userDetails.workTime && userDetails.workTime.id
+                    )
+                  }
+                  variant="contained"
+                >
                   Çalyşmak
                 </Button>
               </Stack>

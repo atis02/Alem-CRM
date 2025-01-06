@@ -58,6 +58,20 @@ export const deleteProject = createAsyncThunk("deleteProject", async (body) => {
     toast.error("Ýalňyşlyk!");
   }
 });
+export const deleteProjectForUser = createAsyncThunk("deleteProjectForUser", async (body) => {
+  const resp = await AxiosInstance.delete(
+    `/project/delete/project?projectId=${body.projectId}&responsibleUserId=${body.responsibleUserId}`
+  );
+  if (resp.data.message == "Project remove successfully") {
+    toast.success("Üstünlikli!");
+    const response = await AxiosInstance.get(`/project/get/user/projects?userId=${body.responsibleUserId}`
+    );
+
+    return response.data.data;
+  } else {
+    toast.error("Ýalňyşlyk!");
+  }
+});
 const project = createSlice({
   name: "project",
   initialState,
@@ -127,6 +141,18 @@ const project = createSlice({
         state.data = action.payload;
       })
       .addCase(deleteProject.rejected, (state, action) => {
+        state.loading = false;
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(deleteProjectForUser.pending, (state) => {
+        state.status = "loading...";
+      })
+      .addCase(deleteProjectForUser.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.data = action.payload;
+      })
+      .addCase(deleteProjectForUser.rejected, (state, action) => {
         state.loading = false;
         state.status = "failed";
         state.error = action.error.message;

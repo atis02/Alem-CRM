@@ -14,7 +14,9 @@ import CreateStandarts from "./CreateStandarts";
 import { useDispatch, useSelector } from "react-redux";
 import {
   deleteStandart,
+  deleteStandartForUser,
   getStandarts,
+  getStandartsForAll,
   getStandartsForUser,
 } from "../../../Components/db/Redux/api/StandartSlice";
 import deleteIcon from "../../../../public/images/Delete.png";
@@ -37,30 +39,27 @@ const SpecificStandart = () => {
   const status = useSelector((state) => state.standarts.status);
   const error = useSelector((state) => state.standarts.error);
   const data = useSelector((state) => state.standarts.data);
+  const additionalData = useSelector(
+    (state) => state.standarts.standartForUser
+  );
 
   const user = JSON.parse(localStorage.getItem("CRM_USER"));
   const UsersData = useSelector((state) => state.users.data);
 
-  const allData = data.filter(
+  const allData = additionalData.filter(
     (elem) => (elem.users && elem.users.length) === UsersData.length
   );
-  const filteredData = data.filter(
-    (elem) => (elem.users && elem.users.length) !== UsersData.length
-  );
+  const filteredData = data.filter((elem) => elem.users && elem.users.length);
 
   useEffect(() => {
-    if (user.role === "ADMIN") {
-      dispatch(getStandarts(user.id));
-    } else {
-      dispatch(getStandartsForUser(user.id));
-    }
+    dispatch(getStandarts(user.id));
   }, [dispatch]);
   const handleDeleteLabor = (id) => {
     const body = {
       laborId: id,
       userId: user.id,
     };
-    dispatch(deleteStandart(body));
+    dispatch(deleteStandartForUser(body));
   };
 
   return (

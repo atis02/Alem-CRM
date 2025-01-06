@@ -31,12 +31,12 @@ export const getProjectForUser = createAsyncThunk(
   }
 );
 export const updateProjectForUser = createAsyncThunk("updateProjectForUser", async (body) => {
-  const resp = await AxiosInstance.put(`/project/updata/project`, body);
+  const resp = await AxiosInstance.put(`/project/updata/project`, body.body);
 
   if (resp.data.message == "Project updated successfully") {
     toast.success("Üstünlikli!");
     const response = await AxiosInstance.get(
-      `/project/get/user/projects?userId=${body.userId}`
+      `/project/get/user/projects?userId=${body.id}`
     );
 
     return response.data.data;

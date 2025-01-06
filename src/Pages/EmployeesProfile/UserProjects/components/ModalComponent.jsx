@@ -108,6 +108,7 @@ const ModalComponent = ({ open, handleClose, userData }) => {
       // setUserId(newValues[newValues.length - 1].id);
     }
   };
+
   const handleSubmit = () => {
     const body = {
       name: value,

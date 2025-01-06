@@ -136,8 +136,8 @@ const Project = ({ setProjectName, userData }) => {
                 </TableHead>
 
                 <TableBody>
-                  {data.map((elem) => (
-                    <StyledTableRow sx={{ cursor: "pointer" }}>
+                  {data.map((elem, index) => (
+                    <StyledTableRow key={index} sx={{ cursor: "pointer" }}>
                       <TableCell
                         onClick={() =>
                           navigate(

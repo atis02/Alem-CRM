@@ -217,6 +217,7 @@ export default function SidebarNav(data, sendingData) {
                   </MenuItem>
                 </Stack>
               </SubMenu> */}
+
               <MenuItem
                 style={{
                   ...(user.role !== "USER"
@@ -225,7 +226,7 @@ export default function SidebarNav(data, sendingData) {
                 }}
                 icon={<GavelIcon />}
                 component={
-                  <NavLink className="sideNav" to="/standarts/specific" />
+                  <NavLink className="sideNav" to="/standarts/specific/user" />
                 }
               >
                 Tertip - düzgünnama

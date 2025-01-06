@@ -115,11 +115,15 @@ const index = () => {
     setColors(color);
   }, []);
   const handleDayWorkTime = (day) => {
+    console.log(day);
+
     const body = {
       userId: user.id,
       date: day,
     };
-    if (moment().isSame(day, "day")) {
+    if (moment(day).isAfter(moment(), "day")) {
+      return;
+    } else {
       dispatch(getUserDayWorkTime(body));
     }
   };
@@ -298,8 +302,23 @@ const index = () => {
   };
   return (
     <Box backgroundColor="#fff">
-      <Stack direction="row" mt="10px" justifyContent="space-around">
-        <Stack direction="column" width="28%" height="88vh">
+      <Stack
+        direction={{ lg: "row", md: "row", sm: "column", xs: "column" }}
+        mt="10px"
+        justifyContent="space-around"
+        flexDirection={{
+          xs: "column-reverse",
+          lg: "row",
+          md: "row",
+          sm: "column",
+        }}
+      >
+        <Stack
+          mt={1}
+          direction="column"
+          width={{ lg: "28%", md: "28%", sm: "100%", xs: "100%" }}
+          height="88vh"
+        >
           <Stack
             backgroundColor="#fff"
             spacing={2}
@@ -915,8 +934,16 @@ const index = () => {
                         disabled={filteredData.length == 0}
                         sx={{
                           ...(filteredData.length > 0
-                            ? { backgroundColor: "#9FC2A5", color: "#fff" }
-                            : { backgroundColor: "#F5F6FA", color: "#474747" }),
+                            ? {
+                                backgroundColor: "#9FC2A5",
+                                color: "#fff",
+                                "&:hover": { background: "#9FC2A5" },
+                              }
+                            : {
+                                backgroundColor: "#F5F6FA",
+                                color: "#474747",
+                                "&:hover": { background: "#F5F6FA" },
+                              }),
                           textTransform: "revert",
                           fontFamily: "Montserrat",
                           fontSize: 18,
@@ -926,7 +953,7 @@ const index = () => {
                           border: "1px solid #D5D5D5",
                           height: 55,
 
-                          "&:hover": { background: "#78a880" },
+                          // "&:hover": { background: "#78a880" },
                         }}
                         onClick={handleAddLeaveTime}
                       >
@@ -1002,7 +1029,7 @@ const index = () => {
                               fontWeight={500}
                               fontFamily="Montserrat"
                               color="#474747"
-                              fontSize={15}
+                              fontSize={{ lg: 15, md: 15, sm: 13, xs: 12 }}
                               textAlign="center"
                             >
                               Gelen wagty
@@ -1012,7 +1039,7 @@ const index = () => {
                               fontFamily="Montserrat"
                               color="#474747"
                               textAlign="center"
-                              fontSize={15}
+                              fontSize={{ lg: 15, md: 15, sm: 13, xs: 12 }}
                             >
                               Giden wagty
                             </Typography>
@@ -1021,7 +1048,7 @@ const index = () => {
                               fontFamily="Montserrat"
                               color="#474747"
                               textAlign="center"
-                              fontSize={15}
+                              fontSize={{ lg: 15, md: 15, sm: 13, xs: 12 }}
                             >
                               Işlän sagady
                             </Typography>
@@ -1197,10 +1224,18 @@ const index = () => {
                                   <Stack
                                     key={item.color}
                                     onClick={() => handleColorClick(item.color)}
-                                    style={{
+                                    sx={{
                                       backgroundColor: item.color,
-                                      width: "52px",
-                                      height: "52px",
+                                      width: { lg: 52, md: 52, sm: 45, xs: 40 },
+                                      height: {
+                                        lg: 52,
+                                        md: 52,
+                                        sm: 45,
+                                        xs: 40,
+                                      },
+
+                                      // width: 52,
+                                      // height: 52,
                                       display: "flex",
                                       alignItems: "center",
                                       justifyContent: "center",
@@ -1224,11 +1259,11 @@ const index = () => {
                                   fontFamily: "Montserrat",
                                   fontSize: 18,
                                   fontWeight: 600,
-                                  width: 185,
+                                  width: { lg: 185, md: 185, sm: 155, xs: 135 },
                                   borderRadius: "50px",
                                   border: "1px solid #D5D5D5",
                                   height: 55,
-                                  mt: -0.5,
+                                  mt: { lg: -0.5, md: -0.5, sm: -1, xs: -1.5 },
                                   "&:hover": {
                                     background: "#78a880",
                                     color: "#F5F6FA",
@@ -1372,7 +1407,7 @@ const index = () => {
         <Stack
           backgroundColor="#fff"
           spacing={4}
-          width="68%"
+          width={{ lg: "68%", md: "68%", sm: "100%", xs: "100%" }}
           borderRadius="20px"
           m="0px 20px 0 0 "
           pb="10px"

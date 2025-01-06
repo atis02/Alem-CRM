@@ -10,7 +10,6 @@ import {
   Modal,
   Paper,
   Select,
-  Slider,
   Stack,
   TextField,
   Typography,
@@ -18,174 +17,228 @@ import {
 import React, { useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import { useDispatch, useSelector } from "react-redux";
-import { getUsers } from "../../../Components/db/Redux/api/UserSlice";
+// import { getUsers } from "../../../../Components/db/Redux/api/UserSlice";
 import { Capitalize } from "../../../Components/utils";
 import AddIcon from "@mui/icons-material/Add";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import AxiosInstance from "../../../Components/db/Redux/api/AxiosHelper";
+// import {
+//   postNewProject,
+//   updateProject,
+// } from "../../../../Components/db/Redux/api/ProjectSlice";
+import { toast } from "react-toastify";
+// import UpdateProjectUserModal from "../../ProjectDetail/components/UpdateProjectUserModal";
+import moment from "moment";
 import dayjs from "dayjs";
-import { toast, ToastContainer } from "react-toastify";
-import { updateTask } from "../../../Components/db/Redux/api/ProjectDetailSlice";
 import { useParams } from "react-router-dom";
+import { updateProjectForUser } from "../../../Components/db/Redux/api/ProjectDetailSlice";
 
-const UpdateProjectUserModal = ({
-  openUserModal,
-  user,
-  handleCloseUserModal,
-  setWorkers,
-  setSelectedUsers,
-}) => {
-  const [users, setUsers] = useState((user.user && user.user.id) || "");
-  const [priority, setPriority] = useState([]);
+const UpdateModalComponent = ({ open, handleClose, details }) => {
+  const [openUserModal, setOpenUserModal] = useState(false);
   const [selectedValue, setSelectedValue] = useState(
-    user.task ? user.task.priority : "Pes"
+    details ? details.priority : "Pes"
   );
   const [selectedStatus, setStatus] = useState(
-    user.task ? user.task.status : "Başlanmadyk"
+    details ? details.status : "Başlanmadyk"
   );
-  const [value, setValue] = useState("");
-  const [userId, setUserId] = useState("");
-  const [startDate, setStartDate] = useState(
-    (user.task && user.task.startDate) || ""
-  );
-  const [endDate, setEndDate] = useState(
-    (user.task && user.task.endDate) || ""
-  );
-  const UsersData = useSelector((state) => state.users.data);
-  const [defaultUser, setDefaultUser] = useState([user && user.user]);
-  const [sliderValue, setSliderValue] = useState(0);
+  const user = JSON.parse(localStorage.getItem("CRM_USER"));
   const { id } = useParams();
 
+  // const [users, setUsers] = useState([]);
+  // const [selectedUsers, setSelectedUsers] = useState(
+  //   details ? details.users : []
+  // );
+  // const [userId, setUserId] = useState("");
+  const [value, setValue] = useState(details?.name || "");
+  const [endDateProject, setEndDateProject] = useState(
+    details
+      ? details.endDate && moment(details.endDate).format("YYYY-MM-DD")
+      : null
+  );
+  const [startDateProject, setStartDateProject] = useState(
+    details
+      ? details.startDate && moment(details.startDate).format("YYYY-MM-DD")
+      : null
+  );
+  const statusUsers = useSelector((state) => state.users.status);
+  const UsersData = useSelector((state) => state.users.data);
+  useEffect(() => {
+    if (details) {
+      setValue(details.name || "");
+      setSelectedValue(details.priority || "");
+      setStatus(details.status || "");
+      setStartDateProject(details.startDate || "");
+      setEndDateProject(details.endDate || "");
+    }
+  }, [details]);
   const dispatch = useDispatch();
-  const handleChangeStep = (e) => {
-    setUsers(e.target.value);
-  };
+  const [workers, setWorkers] = useState([]);
+
   const handleChangeSelect = (event) => {
     setSelectedValue(event.target.value);
   };
   const handleChangeStatus = (event) => {
     setStatus(event.target.value);
   };
-  const handleSliderChange = (event, newValue) => {
-    setSliderValue(newValue);
+  const handleOpenUserModal = (newValues) => {
+    setOpenUserModal(true);
+    setSelectedUsers(newValues);
   };
-  useEffect(() => {
-    if (user) {
-      setValue((user.task && user.task.name) || "");
-      setSelectedValue(user.task ? user.task.priority : "Pes");
-      setStatus(user.task ? user.task.status : "Başlanmadyk");
-      setStartDate((user.task && user.task.startDate) || "");
-      setDefaultUser((user && user.user) || []);
-      setEndDate((user.task && user.task.endDate) || "");
-      setSliderValue((user.task && user.task.completionTask) || 0);
-      setUsers((user.user && user.user.id) || "");
+  const handleCloseUserModal = (id) => {
+    id
+      ? setUsers((prevUsers) => prevUsers.filter((item) => item.id !== id))
+      : setUsers((prevUsers) => prevUsers);
+    setOpenUserModal(false);
+  };
+  // useEffect(() => {
+  //   dispatch(getUsers());
+  // }, [dispatch]);
+  const handleChange = (event) => {
+    setValue(event.target.value);
+  };
+  const handleChangeStep = (e, newValues) => {
+    if (newValues) {
+      //   handleOpenUserModal(newValues);
+      //   setUsers(() =>
+      //     newValues.map((user) => ({
+      //       id: user.id ? user.id : user.userId,
+      //       name: user.name,
+      //       surname: user.surname,
+      //     }))
+      //   );
+      //   setUserId(newValues.id);
     }
-  }, [user]);
+  };
 
-  useEffect(() => {
-    const getPriority = async () => {
-      await AxiosInstance.get("/project/status/priority").then((resp) => {
-        setPriority(resp.data.data);
-      });
-    };
-    getPriority();
-  }, []);
   const handleSubmit = () => {
     const body = {
-      taskId: user.task && user.task.id,
-      completionTask: sliderValue,
-      userId: users ? users : user.user && user.user.id,
+      userId: user.id,
+      projectId: details && details.id,
+      archived: false,
       name: value,
       status: selectedStatus,
       priority: selectedValue,
-      startDate: dayjs(startDate).format("YYYY-MM-DD"),
-      endDate: dayjs(endDate).format("YYYY-MM-DD"),
+      startDate: dayjs(startDateProject).format("YYYY-MM-DD"),
+      endDate: dayjs(endDateProject).format("YYYY-MM-DD"),
     };
 
     if (
-      value !== "" &&
-      selectedStatus != "" &&
-      selectedValue !== "" &&
-      startDate !== null &&
-      endDate !== null
+      value != "" &&
+      selectedValue != "" &&
+      startDateProject !== null &&
+      endDateProject != null
     ) {
-      dispatch(updateTask({ body: body, projectID: id }));
-
-      handleCloseUserModal();
-      // setSelectedValue("");
-      // setValue("");
-      // setStatus("");
-      // setWorkers((prevState) => [...prevState, body]);
+      dispatch(updateProjectForUser({ body: body, id: user.id }));
+      handleClose();
     } else {
       toast.error("Dogry maglumatyňyzy giriziň!");
     }
   };
-
   return (
     <>
-      <Modal
-        open={user !== undefined > 0 && openUserModal}
-        onClose={() => {
-          setSelectedValue("");
-          setStatus("");
-          handleCloseUserModal();
-        }}
-        disableAutoFocus
-        BackdropProps={{
-          style: { backgroundColor: "rgba(0, 0, 0, 0.1)" },
-        }}
-      >
+      {/* {details ? ( */}
+      <Modal open={open} onClose={handleClose} disableAutoFocus>
         <Box
           sx={{
             position: "absolute",
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            width: 650,
-            height: 500,
+            width: 700,
+            height: 470,
             bgcolor: "background.paper",
-            boxShadow: 14,
-            zIndex: 1000,
-            //   p: 4,
+            boxShadow: 24,
+            zIndex: 10,
             borderRadius: "10px",
+            // overflow: "auto",
           }}
+          // className="times"
         >
           <Stack
-            bgcolor="#00B69B"
+            bgcolor="#2F6FD0"
             p="15px 20px"
             direction="row"
             justifyContent="space-between"
             alignItems="center"
             textTransform="capitalize"
-            sx={{ borderTopLeftRadius: "10px", borderTopRightRadius: "10px" }}
+            sx={{
+              borderTopLeftRadius: "10px",
+              borderTopRightRadius: "10px",
+            }}
           >
             <Typography
               color="#fff"
               fontSize={24}
               fontWeight={400}
               fontFamily="DM Sans"
-            >
-              {/* {user !== undefined &&
-                user.length > 0 &&
-                user[user.length - 1].name}{" "}
-              {user !== undefined &&
-                user.length > 0 &&
-                user[user.length - 1].surname} */}
-              {user.user && user.user.name} {user.user && user.user.surname}
-            </Typography>
-            <IconButton
-              onClick={() => {
-                setSelectedValue("");
-                setStatus("");
-                handleCloseUserModal();
+              sx={{
+                textAlign: "center",
+                fontFamily: "DM Sans",
+                maxWidth: 700,
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                fontWeight: 500,
               }}
             >
+              {details && details.name}
+            </Typography>
+            <IconButton onClick={handleClose}>
               <CloseIcon sx={{ color: "#fff" }} />
             </IconButton>
           </Stack>
-          <Stack p="20px 20px 30px " spacing="15px">
+          <Stack p="20px 20px 30px " spacing={2}>
+            <Stack spacing={2} direction="row">
+              <TextField
+                label="Proýektiň Ady"
+                variant="outlined"
+                placeholder="web saýt... "
+                autoComplete="off"
+                value={value}
+                // defaultValue={details && details.name}
+                fullWidth
+                onChange={handleChange}
+                sx={{
+                  borderRadius: "8px",
+                  height: 56,
+                }}
+              />
+            </Stack>
+            <Autocomplete
+              id="combo-box-demo"
+              multiple
+              defaultValue={[user]}
+              fullWidth
+              options={UsersData}
+              getOptionLabel={(option) =>
+                `${Capitalize(option.name)} ${Capitalize(
+                  option.surname == null ? "" : option.surname
+                )}`
+              }
+              disabled
+              onChange={handleChangeStep}
+              renderInput={(params) => (
+                <TextField
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      width: "100%",
+                    },
+                  }}
+                  {...params}
+                  label="Ýerine ýetirýän"
+                  fullWidth
+                  autoComplete="off"
+                  placeholder="Adyny ýazyň ýa-da saýlaň"
+                  variant="outlined"
+                  InputProps={{
+                    ...params.InputProps,
+                    endAdornment: <>{params.InputProps.endAdornment}</>,
+                  }}
+                />
+              )}
+              popupIcon={<AddIcon />}
+            />
             <Stack direction="row" width="100%">
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer
@@ -225,15 +278,21 @@ const UpdateProjectUserModal = ({
                       <DatePicker
                         fullWidth
                         defaultValue={
-                          dayjs(user.task && user.task.startDate).isValid()
-                            ? dayjs(user.task && user.task.startDate)
+                          dayjs(details && details.startDate).isValid()
+                            ? dayjs(details && details.startDate)
                             : null
                         }
                         onChange={(newValue) => {
                           if (newValue) {
-                            setStartDate(newValue);
+                            setStartDateProject(
+                              newValue
+                                ? dayjs(newValue).format("YYYY-MM-DD")
+                                : dayjs(details && details.startDate)
+                            );
                           } else {
-                            setStartDate(null);
+                            setStartDateProject(
+                              dayjs(details && details.startDate)
+                            );
                           }
                         }}
                         format="DD.MM.YYYY"
@@ -256,15 +315,19 @@ const UpdateProjectUserModal = ({
                       <DatePicker
                         fullWidth
                         defaultValue={
-                          dayjs(user.task && user.task.endDate).isValid()
-                            ? dayjs(user.task && user.task.endDate)
+                          dayjs(details && details.endDate).isValid()
+                            ? dayjs(details && details.endDate)
                             : null
                         }
                         onChange={(newValue) => {
                           if (newValue) {
-                            setEndDate(newValue);
+                            setEndDateProject(
+                              newValue
+                                ? dayjs(newValue).format("YYYY-MM-DD")
+                                : null
+                            );
                           } else {
-                            setEndDate(null);
+                            setEndDateProject(null);
                           }
                         }}
                         format="DD.MM.YYYY"
@@ -274,69 +337,6 @@ const UpdateProjectUserModal = ({
                 </DemoContainer>
               </LocalizationProvider>
             </Stack>
-            <TextField
-              label="Etmeli işi"
-              variant="outlined"
-              placeholder="web saýt..."
-              autoComplete="off"
-              value={value}
-              // defaultValue={value}
-              fullWidth
-              onChange={(event) => setValue(event.target.value)}
-              sx={{
-                borderRadius: "8px",
-                height: 56,
-              }}
-            />
-            <FormControl>
-              <InputLabel id="age-label">Işgärler</InputLabel>
-              <Select
-                labelId="age-label"
-                value={users}
-                label="Işgärler"
-                onChange={handleChangeStep}
-              >
-                {UsersData.map((elem) => (
-                  <MenuItem value={elem.id}>
-                    {elem.name} {elem.surname}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-
-            {/* <Autocomplete
-              id="combo-box-demo"
-              multiple
-              defaultValue={[user && user.user] || []}
-              fullWidth
-              options={UsersData}
-              getOptionLabel={(option) =>
-                `${Capitalize(option.name)} ${Capitalize(
-                  option.surname == null ? "" : option.surname
-                )}`
-              }
-              onChange={handleChangeStep}
-              renderInput={(params) => (
-                <TextField
-                  sx={{
-                    "& .MuiOutlinedInput-root": {
-                      width: "100%",
-                    },
-                  }}
-                  {...params}
-                  label="Ýerine ýetirýän"
-                  fullWidth
-                  autoComplete="off"
-                  placeholder="Adyny ýazyň ýa-da saýlaň"
-                  variant="outlined"
-                  InputProps={{
-                    ...params.InputProps,
-                    endAdornment: <>{params.InputProps.endAdornment}</>,
-                  }}
-                />
-              )}
-              popupIcon={<AddIcon />}
-            /> */}
             <Stack direction="row" width="100%" spacing={2}>
               <FormControl fullWidth variant="outlined">
                 <InputLabel id="demo-simple-select-label">Wajyplygy</InputLabel>
@@ -348,9 +348,9 @@ const UpdateProjectUserModal = ({
                   label="Wajyplygy"
                 >
                   {/* {priority.PRIORITY &&
-                  priority.PRIORITY.map((elem, index) => (
-                    <MenuItem key={index} value={10}>{elem.name}</MenuItem>
-                  ))} */}
+                    priority.PRIORITY.map((elem, index) => (
+                      <MenuItem key={index} value={10}>{elem.name}</MenuItem>
+                    ))} */}
                   <MenuItem value="Ýokary">Ýokary</MenuItem>
                   <MenuItem value="Orta">Orta</MenuItem>
                   <MenuItem value="Pes">Pes</MenuItem>
@@ -366,9 +366,9 @@ const UpdateProjectUserModal = ({
                   label="Statusy"
                 >
                   {/* {priority.PRIORITY &&
-                  priority.PRIORITY.map((elem, index) => (
-                    <MenuItem key={index} value={10}>{elem.name}</MenuItem>
-                  ))} */}
+                    priority.PRIORITY.map((elem, index) => (
+                      <MenuItem key={index} value={10}>{elem.name}</MenuItem>
+                    ))} */}
 
                   <MenuItem value="Dowam edýän">Dowam edýän</MenuItem>
                   <MenuItem value="Başlanmadyk">Başlanmadyk</MenuItem>
@@ -377,36 +377,15 @@ const UpdateProjectUserModal = ({
                 </Select>
               </FormControl>
             </Stack>
-            <Stack direction="row">
-              <Typography
-                fontSize={15}
-                fontWeight={500}
-                textAlign="start"
-                color="#474747"
-                width="40%"
-              >
-                Işiň näçe % edildi
-              </Typography>
-              <Slider
-                color={sliderValue == 0 ? "error" : "success"}
-                value={sliderValue}
-                onChange={handleSliderChange} // Called when slider is adjusted
-                aria-labelledby="continuous-slider"
-                valueLabelDisplay="auto"
-                min={0}
-                marks
-                max={100}
-              />
-            </Stack>
-            <Stack alignItems="end">
+            <Stack alignItems="end" pt="10px">
               <Button
                 sx={{
-                  border: "1px solid #00b69b",
+                  border: "1px solid #2F6FD0",
                   width: 115,
                   height: 40,
                   textTransform: "revert",
                   borderRadius: "20px",
-                  color: "#00B69B",
+                  color: "#2F6FD0",
                   backgroundColor: "#f0f7ff",
                 }}
                 onClick={handleSubmit}
@@ -417,8 +396,11 @@ const UpdateProjectUserModal = ({
           </Stack>
         </Box>
       </Modal>
+      {/* ) : (
+        ""
+      )} */}
     </>
   );
 };
 
-export default UpdateProjectUserModal;
+export default UpdateModalComponent;

@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import done from "../../../../public/images/done.png";
 import cointinue from "../../../../public/images/cointinue.png";
 import newAdded from "../../../../public/images/newAdded.png";
 import newProject from "../../../../public/images/newProject.png";
-import { Stack, Typography } from "@mui/material";
+import { Grid2, Stack, Typography } from "@mui/material";
 import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
 import ModalComponent from "./ModalComponent";
 import { useDispatch, useSelector } from "react-redux";
@@ -84,16 +83,17 @@ function ProjectHead() {
     },
   ];
   return (
-    <Grid container spacing={2}>
+    <Grid2 container>
       {details.map((elem, index) => (
-        <Grid item xs={12} key={index} sm={12} md={elem.width}>
+        <Grid2 item width="24%" mr={1.5} key={index} md={elem.width}>
           <Paper
             sx={{
-              height: "85px",
+              height: "105px",
               borderRadius: "12px",
               display: "flex",
               justifyContent: "space-around",
               alignItems: "center",
+              width: "100%",
               border: "0.5px solid lightgray",
             }}
           >
@@ -152,10 +152,10 @@ function ProjectHead() {
               <Typography color="#00B69B">{elem.percentage}</Typography>
             </Stack>
           </Paper>
-        </Grid>
+        </Grid2>
       ))}
       <ModalComponent open={open} handleClose={handleClose} />
-    </Grid>
+    </Grid2>
   );
 }
 

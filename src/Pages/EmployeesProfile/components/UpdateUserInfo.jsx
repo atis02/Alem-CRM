@@ -27,6 +27,7 @@ import moment from "moment";
 import { getUserMonthWorkTime } from "../../../Components/db/Redux/api/ComeTimeSlice";
 import { getPDF } from "../../../Components/db/Redux/api/PdfSlice";
 import LanguageCheckboxes from "./LanguageCheck";
+import NewPassLoginUpdate from "../../Employees/components/NewPassLoginUpdate";
 // import { jwtDecode } from "jwt-decode";
 
 const UpdateUserInfo = ({ userData, userId, params, handleClose }) => {
@@ -42,7 +43,7 @@ const UpdateUserInfo = ({ userData, userId, params, handleClose }) => {
   const [selectedValue, setSelectedValue] = useState(
     userInfo.position ? userInfo.position.id : "ADMIN"
   );
-
+  const [openNewPass, setOpenNewPass] = useState(false);
   const [selectedLanguages, setSelectedLanguages] = useState(
     userInfo.languages ? userInfo.languages.split(",") : []
   );
@@ -147,6 +148,7 @@ const UpdateUserInfo = ({ userData, userId, params, handleClose }) => {
             justifyContent="space-between"
             width="90%"
             spacing={2}
+            mt={-2}
           >
             <Stack direction="column" width="100%" justifyContent="flex-start">
               <Typography
@@ -211,6 +213,34 @@ const UpdateUserInfo = ({ userData, userId, params, handleClose }) => {
             width="90%"
             spacing={2}
           >
+            <Stack direction="column" width="100%" justifyContent="flex-start">
+              <Typography
+                fontSize={13}
+                fontWeight={600}
+                textAlign="start"
+                color="#474747"
+                mb="5px"
+              >
+                Telefon belgi
+              </Typography>
+              <TextField
+                id="outlined-basic"
+                type="text"
+                name="password"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                variant="outlined"
+                autoComplete="off"
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "100px",
+                    height: "45px",
+                  },
+                  width: "100%",
+                  fontFamily: "Montserrat",
+                }}
+              />
+            </Stack>
             <Stack direction="column" width="100%" justifyContent="flex-start">
               <Typography
                 fontSize={13}
@@ -385,37 +415,10 @@ const UpdateUserInfo = ({ userData, userId, params, handleClose }) => {
           <Stack
             direction="row"
             justifyContent="space-between"
+            alignItems="center"
             width="90%"
             spacing={2}
           >
-            <Stack direction="column" width="100%" justifyContent="flex-start">
-              <Typography
-                fontSize={13}
-                fontWeight={600}
-                textAlign="start"
-                color="#474747"
-                mb="5px"
-              >
-                Telefon belgi
-              </Typography>
-              <TextField
-                id="outlined-basic"
-                type="text"
-                name="password"
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
-                variant="outlined"
-                autoComplete="off"
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: "100px",
-                    height: "45px",
-                  },
-                  width: "100%",
-                  fontFamily: "Montserrat",
-                }}
-              />
-            </Stack>
             <Stack direction="column" width="100%" justifyContent="flex-start">
               <Typography
                 fontSize={13}
@@ -450,10 +453,35 @@ const UpdateUserInfo = ({ userData, userId, params, handleClose }) => {
                 </Select>
               </FormControl> */}
             </Stack>
+            <Button
+              variant="outlined"
+              sx={{
+                "&:disabled": { background: "lightgray" },
+                // background: "#2F6FD0",
+                color: "#2F6FD0",
+                "&:hover": { background: "#fff" },
+                height: "50px",
+                width: "250px",
+                borderRadius: "50px",
+                textTransform: "revert",
+                fontSize: 16,
+                mb: 3,
+                lineHeight: "18px",
+              }}
+              onClick={() => setOpenNewPass(true)}
+            >
+              Login we parol çalyşmak
+            </Button>
           </Stack>
         </form>
+        <NewPassLoginUpdate
+          open={openNewPass}
+          handleClose={() => setOpenNewPass(false)}
+          userData={userInfo}
+        />
         <Stack alignItems="center" pt={2}>
           <Button
+            variant="contained"
             onClick={handleSubmit}
             disabled={userInfo.name === email && userInfo.surname === surname}
             sx={{

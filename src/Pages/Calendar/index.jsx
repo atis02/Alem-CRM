@@ -1661,7 +1661,7 @@ const index = () => {
                           color="#474747"
                           mb="5px"
                         >
-                          Duýduryş y
+                          Duýduryşy
                         </Typography>
                         <TextField
                           fullWidth

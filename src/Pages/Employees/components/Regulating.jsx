@@ -77,7 +77,6 @@ const Regulating = () => {
     };
     userChats();
   }, []);
-  console.log(users);
 
   useEffect(() => {
     const fetchUsers = async () => {

@@ -36,7 +36,6 @@ const DocumentUpdateModal = ({ open, handleClose, data }) => {
   const params = searchParams.get("date");
   const dispatch = useDispatch();
 
-  console.log(selectedValue);
 
   useEffect(() => {
     dispatch(getDocType(data.id));

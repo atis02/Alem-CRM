@@ -19,10 +19,11 @@ import {
 } from "../Components/db/Redux/reducers/AuthSlice";
 import AxiosInstance from "../Components/db/Redux/api/AxiosHelper";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import Register from "./Register";
 import logo from "../../public/images/Logo.png";
 import logo2 from "../../public/images/login (2).png";
 import logo3 from "../../public/images/login (1).png";
+import Register from "./Register/Register";
+import RegisterStepper from "./Register/components/RegisterStepper";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -346,7 +347,10 @@ const Login = () => {
             </Stack>
           </Stack>
         ) : (
-          <Register openModal={handleRegister} />
+          // <Register openModal={handleRegister} />
+          <Stack width="60%">
+            <RegisterStepper openModal={handleRegister} />
+          </Stack>
         )}
       </Stack>
     </Box>

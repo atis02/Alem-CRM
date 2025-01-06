@@ -18,6 +18,15 @@ export const turkmenWeekdays = [
   "Şenbe", // Friday
   "Ýekşenbe", // Saturday
 ];
+export const turkmenWeekdaysMin = [
+  "Duş ", // Sunday
+  "Siş ", // Monday
+  "Çar", // Tuesday
+  "Pen", // Wednesday
+  "Ann", // Thursday
+  "Şen", // Friday
+  "Ýek", // Saturday
+];
 export const turkmenMonths = [
   "Ýanwar", // January
   "Fewral", // February
@@ -55,14 +64,15 @@ export const projects = [
 export const style = {
   position: "absolute",
   top: "10%",
-  left: "35%",
+  left: {lg:"35%",md:"35%",sm:"30%",xs:0},
   transform: "translate(-50%, -50%)",
-  width: 535,
+  width: {lg:535,md:535,sm:435,xs:'100%'},
   bgcolor: "#fff",
   boxShadow: 2,
   borderRadius: "30px",
   p: "10px 30px ",
-  height: "575px",
+  height: {lg:575,md:575,sm:435,xs:560}
+  
   // overflow: "scroll",
   // "&::-webkit-scrollbar": {
   //   display: "none",
@@ -98,13 +108,13 @@ export const style2 = {
 };
 
 export const items = [
-  { id: 1, title: "№" },
-  { id: 2, title: "Ady" },
-  { id: 3, title: "Familiýasy" },
-  { id: 5, title: "Gelen wagty" },
-  { id: 6, title: "Giden wagty" },
-  { id: 7, title: "Gijä galan sagady" },
-  { id: 8, title: "Bellik" },
+  {position:"center" ,id: 1, title: "№" },
+  {position:"start" ,id: 2, title: "Ady" },
+  {position:"start" ,id: 3, title: "Familiýasy" },
+  {position:"center" ,id: 5, title: "Gelen wagty" },
+  {position:"center" ,id: 6, title: "Giden wagty" },
+  {position:"center" ,id: 7, title: "Gijä galan sagady" },
+  {position:"center" ,id: 8, title: "Bellik" },
 ];
 export const NonActiveUserItems = [
   { id: 1, title: "№" },
@@ -128,7 +138,6 @@ export const personalItemsWithTime = (startTime,endTime)=>{
   };
   const start = moment(startTime, "HH:mm:ss").format("HH:mm");
   const end = moment(endTime, "HH:mm:ss").format("HH:mm");
-  console.log(endTime);
   
   return  [
     { id: 1, title: "Sene" },
@@ -148,6 +157,7 @@ export const personalItems = [
   { id: 6, title: "Bellik" },
 ];
 export function personalItems2  (data,totalLate) {
+  
   if (!data.workingHours || typeof data.workingHours !== "string") {
     return "Invalid time data";
   }

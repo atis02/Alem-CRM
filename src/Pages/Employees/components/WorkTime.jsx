@@ -4,16 +4,11 @@ import {
   Stack,
   Typography,
   TextField,
-  CircularProgress,
   Autocomplete,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import NonActiveUsers from "./NonActiveUsers";
-import { TimePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import moment from "moment";
-import dayjs from "dayjs";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getWorkTimeDay,
@@ -29,15 +24,7 @@ import NewPassLoginUpdate from "./NewPassLoginUpdate";
 const WorkTime = () => {
   const [users, setUsers] = useState(null);
   const [openNewPass, setOpenNewPass] = useState(false);
-
-  const time = useSelector((state) => state.workTime.data);
-  const status = useSelector((state) => state.workTime.status);
   const UsersData = useSelector((state) => state.users.data);
-
-  const holiday = useSelector((state) => state.holidays.data.data);
-  const statusHoliday = useSelector((state) => state.holidays.status);
-  const errorHoliday = useSelector((state) => state.holidays.error);
-
   const [moderatorModalOpen, setModeratorModalOpen] = useState(false);
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
@@ -189,7 +176,7 @@ const WorkTime = () => {
             textAlign="center"
             fontFamily="DM Sans"
             mb={2}
-            mt={3}
+            // mt={1}
             fontSize={20}
           >
             Ulanyjy login we parol çalyşmak

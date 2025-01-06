@@ -11,11 +11,13 @@ import SetWorkTimeSlice from './SetWorkTimeSlice'
 import StandartSlice from './StandartSlice'
 import HolidaySlice from './HolidaySlice'
 import SubTaskSlice from './SubTaskSlice'
+import AbsenseSlice from './AbsenseSlice'
 
 export const store = configureStore({
   reducer: {
     auth: authSliceReducer,
     imgAccount: ImageUpdateSlice,
+    absense:AbsenseSlice,
     users: UserSlice,
     getWorkDate: ComeTimeSlice,
     uploadPDf: PdfSlice,

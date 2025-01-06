@@ -11,6 +11,8 @@ import {
   Button,
   Stack,
   IconButton,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -18,6 +20,7 @@ import {
   Capitalize,
   turkmenMonths,
   turkmenWeekdays,
+  turkmenWeekdaysMin,
 } from "../../../Components/utils";
 import pattern from "../../../../public/images/pattern.png";
 
@@ -31,6 +34,7 @@ const CustomCalendar = ({
   moment.locale("tk");
   moment.updateLocale("tk", {
     weekdays: turkmenWeekdays.slice(0, 7),
+    weekdaysShort: turkmenWeekdaysMin.slice(0, 7),
   });
 
   moment.updateLocale("tk", {
@@ -99,8 +103,7 @@ const CustomCalendar = ({
   }, [currentDate, viewMode, setStartDate, setEndDate]);
   const isSunday = (day) => day.day() === 0;
   const handleDayClick = (day) => {
-    setSelectedDay(day),
-      isSunday(day) ? "" : openModal(day.format("YYYY-MM-DD"));
+    setSelectedDay(day), openModal(day.format("YYYY-MM-DD"));
   };
   const isholidays = (day) => {
     return (
@@ -119,16 +122,17 @@ const CustomCalendar = ({
       return renderDayView();
     } else {
       const calendar = generateCalendar();
-
+      const theme = useTheme();
+      const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
       return (
         <Table>
           <TableHead>
-            <TableRow>
+            {/* <TableRow>
               {moment.weekdays().map((day, index) => (
                 <TableCell
                   sx={{
                     backgroundColor: "#F5F6FA",
-                    height: "25px",
+                    height: { lg: "25px", md: "25px", sm: "20px", xs: "18px" },
                     p: 1,
                     ...(index === 0 ? { borderTopLeftRadius: "12px" } : ""),
                     ...(moment.weekdays().length - 1 === index
@@ -136,7 +140,7 @@ const CustomCalendar = ({
                       : ""),
                     fontWeight: 500,
                     color: "#202224",
-                    fontSize: 14,
+                    fontSize: { lg: 14, md: 14, sm: 10, xs: 10 },
                   }}
                   key={index}
                   align="center"
@@ -144,6 +148,37 @@ const CustomCalendar = ({
                   {day}
                 </TableCell>
               ))}
+            </TableRow> */}
+            <TableRow>
+              {(isMobile ? moment.weekdaysShort() : moment.weekdays()).map(
+                (day, index) => (
+                  <TableCell
+                    sx={{
+                      backgroundColor: "#F5F6FA",
+                      height: {
+                        lg: "25px",
+                        md: "25px",
+                        sm: "20px",
+                        xs: "18px",
+                      },
+                      p: 1,
+                      ...(index === 0 ? { borderTopLeftRadius: "12px" } : ""),
+                      ...(isMobile
+                        ? moment.weekdaysMin().length - 1 === index
+                        : moment.weekdays().length - 1 === index
+                        ? { borderTopRightRadius: "12px" }
+                        : ""),
+                      fontWeight: 500,
+                      color: "#202224",
+                      fontSize: { lg: 14, md: 14, sm: 10, xs: 10 },
+                    }}
+                    key={index}
+                    align="center"
+                  >
+                    {day}
+                  </TableCell>
+                )
+              )}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -158,10 +193,26 @@ const CustomCalendar = ({
                     sx={{
                       cursor: "pointer",
                       border: "1px solid #ddd",
-                      width: "90px",
+                      // borderRadius: { lg: 0, md: 0, sm: 0, xs: "100%" },
+                      // borderRadius: "100%",
+
+                      // width: "90px",
+                      // height: {
+                      //   lg: "90px",
+                      //   md: "90px",
+                      //   sm: "60px",
+                      //   xs: "20px",
+                      // },
+
                       padding: 0,
                       backgroundColor: isSunday(day) ? "#ADD8E6   " : "#fff",
-                      height: "85px",
+                      // height: "85px",
+                      height: {
+                        lg: "85px",
+                        md: "85px",
+                        sm: "60px",
+                        xs: "60px",
+                      },
                       fontSize: "16px",
                       fontWeight: 500,
 
@@ -325,24 +376,38 @@ const CustomCalendar = ({
   };
 
   return (
-    <Stack p="10px 15px 5px 15px">
+    <Stack
+      sx={{
+        p: { xs: "5px 10px 2px 10px", md: "10px 15px 5px 15px" },
+      }}
+    >
       <Stack
         mb="4px"
         direction="row"
         alignItems="center"
-        justifyContent="space-between"
+        justifyContent={{
+          lg: "space-between",
+          md: "space-between",
+          sm: "center",
+          xs: "flex-start",
+          // xs: "center",
+        }}
+        spacing={1}
       >
         <Button
           sx={{
             color: "#565656",
-            fontSize: 14,
+            fontSize: { lg: 14, md: 14, sm: 10, xs: 10 },
+
             textTransform: "revert",
             fontWeight: 600,
             textAlign: "start",
             border: "0.6px solid #D5D5D5",
             borderRadius: "15px",
-            width: "68px",
-            minHeight: "40px",
+            // width: "68px",
+            // minHeight: "40px",
+            width: { lg: 68, md: 68, ms: 48, xs: 48 },
+            height: { lg: 40, md: 40, ms: 30, xs: 30 },
           }}
           onClick={handleTodayClick}
         >
@@ -350,44 +415,57 @@ const CustomCalendar = ({
         </Button>
         <Stack
           direction="row"
-          width="66%"
+          width={{ lg: "66%", md: "66%", sm: "80%", xs: "65%" }}
           alignItems="center"
-          justifyContent="space-between"
+          justifyContent={{
+            lg: "space-between",
+            md: "space-between",
+            sm: "center",
+            xs: "center",
+          }}
+          spacing={1}
         >
           <Stack direction="row" alignItems="center">
             <IconButton
               sx={{
                 color: "#565656",
+                p: 0,
               }}
               onClick={handlePrevMonth}
             >
               <ArrowBackIosIcon sx={{ width: 18, height: 20 }} />
             </IconButton>
             <Typography
-              width={205}
+              width={{ lg: 205, md: 205, sm: 155, xs: 105 }}
               align="center"
               color="#474747"
-              pt={1.2}
+              pt={1}
               fontWeight={500}
-              fontSize={24}
+              fontSize={{ lg: 24, md: 24, sm: 20, xs: 18 }}
               gutterBottom
             >
               {currentDate.format("MMMM YYYY")}
             </Typography>
-            <IconButton sx={{ color: "#565656" }} onClick={handleNextMonth}>
+            <IconButton
+              sx={{ color: "#565656", p: 0 }}
+              onClick={handleNextMonth}
+            >
               <ArrowForwardIosIcon sx={{ width: 18, height: 20 }} />
             </IconButton>
           </Stack>
           <Stack
-            width={136}
+            width={{ lg: 136, md: 136, sm: 106, xs: 76 }}
             direction="row"
             border="0.6px solid #D5D5D5"
             borderRadius="15px"
+            // ml={2}
           >
             <Button
               sx={{
-                width: "68px",
-                height: "40px",
+                width: { lg: 68, md: 68, ms: 48, xs: 48 },
+                height: { lg: 40, md: 40, ms: 30, xs: 30 },
+                fontSize: { lg: 14, md: 14, sm: 10, xs: 10 },
+
                 color: "#202224",
                 fontWeight: 500,
                 textTransform: "revert",
@@ -411,8 +489,11 @@ const CustomCalendar = ({
             </Button>
             <Button
               sx={{
-                width: "68px",
-                height: "40px",
+                width: { lg: 68, md: 68, ms: 48, xs: 48 },
+                height: { lg: 40, md: 40, ms: 30, xs: 30 },
+                fontSize: { lg: 14, md: 14, sm: 10, xs: 10 },
+
+                // height: "40px",
                 color: "#202224",
                 fontWeight: 500,
                 textTransform: "revert",

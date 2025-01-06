@@ -28,8 +28,13 @@ import { toast } from "react-toastify";
 import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import deleteIcon from "../../../../public/images/Delete.png";
 // import UpdateProjectUserModal from "./UpdateProjectUserModal";
-import { getProjectForUser } from "../../../Components/db/Redux/api/ProjectSlice";
+import {
+  deleteProject,
+  deleteProjectForUser,
+  getProjectForUser,
+} from "../../../Components/db/Redux/api/ProjectSlice";
 import UpdateProjectUserModal from "../../ProjectDetail/components/UpdateProjectUserModal";
+import UpdateModalComponent from "./UpdateProjectUserModal";
 
 const Project = ({ setProjectName }) => {
   const [selectedUsers, setSelectedUsers] = useState("");
@@ -62,14 +67,25 @@ const Project = ({ setProjectName }) => {
     setOpenUserModal(true);
     setSelectedUsers(elem);
   };
-  const handleDeleteProjectTask = (elem) => {
-    const body = {
-      projectId: id,
-      taskId: elem.id,
-      responsibleUserId: user.id,
-    };
-    if (elem && id) {
-      dispatch(deleteProjectTask({ body: body, age: id }));
+  // const handleDeleteProjectTask = (elem) => {
+  //   const body = {
+  //     projectId: id,
+  //     taskId: elem.id,
+  //     responsibleUserId: user.id,
+  //   };
+  //   console.log(elem);
+
+  //   if (elem && id) {
+  //     dispatch(deleteProjectTask({ body: body, age: id }));
+  //   }
+  // };
+  const handleDeleteProject = (id) => {
+    if (id) {
+      const body = {
+        projectId: id,
+        responsibleUserId: user.id,
+      };
+      dispatch(deleteProjectForUser(body));
     }
   };
 
@@ -131,8 +147,8 @@ const Project = ({ setProjectName }) => {
                 </TableHead>
 
                 <TableBody>
-                  {data.map((elem) => (
-                    <StyledTableRow sx={{ cursor: "pointer" }}>
+                  {data.map((elem, index) => (
+                    <StyledTableRow key={index} sx={{ cursor: "pointer" }}>
                       <TableCell
                         onClick={() =>
                           navigate(
@@ -295,20 +311,20 @@ const Project = ({ setProjectName }) => {
                           </Typography>
                         )}
                       </TableCell>
-                      {/* <TableCell
-                        onClick={() =>
-                          navigate(
-                            `/projects/${
-                              elem.project_id ? elem.project_id : elem.id
-                            }`
-                          )
-                        }
+                      <TableCell
+                        // onClick={() =>
+                        //   navigate(
+                        //     `/projects/${
+                        //       elem.project_id ? elem.project_id : elem.id
+                        //     }`
+                        //   )
+                        // }
                         sx={{ width: "100px" }}
                       >
                         <Stack direction="row" alignItems="end" spacing={1}>
                           <IconButton
                             onClick={() =>
-                              handleChange({ task: elem, user: elem.user })
+                              handleChange({ task: elem, user: user })
                             }
                           >
                             <BorderColorOutlinedIcon
@@ -320,7 +336,7 @@ const Project = ({ setProjectName }) => {
                             />
                           </IconButton>
                           <IconButton
-                            onClick={() => handleDeleteProjectTask(elem)}
+                            onClick={() => handleDeleteProject(elem.id)}
                           >
                             <img
                               style={{ width: 20, height: 20 }}
@@ -329,7 +345,7 @@ const Project = ({ setProjectName }) => {
                             />
                           </IconButton>
                         </Stack>
-                      </TableCell> */}
+                      </TableCell>
                     </StyledTableRow>
                   ))}
                 </TableBody>
@@ -340,12 +356,17 @@ const Project = ({ setProjectName }) => {
       ) : (
         ""
       )}
-      <UpdateProjectUserModal
-        user={selectedUsers}
+      {/* <UpdateProjectUserModal
+        user={user}
         setSelectedUsers={setSelectedUsers}
         openUserModal={openUserModal}
         handleCloseUserModal={() => setOpenUserModal(false)}
         setWorkers={setWorkers}
+      /> */}
+      <UpdateModalComponent
+        open={openUserModal}
+        handleClose={() => setOpenUserModal(false)}
+        details={selectedUsers?.task}
       />
     </Stack>
   );

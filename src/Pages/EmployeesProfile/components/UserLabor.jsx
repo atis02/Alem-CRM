@@ -3,6 +3,7 @@ import {
   Button,
   CircularProgress,
   Grid,
+  Grid2,
   IconButton,
   Paper,
   Stack,
@@ -16,6 +17,7 @@ import {
   deleteStandart,
   deleteStandartForUser,
   getStandarts,
+  getStandartsForAll,
   getStandartsForUser,
 } from "../../../Components/db/Redux/api/StandartSlice";
 import deleteIcon from "../../../../public/images/Delete.png";
@@ -40,19 +42,22 @@ const UserLabor = ({ userData }) => {
   const status = useSelector((state) => state.standarts.status);
   const error = useSelector((state) => state.standarts.error);
   const data = useSelector((state) => state.standarts.data);
+  const additionalData = useSelector(
+    (state) => state.standarts.standartForUser
+  );
 
   const user = JSON.parse(localStorage.getItem("CRM_USER"));
   const UsersData = useSelector((state) => state.users.data);
 
-  const allData = data.filter(
-    (elem) => (elem.users && elem.users.length) === UsersData.length
-  );
-  const filteredData = data.filter(
-    (elem) => (elem.users && elem.users.length) !== UsersData.length
-  );
+  // const filteredData = data.filter(
+  //   (elem) => (elem.users && elem.users.length) !== UsersData.length
+  // );
+
+  const filteredData = [...additionalData, ...data];
 
   useEffect(() => {
     dispatch(getStandartsForUser(userData.id));
+    dispatch(getStandartsForAll());
   }, [dispatch]);
   const handleDeleteLabor = (id) => {
     const body = {
@@ -167,9 +172,9 @@ const UserLabor = ({ userData }) => {
               </Typography>
             ) : (
               <>
-                <Grid container item xs={12} md={6} lg={12} spacing={2}>
+                <Grid2 container item xs={12} md={6} lg={12} spacing={2}>
                   {filteredData.map((elem, index) => (
-                    <Grid item xs={12} key={index} lg={12} sm={12}>
+                    <Grid2 item xs={12} key={index} lg={12} sm={12}>
                       <Paper
                         sx={{
                           height: "100%",
@@ -212,8 +217,7 @@ const UserLabor = ({ userData }) => {
                               width="90%"
                             >
                               {elem.title}
-                              {elem.users &&
-                              elem.users.length === UsersData.length ? (
+                              {!elem.users ? (
                                 <Button
                                   sx={{
                                     color: "#00CCFF",
@@ -259,7 +263,7 @@ const UserLabor = ({ userData }) => {
 
                             {user.role === "USER" ? (
                               ""
-                            ) : elem.users.length > 1 ? (
+                            ) : !elem.users ? (
                               ""
                             ) : (
                               <Stack
@@ -297,9 +301,9 @@ const UserLabor = ({ userData }) => {
                           </Typography>
                         </Stack>
                       </Paper>
-                    </Grid>
+                    </Grid2>
                   ))}
-                </Grid>
+                </Grid2>
               </>
             )}
           </Stack>

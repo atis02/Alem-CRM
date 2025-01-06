@@ -40,7 +40,6 @@ const Project = ({ setProjectName, setProjectId }) => {
   const [allData, setAllData] = useState([data]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  console.log(data);
 
   const user = JSON.parse(localStorage.getItem("CRM_USER"));
   useEffect(() => {
@@ -139,8 +138,6 @@ const Project = ({ setProjectName, setProjectId }) => {
                       item.tasks &&
                       item.tasks.map((elem) => (
                         <StyledTableRow key={elem.id}>
-                          {console.log(item)}
-
                           <TableCell
                             sx={style2}
                             onClick={() => {
@@ -163,7 +160,6 @@ const Project = ({ setProjectName, setProjectId }) => {
                               );
                             }}
                           >
-                            {console.log(elem)}
                             {elem.user && elem.user.name}{" "}
                             {elem.user && elem.user.surname}
                           </TableCell>

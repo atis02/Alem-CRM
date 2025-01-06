@@ -6,11 +6,16 @@ import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import Project from "./components/Project";
 import { useSelector } from "react-redux";
 import AddIcon from "@mui/icons-material/Add";
+import ModalComponent from "./components/ModalComponent";
 
 const index = () => {
+  const [open, setOpen] = useState(false);
   const [projectName, setProjectName] = useState("");
   const UsersData = useSelector((state) => state.users.data);
   const [openUserModal, setOpenUserModal] = useState(false);
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const navigate = useNavigate();
   const handleChange = (name) => {
@@ -61,8 +66,26 @@ const index = () => {
               Proýektler
             </Typography>
           </Stack>
+          <Button
+            sx={{
+              color: "#F8F9FA",
+              textTransform: "revert",
+              background: "#2F6FD0",
+              "&:hover": { background: "#2F6FD0" },
+              gap: "10px",
+              width: 190,
+              height: 45,
+              borderRadius: "20px",
+            }}
+            variant="outlined"
+            onClick={handleOpen}
+          >
+            <AddIcon />
+            Täze proýekt
+          </Button>
         </Stack>
         <Project setProjectName={handleChange} />
+        <ModalComponent open={open} handleClose={handleClose} />
       </Stack>
     </Box>
   );

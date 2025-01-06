@@ -54,6 +54,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import Tooltip from "../../../Components/Tooltip";
 import FadeTooltip from "../../../Components/Tooltip";
 import DocumentUpdateModal from "./UpdateDocsUser";
+import NewPassLoginUpdate from "../../Employees/components/NewPassLoginUpdate";
 
 const UserInfo = () => {
   const [open, setOpen] = useState(false);
@@ -61,6 +62,7 @@ const UserInfo = () => {
   const [updateDocs, setUpdateDocs] = useState(false);
   const [openStandart, setOpenStandart] = useState(false);
   const [docTitle, setDocTitle] = useState("");
+  const [openNewPass, setOpenNewPass] = useState(false);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -134,7 +136,7 @@ const UserInfo = () => {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: "35%",
+    width: "40%",
     bgcolor: "background.paper",
     border: "1px solid lightgray",
     gap: "10px",
@@ -178,7 +180,7 @@ const UserInfo = () => {
       borderRadius="20px"
       pb="10px"
       boxShadow=" 0px 0px 8px -5px rgba(0,0,0,0.75)"
-      p="30px 24px 17px"
+      p="30px 14px 17px"
       position="relative"
     >
       <Stack
@@ -353,7 +355,7 @@ const UserInfo = () => {
                       direction="row"
                       alignItems="center"
                       spacing={1}
-                      mt="10px"
+                      mt="5px"
                     >
                       <img
                         src={mail2}
@@ -389,7 +391,7 @@ const UserInfo = () => {
                       direction="row"
                       alignItems="center"
                       spacing={1}
-                      mt="10px"
+                      mt="5px"
                     >
                       <img
                         src={Call}
@@ -411,7 +413,7 @@ const UserInfo = () => {
                       direction="row"
                       alignItems="center"
                       spacing={1}
-                      mt="10px"
+                      mt="5px"
                     >
                       <img
                         src={globus}
@@ -433,7 +435,7 @@ const UserInfo = () => {
                       direction="row"
                       alignItems="center"
                       spacing={1}
-                      mt="10px"
+                      mt="5px"
                     >
                       <img
                         src={portfel}
@@ -472,7 +474,7 @@ const UserInfo = () => {
                       direction="row"
                       alignItems="center"
                       spacing={1}
-                      mt="16px"
+                      mt="5px"
                     >
                       <img
                         src={calendar}
@@ -496,7 +498,7 @@ const UserInfo = () => {
                       direction="row"
                       alignItems="center"
                       spacing={1}
-                      mt="10px"
+                      mt="5px"
                     >
                       <img
                         src={location}
@@ -526,12 +528,43 @@ const UserInfo = () => {
                   >
                     Düzgünnama Goşmak
                   </Button>
+                  <Button
+                    variant="contained"
+                    // sx={{
+                    //   "&:disabled": { background: "lightgray" },
+                    //   // background: "#2F6FD0",
+                    //   color: "#2F6FD0",
+                    //   "&:hover": { background: "#fff" },
+                    //   height: "50px",
+                    //   width: "250px",
+                    //   borderRadius: "50px",
+                    //   textTransform: "revert",
+                    //   fontSize: 16,
+                    //   mb: 3,
+                    //   lineHeight: "18px",
+                    // }}
+                    sx={{
+                      background: "#2F6FD0",
+                      mt: 2,
+                      textTransform: "revert",
+                      fontSize: 16,
+                      "&:hover": { background: "#2F6FD0" },
+                    }}
+                    onClick={() => setOpenNewPass(true)}
+                  >
+                    Login we parol çalyşmak
+                  </Button>
                 </Stack>
               </Stack>
             </>
           )
         ) : null}
       </Stack>
+      <NewPassLoginUpdate
+        open={openNewPass}
+        handleClose={() => setOpenNewPass(false)}
+        userData={data.user}
+      />
       <Modal
         open={openStandart}
         onClose={handleCloseUserStandart}
@@ -566,7 +599,6 @@ const UserInfo = () => {
         </Box>
       </Modal>
       <Divider />
-      <Stack>{console.log(data)}</Stack>
       <Divider />
       <Stack height="45%">
         <Stack
@@ -626,8 +658,6 @@ const UserInfo = () => {
           </Typography>
         ) : (
           <Stack height="100%" className="times2" overflow="auto">
-            {console.log(data.documents)}
-
             {data.documents &&
               data.documents.map((item, index) => (
                 <Stack

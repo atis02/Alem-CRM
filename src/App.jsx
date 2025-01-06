@@ -18,6 +18,7 @@ import Regulating from "./Pages/Employees/components/Regulating";
 import WorkTime from "./Pages/Employees/components/WorkTime";
 import Calendar from "./Pages/Calendar";
 import SpecificStandart from "./Pages/Standarts/components/SpecificStandart";
+import SpecificStandartForUser from "./Pages/Standarts/components/SpecificStandartForUser";
 import TaskDetail from "./Pages/TaskDetail";
 function App() {
   const ProtectedRoute = ({ children }) => {
@@ -67,6 +68,10 @@ function App() {
         {
           path: "/standarts/specific",
           element: <SpecificStandart />,
+        },
+        {
+          path: "/standarts/specific/user",
+          element: <SpecificStandartForUser />,
         },
         {
           path: "/employees",

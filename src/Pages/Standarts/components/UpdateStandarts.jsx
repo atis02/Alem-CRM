@@ -39,6 +39,8 @@ const UpdateStandarts = ({ openUpdate, handleClose, data, userId }) => {
   const [selectedUser, setSelectedUser] = useState([]);
   const [description, setDescription] = useState(data && data.description);
   const [title, setTitle] = useState(data && data.title);
+  const loggedUser = JSON.parse(localStorage.getItem("CRM_USER"));
+  const isStandartAllPage = location.pathname === "/standarts/all";
 
   useEffect(() => {
     data && setUserData(data);
@@ -83,6 +85,7 @@ const UpdateStandarts = ({ openUpdate, handleClose, data, userId }) => {
     { id: "selectAll", name: "Ählisi", surname: "" },
     ...UsersData,
   ];
+  console.log(selectedUser);
 
   const handleSubmit = () => {
     const body = {
@@ -91,8 +94,11 @@ const UpdateStandarts = ({ openUpdate, handleClose, data, userId }) => {
       description: description,
       usersId: selectedUser.length
         ? selectedUser
-        : userData.users.map((user) => user.id),
+        : userData.users
+        ? userData.users.map((user) => user.id)
+        : null,
       userId: userId,
+      permissionUserId: loggedUser.id,
     };
 
     if (title && description) {
@@ -106,7 +112,7 @@ const UpdateStandarts = ({ openUpdate, handleClose, data, userId }) => {
       toast.error("Maglumatlary giriziň!");
     }
   };
-
+  const allUsers = [{ name: "Ähli ulanyjylar" }];
   return (
     <Modal open={openUpdate} onClose={handleClose}>
       <Box sx={style}>
@@ -152,7 +158,8 @@ const UpdateStandarts = ({ openUpdate, handleClose, data, userId }) => {
             id="combo-box-demo"
             multiple
             fullWidth
-            defaultValue={data && data.users}
+            disabled={isStandartAllPage}
+            defaultValue={data && data.users ? data.users : allUsers}
             isOptionEqualToValue={(option, value) => option.id === value.id}
             options={optionsWithSelectAll}
             getOptionLabel={(option) =>
@@ -200,7 +207,7 @@ const UpdateStandarts = ({ openUpdate, handleClose, data, userId }) => {
             onChange={(e) => setDescription(e.target.value)}
             variant="outlined"
             multiline
-            minRows={13.7}
+            minRows={13.5}
             maxRows={18}
             fullWidth
             sx={{

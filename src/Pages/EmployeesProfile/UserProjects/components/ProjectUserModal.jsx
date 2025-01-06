@@ -34,12 +34,12 @@ const ProjectUserModal = ({
 }) => {
   const [users, setUsers] = useState([]);
   const [priority, setPriority] = useState([]);
-  const [selectedValue, setSelectedValue] = useState("");
+  const [selectedValue, setSelectedValue] = useState("Orta");
   const [selectedStatus, setStatus] = useState("Başlanmadyk");
   const [value, setValue] = useState("");
   const [userId, setUserId] = useState("");
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+  const [startDate, setStartDate] = useState(dayjs);
+  const [endDate, setEndDate] = useState(dayjs);
   const [selection, setSelection] = useState(user);
 
   const handleChangeStep = (e, newValues) => {
@@ -76,6 +76,7 @@ const ProjectUserModal = ({
       startDate: dayjs(startDate).format("YYYY-MM-DD"),
       endDate: dayjs(endDate).format("YYYY-MM-DD"),
     };
+
     if (
       value !== "" &&
       selectedStatus != "" &&
@@ -203,6 +204,7 @@ const ProjectUserModal = ({
 
                       <DatePicker
                         fullWidth
+                        value={startDate}
                         onChange={(newValue) => {
                           if (newValue) {
                             setStartDate(newValue);
@@ -229,6 +231,7 @@ const ProjectUserModal = ({
 
                       <DatePicker
                         fullWidth
+                        value={endDate}
                         onChange={(newValue) => {
                           if (newValue) {
                             setEndDate(newValue);
